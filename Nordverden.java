@@ -65,9 +65,54 @@ public class Nordverden {
         switch(pSel) {
             case "2": System.out.println("Placeholder2"); break;
             case "1": CharacterCreation(); break;
-            default: System.out.println("\n         C'mon m8 it's 2 buttons\n"); CharacterSelection();
+            default: System.out.println("\n         C'mon m8 it's only 2 buttons\n"); CharacterSelection();
         }
 
+
+    }
+
+    static void pCustomizeStats() {
+        System.out.println("    Here you will be able to modify your character's stats.");
+
+        System.out.println("    First assign up to 50 points to your skills");
+        
+        System.out.println("    Which Skill would you like to modify?"
+                            + "\n\n1. Strenght ("+ pStrenght +"/100) [10 recommended]"
+                            + "\n2. Speech ("+ pSpeech +"/100) [10 recommended]"
+                            + "\n3. Stamina ("+ pStamina +"/100) [30 recommended]"
+                            + "\n4. Scorcery ("+ pScorcery +"/100)"
+                            + "\n5. Sneak ("+ pSneak +"/100)"
+        );
+
+        pSel = "";
+        pSel = input.next();
+
+        int totalPts = 50;
+        
+
+        switch(pSel) {
+            case "5": 
+                System.out.println("    How many points would you like to assign to Strenght");
+                pStrenght = input.nextInt();
+                if ((totalPts > 0) && (pStrenght < totalPts)){
+                    totalPts -= pStrenght;
+                } else if (totalPts == 0){
+                    System.out.println("    You have run out of points to spend"
+                                        + "\n   You can confirm or reset your skills"
+                                        + "\n\n 1. Confirm Skills"
+                                        + "\n 2. Reset Skills"
+                    );
+                    pSel = "";
+                    pSel = input.next();
+
+                }
+                break;
+            case "4": System.out.println("How many points would you like to assign to Speech"); break;
+            case "3": System.out.println("How many points would you like to assign to Stamina"); break;
+            case "2": System.out.println("How many points would you like to assign to Scorcery"); break;
+            case "1": System.out.println("How many points would you like to assign to Sneak"); break;
+            default: System.out.println("\n         C'mon m8 is 7 too many buttons?\n"); CharacterSelection();
+        }
 
     }
 
@@ -103,15 +148,15 @@ public class Nordverden {
                             + "\n   Long Range Damage ("+ pRangedDmg +")"
         );
 
-        System.out.println("Would you like to view the default stats?\nor modify them right now?\n");
+        System.out.println("    Would you like to view the default stats or modify them right now?\n");
         System.out.println("1. View Character Stats\n2. Modify\n");
 
         pSel = "";
         pSel = input.next();
 
         switch(pSel) {
-            case "2": System.out.println("Placeholder2"); break;
-            case "1": System.out.println(playerStatsDisplay); break;
+            case "2": pCustomizeStats(); break;
+            case "1": System.out.println(playerStatsDisplay); CharacterCreation(); break;
             default: System.out.println("\nC'mon m8 it's 2 buttons\n"); CharacterSelection();
         }
 
@@ -120,15 +165,16 @@ public class Nordverden {
 
     public static void main(String args[]){
 
-        String welcomeMsg = ("\n"
+        String welcomeMsg = ( "\n"
                             + "\n    Welcome to"
                             + "\n          __              _                   _            "
                             + "\n       /\\ \\ \\___  _ __ __| |_   _____ _ __ __| | ___ _ __  "
                             + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
                             + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
                             + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.001.100124"
-                            + "\n");
+                            + "\n                                       Version 0.002.100224"
+                            + "\n" 
+        );
         
         System.out.println(welcomeMsg);
 

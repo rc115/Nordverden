@@ -12,7 +12,7 @@
  *  \_\ \/ \___/|_|  \__,_| \_/ \___|_|  \__,_|\___|_| |_|
  *                                                     
  * 
- * Inspired by classic role playing games from Interplay and modern Bethesda games
+ * Inspired by classic role playing games from Interplay and modern open-world Bethesda games
  * 
  */
 
@@ -24,19 +24,29 @@ public class Nordverden {
     
     static String pSel = "";
 
-    static int pLevel = 1;
+    static int pLevel = 1; //Max lvl 46 (lvl 5 = 1000 xp needed [340 @lvl 4])
     static int pCurXp = 0;
-    static int pNextLvl = 100;
+    static int xpCalc = (100*(pLevel*pLevel));
+    static int pNextLvl = xpCalc;
     static int pHealth = 100;
     static int pInv = 5;
     static int pGold = 5;
     static int pLuck = 0;
+
+    static int totalPts = 50;
 
     static int pStrenght = 0;
     static int pSpeech = 0;
     static int pStamina = 0;
     static int pScorcery = 0;
     static int pSneak = 0;
+
+    static int assStr = 0;
+    static int assSpe = 0;
+    static int assSta = 0;
+    static int assSco = 0;
+    static int assSne = 0;
+
 
     static double pBladeRes = 0.0;
     static double pBluntRes = 0.0;
@@ -71,6 +81,163 @@ public class Nordverden {
 
     }
 
+    static void resetSkills() {
+        System.out.println("\n    Are you sure you want to reset your skills?"
+                            + "\n1. Reset\n2. Continue Modifying\n");
+
+        pSel = "";
+        pSel = input.next();
+
+        switch (pSel) {
+            case "1":
+                totalPts = (pStrenght + pSpeech + pStamina + pScorcery + pSneak);
+                pStrenght = 0;
+                pSpeech = 0;
+                pStamina = 0;
+                pScorcery = 0;
+                pSneak = 0;
+
+                System.out.println("\n  Your skills have been reset. You now have " 
+                                    + totalPts 
+                                    + " points to assign.\n"
+                );
+
+                pCustomizeStats();
+                break;
+            case "2": pCustomizeStats(); break;
+            default: System.out.println("\n         Thats an invalid option."); resetSkills(); break;
+        }
+
+    }
+
+    static void assignStrPts() {
+        System.out.println("\n    How many points would you like to assign to Strenght\n");
+        assStr = input.nextInt();
+
+        if (assStr > totalPts) {
+
+            if (totalPts == 0){
+                System.out.println("\n    You have run out of points to spend"
+                                    + "\n   You can confirm or reset your skills\n"
+                                    + "\n1. Confirm Skills"
+                                    + "\n2. Reset Skills"
+                );
+                pSel = "";
+                pSel = input.next();
+
+                switch(pSel) {
+                    case "2": resetSkills(); break;
+                    case "1": System.out.println("Placeholder1"); break;
+                    default: System.out.println("\n         C'mon m8 it's only 2 buttons\n"); assignStrPts(); break;
+                }
+            }
+            
+            System.out.println(  "\n    You cannot assign " + assStr + " points to Strenght."
+                                +"\n    You only have " + totalPts + " points available.");
+            assStr = 0;
+            assignStrPts();
+        } else if (assStr < 0) {
+            System.out.println(  "\n    You cannot assign negative points."
+                                +"\n    If you would like to reset your points you can do that later.");
+            assStr = 0;
+            assignStrPts();
+        }
+
+
+        if (totalPts > 0){
+            totalPts -= assStr;
+            pStrenght += assStr;
+            System.out.println("\nYour Strenght is now at "+ pStrenght + "\n");
+            
+        } else if (totalPts == 0){
+            System.out.println("\n    You have run out of points to spend"
+                                + "\n   You can confirm or reset your skills\n"
+                                + "\n1. Confirm Skills"
+                                + "\n2. Reset Skills"
+            );
+            pSel = "";
+            pSel = input.next();
+
+
+            switch(pSel) {
+                case "2": resetSkills(); break;
+                case "1": System.out.println("Placeholder1"); break;
+                default: System.out.println("\n         C'mon m8 it's only 2 buttons\n"); assignStrPts(); break;
+            }
+
+        } else {
+            System.out.println("What did you do?");
+        }
+
+        System.out.println("\n    Would you like to move to modifying Speech?\n"
+                            + "\n1. Continue\n2. Modify Strenght"
+        );
+
+        pSel = "";
+        pSel = input.next();
+
+        switch(pSel) {
+            case "2": assignStrPts(); assStr = 0; break;
+            case "1": assignSpePts(); break;
+            default: System.out.println("   Invalid input."); assignStrPts();
+        }
+    }
+    static void assignSpePts() {
+        System.out.println("\n    How many points would you like to assign to Speech");
+        assSpe = input.nextInt();
+
+        if (assSpe > totalPts) {
+            System.out.println(  "\n    You cannot assign " + assSpe + " points to Speech."
+                                +"\n    You only have " + totalPts + " points available.");
+            assSpe = 0;
+            assignSpePts();
+        } else if (assSpe < 0) {
+            System.out.println(  "\n    You cannot assign negative points."
+                                +"\n    If you would like to reset your points you can do that later.");
+            assSpe = 0;
+            assignSpePts();
+        }
+
+
+        if (totalPts > 0){
+            totalPts -= assSpe;
+            pSpeech += assSpe;
+            System.out.println("Your Speech is now at "+ pSpeech + "\n");
+            
+        } else if (totalPts == 0){
+            System.out.println("\n    You have run out of points to spend"
+                                + "\n   You can confirm or reset your skills"
+                                + "\n\n 1. Confirm Skills"
+                                + "\n 2. Reset Skills"
+            );
+            pSel = "";
+            pSel = input.next();
+
+            switch(pSel) {
+                case "2": resetSkills(); break;
+                case "1": System.out.println("Placeholder1"); break;
+                default: System.out.println("\n         C'mon m8 it's only 2 buttons\n"); assignStrPts(); break;
+            }
+
+        } else {
+            System.out.println("What did you do?");
+        }
+
+        System.out.println("\n    Would you like to move to modifying Stamina?\n"
+                            + "\n1. Continue\n2. Modify Speech"
+        );
+
+        pSel = "";
+        pSel = input.next();
+
+        switch(pSel) {
+            case "2": assignSpePts(); assSpe = 0; break;
+            case "1": System.out.println("Placeholder"); break;
+            default: System.out.println("   Invalid input."); assignSpePts();
+        }
+
+    }
+
     static void pCustomizeStats() {
         System.out.println("    Here you will be able to modify your character's stats.");
 
@@ -87,31 +254,15 @@ public class Nordverden {
         pSel = "";
         pSel = input.next();
 
-        int totalPts = 50;
         
 
         switch(pSel) {
-            case "5": 
-                System.out.println("    How many points would you like to assign to Strenght");
-                pStrenght = input.nextInt();
-                if ((totalPts > 0) && (pStrenght < totalPts)){
-                    totalPts -= pStrenght;
-                } else if (totalPts == 0){
-                    System.out.println("    You have run out of points to spend"
-                                        + "\n   You can confirm or reset your skills"
-                                        + "\n\n 1. Confirm Skills"
-                                        + "\n 2. Reset Skills"
-                    );
-                    pSel = "";
-                    pSel = input.next();
-
-                }
-                break;
-            case "4": System.out.println("How many points would you like to assign to Speech"); break;
+            case "1": assignStrPts(); break;
+            case "2": System.out.println("How many points would you like to assign to Speech"); break;
             case "3": System.out.println("How many points would you like to assign to Stamina"); break;
-            case "2": System.out.println("How many points would you like to assign to Scorcery"); break;
-            case "1": System.out.println("How many points would you like to assign to Sneak"); break;
-            default: System.out.println("\n         C'mon m8 is 7 too many buttons?\n"); CharacterSelection();
+            case "4": System.out.println("How many points would you like to assign to Scorcery"); break;
+            case "5": System.out.println("How many points would you like to assign to Sneak"); break;
+            default: System.out.println("\n         C'mon is 5 too many buttons for you?\n"); CharacterSelection();
         }
 
     }
@@ -172,7 +323,7 @@ public class Nordverden {
                             + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
                             + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
                             + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.002.100224"
+                            + "\n                                       Version 0.003.100224"
                             + "\n" 
         );
         

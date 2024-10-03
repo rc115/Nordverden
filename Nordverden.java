@@ -182,6 +182,7 @@ public class Nordverden {
             default: System.out.println("   Invalid input."); assignStrPts();
         }
     }
+
     static void assignSpePts() {
         System.out.println("\n    How many points would you like to assign to Speech");
         assSpe = input.nextInt();
@@ -238,6 +239,79 @@ public class Nordverden {
 
     }
 
+    static void assignStaPts() {
+        System.out.println("\n    How many points would you like to assign to Stamina\n");
+        assSta = input.nextInt();
+
+        if (assSta > totalPts) {
+
+            if (totalPts == 0){
+                System.out.println("\n    You have run out of points to spend"
+                                    + "\n   You can confirm or reset your skills\n"
+                                    + "\n1. Confirm Skills"
+                                    + "\n2. Reset Skills"
+                );
+                pSel = "";
+                pSel = input.next();
+
+                switch(pSel) {
+                    case "2": resetSkills(); break;
+                    case "1": System.out.println("Placeholder1"); break;
+                    default: System.out.println("\n         C'mon m8 it's only 2 buttons\n"); assignStrPts(); break;
+                }
+            }
+            
+            System.out.println(  "\n    You cannot assign " + assSta + " points to Speech."
+                                +"\n    You have " + totalPts + " points available.");
+            assStr = 0;
+            assignStaPts();
+        } else if (assSta < 0) {
+            System.out.println(  "\n    You cannot assign negative points."
+                                +"\n    If you would like to reset your points you can do that later.");
+            assStr = 0;
+            assignStaPts();
+        }
+
+
+        if (totalPts > 0){
+            totalPts -= assSta;
+            pStamina += assSta;
+            System.out.println("\nYour Strenght is now at "+ pStamina + "\n");
+            
+        } else if (totalPts == 0){
+            System.out.println("\n    You have run out of points to spend"
+                                + "\n   You can confirm or reset your skills\n"
+                                + "\n1. Confirm Skills"
+                                + "\n2. Reset Skills"
+            );
+            pSel = "";
+            pSel = input.next();
+
+
+            switch(pSel) {
+                case "2": resetSkills(); break;
+                case "1": System.out.println("Placeholder1"); break;
+                default: System.out.println("\n         C'mon m8 it's only 2 buttons\n"); assignStaPts(); break;
+            }
+
+        } else {
+            System.out.println("What did you do?");
+        }
+
+        System.out.println("\n    Would you like to move to modifying Scorcery?\n"
+                            + "\n1. Continue\n2. Modify Speech"
+        );
+
+        pSel = "";
+        pSel = input.next();
+
+        switch(pSel) {
+            case "2": assignStrPts(); assStr = 0; break;
+            case "1": assignSpePts(); break;
+            default: System.out.println("   Invalid input."); assignStrPts();
+        }
+    }
+
     static void pCustomizeStats() {
         System.out.println("    Here you will be able to modify your character's stats.");
 
@@ -248,7 +322,7 @@ public class Nordverden {
                             + "\n2. Speech ("+ pSpeech +"/100) [10 recommended]"
                             + "\n3. Stamina ("+ pStamina +"/100) [30 recommended]"
                             + "\n4. Scorcery ("+ pScorcery +"/100)"
-                            + "\n5. Sneak ("+ pSneak +"/100)"
+                            + "\n5. Sneak ("+ pSneak +"/100)\n"
         );
 
         pSel = "";
@@ -262,7 +336,7 @@ public class Nordverden {
             case "3": System.out.println("How many points would you like to assign to Stamina"); break;
             case "4": System.out.println("How many points would you like to assign to Scorcery"); break;
             case "5": System.out.println("How many points would you like to assign to Sneak"); break;
-            default: System.out.println("\n         C'mon is 5 too many buttons for you?\n"); CharacterSelection();
+            default: System.out.println("\n         Are 5 buttons too much for you?\n"); CharacterSelection();
         }
 
     }
@@ -323,7 +397,7 @@ public class Nordverden {
                             + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
                             + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
                             + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.003.100224"
+                            + "\n                                       Version 0.004.100224"
                             + "\n" 
         );
         

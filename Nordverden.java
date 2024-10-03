@@ -24,6 +24,7 @@ public class Nordverden {
     
     static String pSel = "";
     static String pStatsDisplay = "";
+    static String pStatsInfo = "";
     static String pName = "";
     static String proSub = "";
     static String proObj = "";
@@ -47,7 +48,8 @@ public class Nordverden {
     static int pSorcery = 0;
     static int pSneak = 0;
 
-    static double resistPts = 2;
+    static double resistPts = 3.0;
+    static double assResPts = 0.0;
     static double pBladeRes = 0.0;
     static double pBluntRes = 0.0;
     static double pMagicRes = 0.0;
@@ -55,6 +57,8 @@ public class Nordverden {
     static double pFireRes = 0.0;
     static double pFrostRes = 0.0;
 
+    static double combatPts = 2.0;
+    static double assComPts = 0.0;
     static double pUnarmedDmg = 0.0;
     static double pBladeDmg = 0.0;
     static double pBluntDmg = 0.0;
@@ -131,9 +135,9 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "1": System.out.println("\n__________________________________________________\n");
+            case "1": System.out.println("\n____________________________________________________________________________________________________\n");
                       System.out.println("\n   Your stats are now:\n"); playerStatsDisplay();
-                      System.out.println("\n__________________________________________________\n");
+                      System.out.println("\n____________________________________________________________________________________________________\n");
             case "2": customizeStats(); break;
             case "3": resetSkills(); break;
             default: System.out.println("\n       You can't do that.\n"); confirmStats();
@@ -378,7 +382,7 @@ public class Nordverden {
         assSkiPts = 0;
 
         if (pName.equals("")) {
-            System.out.println("\n__________________________________________________\n");
+            System.out.println("\n____________________________________________________________________________________________________\n");
             System.out.println("    What is your character's name?\n");
 
             playerSelection();
@@ -417,7 +421,7 @@ public class Nordverden {
                                 +"\n    Everyone was terrified of " + proObj + ".\n"
             );
 
-            System.out.println("\n__________________________________________________\n");
+            System.out.println("\n____________________________________________________________________________________________________\n");
         }
 
         if (skillPts > 0) {
@@ -477,22 +481,57 @@ public class Nordverden {
         System.out.println(pStatsDisplay);
     }
 
+    static void playerStatsInfo() {
+        pStatsInfo = (
+            "\n\n   Level                   [Level determines the ammount of points you have to distribute]\n"
+            + "\n   Health                  [Health is self explanitory. If it drops to 0 your character dies.]\n"
+            + "\n   Inventory Space         [Inventory management is important in this game."
+            + "\n                            Each armour piece, weapon, and quest item takes up inventory space]\n"
+            + "\n   Gold                    [Gold is the currency of Nordverden. It can be used to purchase items.]\n"
+            + "\n   Luck                    [Luck increases your rolls by the ammount of Luck you have."
+            + "\n                            Ex: Roll 9 + 2 Luck = Roll 11 (20 is the max roll)]\n"
+
+            + "\n\n   Strenght                [Strength is determines how much damage you do and take.]\n"
+            + "\n   Speech                  [Speech is used to convice people to do things you want.]\n"
+            + "\n   Stamina                 [Stamina is very important in this game."
+            + "\n                            It determines how many actions you can make per turn.]\n"
+            + "\n   Sorcery                 [Sorcey determines which spells, and how many you can cast.]\n"
+            + "\n   Sneak                   [Sneak is determines if you can get away with undesired actions.]\n"
+
+            + "\n\n   Bladed Damage Res.      [Blade Resistance lowers the damage you take from bladed weapons.]\n"
+            + "\n   Blunt Damage Res.       [Blunt Resistance lowers the damage you take from blunt weapons.]\n"
+            + "\n   Magic Res.              [Magic Resistance lowers the damage you take from magic.]\n"
+            + "\n   Poison Res.             [Poison Resistance lowers your chance of being poisoned.]\n"
+            + "\n   Fire Res.               [Fire Resistance lowers your chance of being set on fire.]\n"
+            + "\n   Frost Res.              [Frost Resistance lowers your chance of getting hypothermia.]\n"
+
+            + "\n\n   Unarmed Damage          [Unarmed damage increases the damage you do with unarmed weapons]\n"
+            + "\n   Bladed Damage           [Bladed damage increases the damage you do with bladed weapons]\n"
+            + "\n   Blunt Damage            [Blunt damage increases the damage you do with blunt weapons]\n"
+            + "\n   Heavy Weapons Damage    [H.W. damage increases the damage you do with heavy weapons]\n"
+            + "\n   Magic Damage            [Magic damage increases the damage you do with magic]\n"
+            + "\n   Long Range Damage       [Unarmed damage increases the damage you do with ranged weapons]"
+        );
+
+        System.out.println(pStatsInfo);
+        System.out.println("\n____________________________________________________________________________________________________\n");
+    }
+
     static void CharacterCreation() {
         System.out.println("\n    Follow the steps to create your character."
-                            + "\n    Would you like to view the default stats"
-                            + " or modify them right now?\n"
-                            + "\n1. View Character Stats\n2. Modify\n"
+                            + "\n    Would you like to view info on your stats "
+                            + "or modify them right now?\n"
+                            + "\n1. View info on stats\n2. Modify\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "2": customizeStats(); break;
-            case "1": playerStatsDisplay(); CharacterCreation(); break;
+            case "1": playerStatsInfo(); CharacterCreation(); break;
             default: System.out.println("\nC'mon m8 it's 2 buttons\n"); CharacterSelection();
         }
 
     }
-
 
     public static void main(String args[]){
 
@@ -503,15 +542,13 @@ public class Nordverden {
                             + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
                             + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
                             + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.006.100324"
+                            + "\n                                       Version 0.007.100324"
                             + "\n" 
         );
 
         System.out.println(welcomeMsg);
 
-
         CharacterSelection();
-
 
     }
 }

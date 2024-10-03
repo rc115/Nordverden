@@ -24,6 +24,11 @@ public class Nordverden {
     
     static String pSel = "";
     static String pStatsDisplay = "";
+    static String pName = "";
+    static String proSub = "";
+    static String proObj = "";
+    static String proPos = "";
+    static String pRace = "";
 
     static int pLevel = 1; //Max lvl 46 (lvl 5 = 1000 xp needed [340 @lvl 4])
     static int pCurXp = 0;
@@ -35,15 +40,14 @@ public class Nordverden {
     static int pLuck = 0;
 
     static int skillPts = 50;
-
+    static int assSkiPts = 0;
     static int pStrenght = 0;
     static int pSpeech = 0;
     static int pStamina = 0;
     static int pSorcery = 0;
     static int pSneak = 0;
 
-    static int assPts = 0;
-
+    static double resistPts = 2;
     static double pBladeRes = 0.0;
     static double pBluntRes = 0.0;
     static double pMagicRes = 0.0;
@@ -101,9 +105,9 @@ public class Nordverden {
                                     + " points to assign.\n"
                 );
 
-                pCustomizeStats();
+                customizeStats();
                 break;
-            case "2": pCustomizeStats(); break;
+            case "2": customizeStats(); break;
             case "3": playerStatsDisplay(); resetSkills(); break;
             default: System.out.println("\n         Nah"); resetSkills();
         }
@@ -113,6 +117,12 @@ public class Nordverden {
         System.out.println("\n    These are your uncomfirmed stats:\n");
         playerStatsDisplay();
 
+        if (skillPts > 0) {
+            System.out.println("\n\n    Are you sure? You still have "
+                                + skillPts + " unspent points"
+            );
+        }
+
         System.out.println("\n    Do you want to:\n"
                             + "\n1. Confirm stats"
                             + "\n2. Continue Modifying"
@@ -121,10 +131,10 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "1": System.out.println("\n  Your stats are now:\n");
-                playerStatsDisplay();
-                break;
-            case "2": pCustomizeStats(); break;
+            case "1": System.out.println("\n__________________________________________________\n");
+                      System.out.println("\n   Your stats are now:\n"); playerStatsDisplay();
+                      System.out.println("\n__________________________________________________\n");
+            case "2": customizeStats(); break;
             case "3": resetSkills(); break;
             default: System.out.println("\n       You can't do that.\n"); confirmStats();
         }
@@ -146,30 +156,30 @@ public class Nordverden {
     }
 
     static void assignStrPts() {
-        assPts = 0;
+        assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Strenght\n");
-        assPts = input.nextInt();
+        assSkiPts = input.nextInt();
 
-        if (assPts > skillPts) {
+        if (assSkiPts > skillPts) {
             if (skillPts == 0) {
                 ranOuttaPoints();
             }
 
-            System.out.println(  "\n    You cannot assign " + assPts + " points to Strenght."
+            System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Strenght."
                                 +"\n    You have " + skillPts + " points available."
             );
             assignStrPts();
 
-        } else if (assPts < 0) {
+        } else if (assSkiPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
             assignStrPts();
 
         }else if (skillPts > 0){
-            skillPts -= assPts;
-            pStrenght += assPts;
-            assPts = 0;
+            skillPts -= assSkiPts;
+            pStrenght += assSkiPts;
+            assSkiPts = 0;
             System.out.println("\n    Your Strenght is now at "+ pStrenght + "\n");
 
         } else {
@@ -183,37 +193,37 @@ public class Nordverden {
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
-            case "2": pCustomizeStats(); break;
+            case "2": customizeStats(); break;
             case "1": assignSpePts(); break;
             default: System.out.println("   Invalid input."); assignStrPts();
         }
     }
 
     static void assignSpePts() {
-        assPts = 0;
+        assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Speech\n");
-        assPts = input.nextInt();
+        assSkiPts = input.nextInt();
 
-        if (assPts > skillPts) {
+        if (assSkiPts > skillPts) {
             if (skillPts == 0) {
                 ranOuttaPoints();
             }
 
-            System.out.println(  "\n    You cannot assign " + assPts + " points to Speech."
+            System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Speech."
                                 +"\n    You have " + skillPts + " points available."
             );
             assignSpePts();
 
-        } else if (assPts < 0) {
+        } else if (assSkiPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
             assignSpePts();
 
         }else if (skillPts > 0){
-            skillPts -= assPts;
-            pSpeech += assPts;
-            assPts = 0;
+            skillPts -= assSkiPts;
+            pSpeech += assSkiPts;
+            assSkiPts = 0;
             System.out.println("\n    Your Speech is now at "+ pSpeech + "\n");
 
         } else {
@@ -227,37 +237,37 @@ public class Nordverden {
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
-            case "2": pCustomizeStats(); break;
+            case "2": customizeStats(); break;
             case "1": assignStaPts(); break;
             default: System.out.println("   Invalid input."); assignStrPts();
         }
     }
 
     static void assignStaPts() {
-        assPts = 0;
+        assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Stamina\n");
-        assPts = input.nextInt();
+        assSkiPts = input.nextInt();
 
-        if (assPts > skillPts) {
+        if (assSkiPts > skillPts) {
             if (skillPts == 0) {
                 ranOuttaPoints();
             }
 
-            System.out.println(  "\n    You cannot assign " + assPts + " points to Stamina."
+            System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Stamina."
                                 +"\n    You have " + skillPts + " points available."
             );
             assignStaPts();
 
-        } else if (assPts < 0) {
+        } else if (assSkiPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
             assignStaPts();
 
         }else if (skillPts > 0){
-            skillPts -= assPts;
-            pStamina += assPts;
-            assPts = 0;
+            skillPts -= assSkiPts;
+            pStamina += assSkiPts;
+            assSkiPts = 0;
             System.out.println("\n    Your Stamina is now at "+ pStamina + "\n");
 
         } else {
@@ -271,37 +281,37 @@ public class Nordverden {
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
-            case "2": pCustomizeStats(); break;
+            case "2": customizeStats(); break;
             case "1": assignSorPts(); break;
             default: System.out.println("   Invalid input."); assignStrPts();
         }
     }
 
     static void assignSorPts() {
-        assPts = 0;
+        assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Sorcery\n");
-        assPts = input.nextInt();
+        assSkiPts = input.nextInt();
 
-        if (assPts > skillPts) {
+        if (assSkiPts > skillPts) {
             if (skillPts == 0) {
                 ranOuttaPoints();
             }
 
-            System.out.println(  "\n    You cannot assign " + assPts + " points to Sorcery."
+            System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Sorcery."
                                 +"\n    You have " + skillPts + " points available."
             );
             assignSorPts();
 
-        } else if (assPts < 0) {
+        } else if (assSkiPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
             assignSorPts();
 
         }else if (skillPts > 0){
-            skillPts -= assPts;
-            pSorcery += assPts;
-            assPts = 0;
+            skillPts -= assSkiPts;
+            pSorcery += assSkiPts;
+            assSkiPts = 0;
             System.out.println("\n    Your Sorcery is now at "+ pSorcery + "\n");
 
         } else {
@@ -315,37 +325,37 @@ public class Nordverden {
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
-            case "2": pCustomizeStats(); break;
+            case "2": customizeStats(); break;
             case "1": assignSnePts(); break;
             default: System.out.println("   Invalid input."); assignStrPts();
         }
     }
 
     static void assignSnePts() {
-        assPts = 0;
+        assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Sneak\n");
-        assPts = input.nextInt();
+        assSkiPts = input.nextInt();
 
-        if (assPts > skillPts) {
+        if (assSkiPts > skillPts) {
             if (skillPts == 0) {
                 ranOuttaPoints();
             }
 
-            System.out.println(  "\n    You cannot assign " + assPts + " points to Sneak."
+            System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Sneak."
                                 +"\n    You have " + skillPts + " points available."
             );
             assignSnePts();
 
-        } else if (assPts < 0) {
+        } else if (assSkiPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
             assignSnePts();
 
         }else if (skillPts > 0){
-            skillPts -= assPts;
-            pSneak += assPts;
-            assPts = 0;
+            skillPts -= assSkiPts;
+            pSneak += assSkiPts;
+            assSkiPts = 0;
             System.out.println("\n    Your Sneak is now at "+ pSneak + "\n");
 
         } else {
@@ -359,33 +369,78 @@ public class Nordverden {
         playerSelection();
         switch(pSel) {
             case "2": confirmStats(); break;
-            case "1": pCustomizeStats(); break;
+            case "1": customizeStats(); break;
             default: System.out.println("   Invalid input."); assignStrPts();
         }
     }
 
-    static void pCustomizeStats() {
-        assPts = 0;
-        System.out.println("    Here you will be able to modify your character's stats."
-                            + "\n    First assign up to 50 points to your skills"
-        );
+    static void customizeStats() {
+        assSkiPts = 0;
 
-        System.out.println("    Which Skill would you like to modify?"
-                            + "\n\n1. Strenght ("+ pStrenght +"/100) [10 recommended]"
-                            + "\n2. Speech ("+ pSpeech +"/100) [10 recommended]"
-                            + "\n3. Stamina ("+ pStamina +"/100) [30 recommended]"
-                            + "\n4. Sorcery ("+ pSorcery +"/100)"
-                            + "\n5. Sneak ("+ pSneak +"/100)\n"
-        );
+        if (pName.equals("")) {
+            System.out.println("\n__________________________________________________\n");
+            System.out.println("    What is your character's name?\n");
 
-        playerSelection();
-        switch(pSel) {
-            case "1": assignStrPts(); break;
-            case "2": assignSpePts(); break;
-            case "3": assignStaPts(); break;
-            case "4": assignSorPts(); break;
-            case "5": assignSnePts(); break;
-            default: System.out.println("\n         Are 5 buttons too much for you?\n"); CharacterSelection();
+            playerSelection();
+            pName = pSel;
+
+            System.out.println("\n    " + pName + " is your character's name.\n"
+                                + "\n1. Confirm name\n2. Change name\n"
+            
+            );
+            
+            playerSelection();
+            switch(pSel) {
+                case "2": pName = ""; customizeStats(); break;
+                case "1": break;
+                default: System.out.println("\n       No\n");
+            }
+        }
+
+        if (proSub.equals("")) {
+            System.out.println("\n    Which pronouns does your character go by?\n"
+                                + "\n1. He/Him/His\n2. She/Her/Her\n3. They/Them/Their\n4. Just use name\n"
+            );
+
+            playerSelection();
+            switch(pSel) {
+                case "1": proSub = "he"; proObj = "him"; proPos = "his"; break;
+                case "2": proSub = "she"; proObj = "her"; proPos = "her"; break;
+                case "3": proSub = "they"; proObj = "them"; proPos = "their"; break;
+                case "4": proSub = pName; proObj = pName; proPos = (pName + "'s"); break;
+                default: System.out.println("\n       Sorry that won't work\n"); customizeStats();
+            }
+
+            System.out.println("\n    This is an example of your selection:\n\n");
+            System.out.println("    The tavern was lively until " + proSub 
+                                + " walked in and pulled out " + proPos + " sword."
+                                +"\n    Everyone was terrified of " + proObj + ".\n"
+            );
+
+            System.out.println("\n__________________________________________________\n");
+        }
+
+        if (skillPts > 0) {
+            System.out.println("\n    You have " + skillPts + " skill points to spend.");
+            System.out.println("    Which Skill would you like to modify?"
+                                + "\n\n1. Strenght ("+ pStrenght +"/100) [10 recommended]"
+                                + "\n2. Speech ("+ pSpeech +"/100) [10 recommended]"
+                                + "\n3. Stamina ("+ pStamina +"/100) [30 recommended]"
+                                + "\n4. Sorcery ("+ pSorcery +"/100)"
+                                + "\n5. Sneak ("+ pSneak +"/100)\n"
+            );
+
+            playerSelection();
+            switch(pSel) {
+                case "1": assignStrPts(); break;
+                case "2": assignSpePts(); break;
+                case "3": assignStaPts(); break;
+                case "4": assignSorPts(); break;
+                case "5": assignSnePts(); break;
+                default: System.out.println("\n         Are 5 buttons too much for you?\n"); customizeStats();
+            }
+        } else if (resistPts > 0) {
+            System.out.println("{Placeholder}");
         }
 
     }
@@ -431,7 +486,7 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "2": pCustomizeStats(); break;
+            case "2": customizeStats(); break;
             case "1": playerStatsDisplay(); CharacterCreation(); break;
             default: System.out.println("\nC'mon m8 it's 2 buttons\n"); CharacterSelection();
         }
@@ -448,7 +503,7 @@ public class Nordverden {
                             + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
                             + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
                             + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.005.100224"
+                            + "\n                                       Version 0.006.100324"
                             + "\n" 
         );
 

@@ -19,3 +19,9 @@ Update 8 --- Oct. 3rd, 2024:
 * List of things needed would be too long to include so ill include the link to the spreadsheet of ideas below
 * Spreadsheet of ideas: https://docs.google.com/spreadsheets/d/1skmt_pbT3vvZ0yztQ135bosPSbpcWVjASjwLznJw5q8/edit?usp=sharing
 * Hopefully I can finish the important bits by the end of November
+
+Update 9 --- Oct. 4th, 2024:
+* Started work on damage multipliers
+* Fixed resistance bug that cause the game to crash
+* Still haven't fixed it fully it just works with decimals now
+* Short update cus I gotta go to sleep its 2:12 rn

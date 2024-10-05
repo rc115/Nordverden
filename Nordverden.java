@@ -297,13 +297,37 @@ public class Nordverden {
                                 + "\n    Frost Resistance ("+ pFrostRes + ")"
             );
             System.out.println("\n    Are you happy with these or would you like to reset your resistances?\n"
-                                + "\n1. Confirm\n2. Reset"
+                                + "\n1. Confirm\n2. Reset\n"
             );
 
             playerSelection();
             switch (pSel) {
-                case "2": resetSkills(); break;
+                case "2": resetResists(); break;
                 case "1": conResists = true; break;
+                default: System.out.println("\n        Nope"); customizeStats();
+            }
+        }
+        
+        // Confirms the character's damage multipliers
+        if ((damagePts == 0) && (conDamage == false)){
+            System.out.println("\n____________________________________________________________________________________________________\n");
+            System.out.println("\n    You have run out of damage points.\n");
+            System.out.println("\n    Your damage multipliers are:"
+                                + "\n\n    Unarmed Damage ("+ pUnarmedDmg + ")"
+                                + "\n    Bladed Damage ("+ pBladeDmg + ")"
+                                + "\n    Blunt Damage ("+ pBluntDmg + ")"
+                                + "\n    Heavy Weapons ("+ pHeavyDmg + ")"
+                                + "\n    Magic Damage ("+ pMagicDmg + ")"
+                                + "\n    Ranged Damage ("+ pRangedDmg + ")"
+            );
+            System.out.println("\n    Are you happy with these or would you like to reset your dmg multipliers?\n"
+                                + "\n1. Confirm\n2. Reset\n"
+            );
+
+            playerSelection();
+            switch (pSel) {
+                case "2": resetDmgMults(); break;
+                case "1": conDamage = true; break;
                 default: System.out.println("\n        Nope"); customizeStats();
             }
         }
@@ -348,8 +372,48 @@ public class Nordverden {
                 case "4": assPoisonResPts(); break;
                 case "5": assFireResPts(); break;
                 case "6": assFrostResPts(); break;
-                default: System.out.println("\n         Are 5 buttons too much for you?\n"); customizeStats();
+                default: System.out.println("\n         not gonna do that\n"); customizeStats();
             }
+        } else if (damagePts > 0) {
+            System.out.println("\n    You have " + damagePts + " damage points to spend.");
+            System.out.println("    Which damage multiplier would you like to modify?"
+                                + "\n\n1. Unarmed Damage ("+ pUnarmedDmg +")"
+                                + "\n2. Bladed Damage ("+ pBladeDmg +") [1.0 Recommended]"
+                                + "\n3. Blunt Damage ("+ pBluntDmg +") [1.0 recommended]"
+                                + "\n4. Heavy Weapons ("+ pHeavyDmg +")"
+                                + "\n5. Magic Damage ("+ pMagicDmg +")"
+                                + "\n6. Ranged Damage ("+ pRangedDmg +")\n"
+            );
+
+            playerSelection();
+            switch(pSel) {
+                case "1": assUnarmedDmgPts(); break;
+                case "2": assBladedDmgPts(); break;
+                case "3": assBluntDmgPts(); break;
+                case "4": assHeavyDmgPts(); break;
+                case "5": assMagicDmgPts(); break;
+                case "6": assRangedDmgPts(); break;
+                default: System.out.println("\n         cannot do that for some reason\n"); customizeStats();
+            }
+        } else if (conSkills == true && conResists == true && conDamage == true) {
+            System.out.println("\n    You have finished setting your character's stats."
+                                + "\n    These are your finalized character stats:\n"
+                                + pStatsDisplay
+                                + "\n\n    Are you happy with these or do you want to reset them?"
+                                + "\n    WARNING: You will not be able to reset your stats for a while.\n"
+                                + "\n1. Confirm Final Stats\n2. Reset Stats\n"
+            );
+
+            playerSelection();
+            switch (pSel) {
+                case "2":
+                    resetAllStats();
+                    break;
+            
+                default:
+                    break;
+            }
+            
         }
 
     }
@@ -412,7 +476,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Strenght."
-                                +"\n    You have " + skillPts + " points available."
+                                +"\n    You have " + skillPts + " skill points available."
             );
             assignStrPts();
 
@@ -426,7 +490,8 @@ public class Nordverden {
             skillPts -= assSkiPts;
             pStrenght += assSkiPts;
             assSkiPts = 0;
-            System.out.println("\n    Your Strenght is now at "+ pStrenght + "\n");
+            System.out.println("\n    Your Strenght is now at "+ pStrenght);
+            System.out.println("\n    You have " + skillPts + " skill points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
@@ -456,7 +521,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Speech."
-                                +"\n    You have " + skillPts + " points available."
+                                +"\n    You have " + skillPts + " skill points available."
             );
             assignSpePts();
 
@@ -471,6 +536,7 @@ public class Nordverden {
             pSpeech += assSkiPts;
             assSkiPts = 0;
             System.out.println("\n    Your Speech is now at "+ pSpeech + "\n");
+            System.out.println("\n    You have " + skillPts + " skill points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
@@ -500,7 +566,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Stamina."
-                                +"\n    You have " + skillPts + " points available."
+                                +"\n    You have " + skillPts + " skill points available."
             );
             assignStaPts();
 
@@ -515,6 +581,7 @@ public class Nordverden {
             pStamina += assSkiPts;
             assSkiPts = 0;
             System.out.println("\n    Your Stamina is now at "+ pStamina + "\n");
+            System.out.println("\n    You have " + skillPts + " skill points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
@@ -544,7 +611,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Sorcery."
-                                +"\n    You have " + skillPts + " points available."
+                                +"\n    You have " + skillPts + " skill points available."
             );
             assignSorPts();
 
@@ -559,6 +626,7 @@ public class Nordverden {
             pSorcery += assSkiPts;
             assSkiPts = 0;
             System.out.println("\n    Your Sorcery is now at "+ pSorcery + "\n");
+            System.out.println("\n    You have " + skillPts + " skill points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
@@ -588,7 +656,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assSkiPts + " points to Sneak."
-                                +"\n    You have " + skillPts + " points available."
+                                +"\n    You have " + skillPts + " skill points available."
             );
             assignSnePts();
 
@@ -603,6 +671,7 @@ public class Nordverden {
             pSneak += assSkiPts;
             assSkiPts = 0;
             System.out.println("\n    Your Sneak is now at "+ pSneak + "\n");
+            System.out.println("\n    You have " + skillPts + " skill points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
@@ -633,7 +702,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assResPts + " points to Bladed Dmg. Res."
-                                +"\n    You have " + resistPts + " points available."
+                                +"\n    You have " + resistPts + " resistance points available."
             );
             assBladedResPts();
 
@@ -648,13 +717,14 @@ public class Nordverden {
             pBladeRes += assResPts;
             assResPts = 0;
             System.out.println("\n    Your Bladed Damage Resistance is now at "+ pBladeRes + "\n");
+            System.out.println("\n    You have " + resistPts + " resistance points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to move on to modifying Blunt Dmg. Resistance?\n"
-                            + "\n1. Continue to Blunt Res.\n2. Modify other resistances\n3. Confirm stats\n"
+                            + "\n1. Continue to Blunt Res.\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
@@ -677,7 +747,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assResPts + " points to Blunt Dmg. Res."
-                                +"\n    You have " + resistPts + " points available."
+                                +"\n    You have " + resistPts + " resistance points available."
             );
             assBluntResPts();
 
@@ -692,13 +762,14 @@ public class Nordverden {
             pBluntRes += assResPts;
             assResPts = 0;
             System.out.println("\n    Your Blunt Damage Resistance is now at "+ pBluntRes + "\n");
+            System.out.println("\n    You have " + resistPts + " resistance points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to move on to modifying Magic Dmg. Resistance?\n"
-                            + "\n1. Continue to Magic Res.\n2. Modify other resistances\n3. Confirm stats\n"
+                            + "\n1. Continue to Magic Res.\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
@@ -721,7 +792,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assResPts + " points to Magic Dmg. Res."
-                                +"\n    You have " + resistPts + " points available."
+                                +"\n    You have " + resistPts + " resistance points available."
             );
             assMagicResPts();
 
@@ -736,20 +807,21 @@ public class Nordverden {
             pMagicRes += assResPts;
             assResPts = 0;
             System.out.println("\n    Your Magic Damage Resistance is now at "+ pMagicRes + "\n");
+            System.out.println("\n    You have " + resistPts + " resistance points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to move on to modifying Poison Dmg. Resistance?\n"
-                            + "\n1. Continue to Poison Res.\n2. Modify other resistances\n3. Confirm stats\n"
+                            + "\n1. Continue to Poison Res.\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "1": break;
+            case "1": assPoisonResPts(); break;
             default: System.out.println("   Invalid input."); assMagicResPts();
         }
     }
@@ -765,7 +837,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assResPts + " points to Poison Dmg. Res."
-                                +"\n    You have " + resistPts + " points available."
+                                +"\n    You have " + resistPts + " resistance points available."
             );
             assPoisonResPts();
 
@@ -780,13 +852,14 @@ public class Nordverden {
             pPoisonRes += assResPts;
             assResPts = 0;
             System.out.println("\n    Your Poison Damage Resistance is now at "+ pPoisonRes + "\n");
+            System.out.println("\n    You have " + resistPts + " resistance points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to move on to modifying Fire Dmg. Resistance?\n"
-                            + "\n1. Continue to Fire Res.\n2. Modify other resistances\n3. Confirm stats\n"
+                            + "\n1. Continue to Fire Res.\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
@@ -809,7 +882,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assResPts + " points to Fire Dmg. Res."
-                                +"\n    You have " + resistPts + " points available."
+                                +"\n    You have " + resistPts + " resistance points available."
             );
             assFireResPts();
 
@@ -824,13 +897,14 @@ public class Nordverden {
             pFireRes += assResPts;
             assResPts = 0;
             System.out.println("\n    Your Fire Damage Resistance is now at "+ pFireRes + "\n");
+            System.out.println("\n    You have " + resistPts + " resistance points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to move on to modifying Frost Dmg. Resistance?\n"
-                            + "\n1. Continue to Frost Res.\n2. Modify other resistances\n3. Confirm stats\n"
+                            + "\n1. Continue to Frost Res.\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
@@ -853,7 +927,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assResPts + " points to Frost Dmg. Res."
-                                +"\n    You have " + resistPts + " points available."
+                                +"\n    You have " + resistPts + " resistance points available."
             );
             assFrostResPts();
 
@@ -868,13 +942,14 @@ public class Nordverden {
             pFrostRes += assResPts;
             assResPts = 0;
             System.out.println("\n    Your Frost Damage Resistance is now at "+ pFrostRes + "\n");
+            System.out.println("\n    You have " + resistPts + " resistance points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to confirm your Resistances?\n"
-                            + "\n1. Confirm stats\n2. Modify other resistances\n3. Reset resistances\n"
+                            + "\n1. Confirm stats\n2. Modify other stats\n3. Reset resistances\n"
         );
 
         playerSelection();
@@ -898,7 +973,7 @@ public class Nordverden {
             }
 
             System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Unarmed Damage"
-                                +"\n    You have " + damagePts + " points available."
+                                +"\n    You have " + damagePts + " damage points available."
             );
             assUnarmedDmgPts();
 
@@ -913,244 +988,250 @@ public class Nordverden {
             pUnarmedDmg += assDmgPts;
             assDmgPts = 0;
             System.out.println("\n    Your Unarmed Damage Multiplier is now at "+ pUnarmedDmg + "\n");
+            System.out.println("\n    You have " + damagePts + " damage points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
         System.out.println("\n    Would you like to move on to modifying Bladed Damage?\n"
-                            + "\n1. Continue to Bladed Damage\n2. Modify other dmg mulripliers\n3. Confirm stats\n"
+                            + "\n1. Continue to Bladed Damage\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "1": /*assBladedDmgPts();*/ break;
+            case "1": assBladedDmgPts(); break;
             default: System.out.println("   Invalid input."); assUnarmedDmgPts();
         }
     }
-/* 
-    static void assBluntResPts() {
+ 
+    static void assBladedDmgPts() {
         assDmgPts = 0;
-        System.out.println("\n    How many points would you like to assign to Blunt Damage Resistance\n");
+        System.out.println("\n    How many points would you like to assign to Bladed Damage\n");
         assDmgPts = input.nextDouble();
 
         if (assDmgPts > damagePts) {
             if (damagePts == 0) {
-                ranOuttaResPts();
+                ranOuttaDmgPts();
             }
 
-            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Blunt Dmg. Res."
-                                +"\n    You have " + damagePts + " points available."
+            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Bladed Damage"
+                                +"\n    You have " + damagePts + " damage points available."
             );
-            assBluntResPts();
+            assBladedDmgPts();
 
         } else if (assDmgPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
-            assBluntResPts();
+            assBladedDmgPts();
 
         }else if (damagePts > 0){
             damagePts -= assDmgPts;
-            pBluntRes += assDmgPts;
+            pBladeDmg += assDmgPts;
             assDmgPts = 0;
-            System.out.println("\n    Your Blunt Damage Resistance is now at "+ pBladeRes + "\n");
+            System.out.println("\n    Your Bladed Damage is now at "+ pBladeDmg + "\n");
+            System.out.println("\n    You have " + damagePts + " damage points available.\n");
 
         } else {
-            System.out.println("\n\nWhat did you do?\n");
+            System.out.println("\n\n        What did you do?\n");
         }
 
-        System.out.println("\n    Would you like to move on to modifying Magic Dmg. Resistance?\n"
-                            + "\n1. Continue to Magic Res.\n2. Modify other resistances\n3. Confirm stats\n"
+        System.out.println("\n    Would you like to move on to modifying Blunt Damage?\n"
+                            + "\n1. Continue to Blunt Damage\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "1": assMagicResPts(); break;
-            default: System.out.println("   Invalid input."); assBluntResPts();
+            case "1": assBluntDmgPts(); break;
+            default: System.out.println("   Invalid input."); assBladedDmgPts();
         }
     }
 
-    static void assMagicResPts() {
+    static void assBluntDmgPts() {
         assDmgPts = 0;
-        System.out.println("\n    How many points would you like to assign to Magic Damage Resistance\n");
+        System.out.println("\n    How many points would you like to assign to Blunt Damage\n");
         assDmgPts = input.nextDouble();
 
         if (assDmgPts > damagePts) {
             if (damagePts == 0) {
-                ranOuttaResPts();
+                ranOuttaDmgPts();
             }
 
-            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Magic Dmg. Res."
-                                +"\n    You have " + damagePts + " points available."
+            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Dlunt Damage"
+                                +"\n    You have " + damagePts + " damage points available."
             );
-            assMagicResPts();
+            assBluntDmgPts();
 
         } else if (assDmgPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
-            assMagicResPts();
+            assBluntDmgPts();
 
         }else if (damagePts > 0){
             damagePts -= assDmgPts;
-            pMagicRes += assDmgPts;
+            pBluntDmg += assDmgPts;
             assDmgPts = 0;
-            System.out.println("\n    Your Magic Damage Resistance is now at "+ pMagicRes + "\n");
+            System.out.println("\n    Your Blunt Damage is now at "+ pBluntDmg + "\n");
+            System.out.println("\n    You have " + damagePts + " damage points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
-        System.out.println("\n    Would you like to move on to modifying Poison Dmg. Resistance?\n"
-                            + "\n1. Continue to Poison Res.\n2. Modify other resistances\n3. Confirm stats\n"
+        System.out.println("\n    Would you like to move on to modifying Heavy Weapons Damage?\n"
+                            + "\n1. Continue to Heavy Damage\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "1": break;
-            default: System.out.println("   Invalid input."); assMagicResPts();
+            case "1": assHeavyDmgPts(); break;
+            default: System.out.println("   Invalid input."); assBluntDmgPts();
         }
     }
 
-    static void assPoisonResPts() {
+    static void assHeavyDmgPts() {
         assDmgPts = 0;
-        System.out.println("\n    How many points would you like to assign to Poison Damage Resistance\n");
+        System.out.println("\n    How many points would you like to assign to Heavy Weapons Damage?\n");
         assDmgPts = input.nextDouble();
 
         if (assDmgPts > damagePts) {
             if (damagePts == 0) {
-                ranOuttaResPts();
+                ranOuttaDmgPts();
             }
 
-            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Poison Dmg. Res."
-                                +"\n    You have " + damagePts + " points available."
+            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Heavy Damage"
+                                +"\n    You have " + damagePts + " damage points available."
             );
-            assPoisonResPts();
+            assHeavyDmgPts();
 
         } else if (assDmgPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
-            assPoisonResPts();
+            assHeavyDmgPts();
 
         }else if (damagePts > 0){
             damagePts -= assDmgPts;
-            pPoisonRes += assDmgPts;
+            pHeavyDmg += assDmgPts;
             assDmgPts = 0;
-            System.out.println("\n    Your Poison Damage Resistance is now at "+ pPoisonRes + "\n");
+            System.out.println("\n    Your Heavy Weapons Damage is now at "+ pHeavyDmg + "\n");
+            System.out.println("\n    You have " + damagePts + " damage points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
-        System.out.println("\n    Would you like to move on to modifying Fire Dmg. Resistance?\n"
-                            + "\n1. Continue to Fire Res.\n2. Modify other resistances\n3. Confirm stats\n"
+        System.out.println("\n    Would you like to move on to modifying Magic Damage?\n"
+                            + "\n1. Continue to Magic Dmg\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "1": assFireResPts(); break;
-            default: System.out.println("   Invalid input."); assPoisonResPts();
+            case "1": assMagicDmgPts(); break;
+            default: System.out.println("   Invalid input."); assHeavyDmgPts();
         }
     }
 
-    static void assFireResPts() {
+    static void assMagicDmgPts() {
         assDmgPts = 0;
-        System.out.println("\n    How many points would you like to assign to Fire Damage Resistance\n");
+        System.out.println("\n    How many points would you like to assign to Magic Damage\n");
         assDmgPts = input.nextDouble();
 
         if (assDmgPts > damagePts) {
             if (damagePts == 0) {
-                ranOuttaResPts();
+                ranOuttaDmgPts();
             }
 
-            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Fire Dmg. Res."
-                                +"\n    You have " + damagePts + " points available."
+            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Magic Damage"
+                                +"\n    You have " + damagePts + " damage points available."
             );
-            assFireResPts();
+            assMagicDmgPts();
 
         } else if (assDmgPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
-            assFireResPts();
+            assMagicDmgPts();
 
         }else if (damagePts > 0){
             damagePts -= assDmgPts;
-            pFireRes += assDmgPts;
+            pMagicDmg += assDmgPts;
             assDmgPts = 0;
-            System.out.println("\n    Your Fire Damage Resistance is now at "+ pFireRes + "\n");
+            System.out.println("\n    Your Magic Damage is now at "+ pMagicDmg + "\n");
+            System.out.println("\n    You have " + damagePts + " damage points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
-        System.out.println("\n    Would you like to move on to modifying Frost Dmg. Resistance?\n"
-                            + "\n1. Continue to Frost Res.\n2. Modify other resistances\n3. Confirm stats\n"
+        System.out.println("\n    Would you like to move on to modifying Ranged Damage?\n"
+                            + "\n1. Continue to Ranged Damage\n2. Modify other stats\n3. Confirm stats\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "3": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "1": assFrostResPts(); break;
-            default: System.out.println("   Invalid input."); assFireResPts();
+            case "1": assRangedDmgPts(); break;
+            default: System.out.println("   Invalid input."); assMagicDmgPts();
         }
     }
 
-    static void assFrostResPts() {
+    static void assRangedDmgPts() {
         assDmgPts = 0;
-        System.out.println("\n    How many points would you like to assign to Frost Damage Resistance\n");
+        System.out.println("\n    How many points would you like to assign to Ranged Damage\n");
         assDmgPts = input.nextDouble();
 
         if (assDmgPts > damagePts) {
             if (damagePts == 0) {
-                ranOuttaResPts();
+                ranOuttaDmgPts();
             }
 
-            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Frost Dmg. Res."
-                                +"\n    You have " + damagePts + " points available."
+            System.out.println(  "\n    You cannot assign " + assDmgPts + " points to Ranged Damage"
+                                +"\n    You have " + damagePts + " damage points available."
             );
-            assFrostResPts();
+            assRangedDmgPts();
 
         } else if (assDmgPts < 0) {
             System.out.println(  "\n    You cannot assign negative points."
                                 +"\n    If you would like to reset your points you can do that later."
             );
-            assFrostResPts();
+            assRangedDmgPts();
 
         }else if (damagePts > 0){
             damagePts -= assDmgPts;
-            pFrostRes += assDmgPts;
+            pRangedDmg += assDmgPts;
             assDmgPts = 0;
-            System.out.println("\n    Your Frost Damage Resistance is now at "+ pFrostRes + "\n");
+            System.out.println("\n    Your Ranged Damage is now at "+ pRangedDmg + "\n");
+            System.out.println("\n    You have " + damagePts + " damage points available.\n");
 
         } else {
             System.out.println("\n\nWhat did you do?\n");
         }
 
-        System.out.println("\n    Would you like to confirm your Resistances?\n"
-                            + "\n1. Confirm stats\n2. Modify other resistances\n3. Reset resistances\n"
+        System.out.println("\n    Would you like to confirm your stats?\n"
+                            + "\n1. Confirm stats\n2. Modify other statss\n3. Reset Damages\n"
         );
 
         playerSelection();
         switch(pSel) {
             case "1": confirmStats(); break;
             case "2": customizeStats(); break;
-            case "3": resetResists(); break;
-            default: System.out.println("   Invalid input."); assFrostResPts();
+            case "3": resetDmgMults(); break;
+            default: System.out.println("   Invalid input."); assRangedDmgPts();
         }
     }
-*/
+
 // Method that confirms the character's statistics
     static void confirmStats() {
         System.out.println("\n    These are your uncomfirmed stats:\n");
@@ -1259,6 +1340,57 @@ public class Nordverden {
             default: System.out.println("\n         cant do that"); resetSkills();
         }
     }
+
+    static void resetAllStats() {
+        conSkills = false;
+        conResists = false;
+        conDamage = false;
+        System.out.println("\n    Are you sure you want to reset all your stats?\n"
+                            + "    This action is not reversable!\n"
+                            + "\n1. View Stats\n2. Continue Modifying\n3. Reset all stats\n"
+        );
+
+        playerSelection();
+        switch (pSel) {
+            case "3":
+                skillPts = (pStrenght + pSpeech + pStamina + pSorcery + pSneak);
+                pStrenght = 0;
+                pSpeech = 0;
+                pStamina = 0;
+                pSorcery = 0;
+                pSneak = 0;
+
+                resistPts = (pBladeRes + pBluntRes + pMagicRes + pPoisonRes + pFireRes + pFrostRes);
+                pBladeRes = 0;
+                pBluntRes = 0;
+                pMagicRes = 0;
+                pPoisonRes = 0;
+                pFireRes = 0;
+                pFrostRes = 0;
+
+                damagePts = (pBladeDmg + pBluntDmg + pMagicDmg + pUnarmedDmg + pHeavyDmg + pRangedDmg);
+                pBladeDmg = 0;
+                pBluntDmg = 0;
+                pMagicDmg = 0;
+                pUnarmedDmg = 0;
+                pHeavyDmg = 0;
+                pRangedDmg = 0;
+
+                System.out.println("\n  All of your character's stats have been reset. You now have:\n    " 
+                                    + skillPts 
+                                    + " skill points to assign.\n    "
+                                    + resistPts 
+                                    + " resistance points to assign.\n    "
+                                    + damagePts 
+                                    + " damage points to assign.\n"
+                                    
+                );
+            case "2": customizeStats(); break;
+            case "1": playerStatsDisplay(); resetSkills(); break;
+            default: System.out.println("\n         Nah"); resetSkills();
+        }
+    }
+
 //
 
 
@@ -1272,7 +1404,7 @@ public class Nordverden {
                             + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
                             + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
                             + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.009.100424"
+                            + "\n                                       Version 0.010.100424"
                             + "\n" 
         );
 

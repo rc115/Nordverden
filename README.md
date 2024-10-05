@@ -25,3 +25,9 @@ Update 9 --- Oct. 4th, 2024:
 * Fixed resistance bug that cause the game to crash
 * Still haven't fixed it fully it just works with decimals now
 * Short update cus I gotta go to sleep its 2:12 rn
+
+Update 10 --- Oct. 4th, 2024
+* Finished the stat distribution
+* Game breaking bugs still include invalid input crashing
+* 3/5 parts of the character creator are finished now
+* 3/30 modules finished (1.5k lines of code for 10% of the game... yay.)

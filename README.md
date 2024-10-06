@@ -31,3 +31,21 @@ Update 10 --- Oct. 4th, 2024
 * Game breaking bugs still include invalid input crashing
 * 3/5 parts of the character creator are finished now
 * 3/30 modules finished (1.5k lines of code for 10% of the game... yay.)
+
+Update 11 --- Oct. 6th, 2024
+* Huge update changed most of the functions for stat distribution
+* Finally finished the majority of the character creator
+   * Name & Pronouns
+   * Skills
+   * Resistances and damage multipliers
+   * Class and Race
+   * Karma
+   * Started work on starting equipment
+   * Need to start work on starting location
+* Added random (it needed to be done eventually anyway)
+* Cleaned up a lot of functions
+* Game breaking bug(invalid input on stat distribution) is not a priority rn
+* Started work on the combat system
+* #1 priority rn is getting the inventory system working (might need to change class equipment later)
+* changed the character creator to be more intuitive
+* might be forgetting some stuff but thats most of it :)

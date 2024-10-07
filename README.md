@@ -49,3 +49,13 @@ Update 11 --- Oct. 6th, 2024
 * #1 priority rn is getting the inventory system working (might need to change class equipment later)
 * changed the character creator to be more intuitive
 * might be forgetting some stuff but thats most of it :)
+
+Update 12 --- Oct. 7th, 2024
+* Fixed infinite loop bug in the character creator
+* Added arrays (didn't even think I had to ngl)
+* Started work on the inventory management system
+* Started work on the combat system
+* Added all of the weapons
+* Added functions to make weapons work
+* Need to fix the class system to work with the ims
+* Cleaned up comments

@@ -16,21 +16,30 @@
 * 
 */
 
-// Import statements
+
 import java.util.Scanner;
 import java.util.Random;
+import java.util.ArrayList;
 
 
 public class Nordverden {
-// input object
-    static Scanner input = new Scanner(System.in); 
-// random object
+    static Scanner input = new Scanner(System.in);
     static Random rand = new Random();
-//
 
+// --->   VarHell Starts here  <---
+// (Variables are static to be used globally)
 
-// - - >     Variables     < - -
-// Empty string variables needed in certain functions
+    // String Variables
+    static String welcomeMsg = ( "\n"
+        + "\n    Welcome to"
+        + "\n          __              _                   _            "
+        + "\n       /\\ \\ \\___  _ __ __| |_   _____ _ __ __| | ___ _ __  "
+        + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
+        + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
+        + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
+        + "\n                                       Version 0.012.100724"
+        + "\n" 
+    );
     static String pSel = "";
     static String pStatsDisplay = "";
     static String pStatsInfo = "";
@@ -41,12 +50,12 @@ public class Nordverden {
     static String pRace = "";
     static String pClass = "";
     static String pLocation = "";
-//
-// All of the variables for the character's statistics
+
     static int pLevel = 1; //character's level. +10 skill pointsMax lvl 46 (lvl 5 = 1000 total xp needed)
     static int pCurXp = 0; // current expirience points
     static int pNextLvl = (10*(pLevel*pLevel) + 90); // ammount of xp needed to level up
     static int pHealth = 100; // character's health
+    static int pMaxHealth = 100;
     static int pKarma = 0;
 
     static boolean pRaceSet = false; // var for if the player set their character's race
@@ -64,7 +73,6 @@ public class Nordverden {
     static boolean pDragonborn = false;
 
     static int pLives = 1; // ammount of lives the character has
-    static int pInv = 5; // player inventory space
     static int pGold = 5; // Nordverden currency
     static int pCoins = 0; // Empirian currency
     static int pSchmeeps = 0; // Nekohito currency
@@ -77,21 +85,24 @@ public class Nordverden {
     static int schmeepToGold = (schmeepsToConvert/100); // calculation for schmeep to gold conversion
 
     static int pLuck = 0; // luck variable (adds to all rolls)
-    static boolean conFinalStats = false;
+    static boolean conFinalStats = false; // confirms all stats
 
     static int skillPts = 50; // total unspent skill points
     static int assSkiPts = 0; // skill points player wants to assign
     static boolean conSkills = false; // confirms player's skill choices
+    static double resistPts = 3.0; // total unspent resistance points
+    static double assResPts = 0.0; // resistance points the player wants to assign
+    static boolean conResists = false; // confirms the player's resistances 
+    static double damagePts = 2.0; // tatal unspent damage points
+    static double assDmgPts = 0.0; // damage points the player wants to assign
+    static boolean conDamage = false; // confirms the player's damage
+
     // player character's skills
     static int pStrenght = 0;
     static int pSpeech = 0;
     static int pStamina = 0;
     static int pSorcery = 0;
     static int pSneak = 0;
-
-    static double resistPts = 3.0; // total unspent resistance points
-    static double assResPts = 0.0; // resistance points the player wants to assign
-    static boolean conResists = false; // confirms the player's resistances 
     // player character's damage resistance
     static double pBladeRes = 0.0;
     static double pBluntRes = 0.0;
@@ -99,10 +110,6 @@ public class Nordverden {
     static double pPoisonRes = 0.0;
     static double pFireRes = 0.0;
     static double pFrostRes = 0.0;
-
-    static double damagePts = 2.0; // tatal unspent damage points
-    static double assDmgPts = 0.0; // damage points the player wants to assign
-    static boolean conDamage = false; // confirms the player's damage
     // player character's damage multipliers
     static double pUnarmedDmg = 0.0;
     static double pBladeDmg = 0.0;
@@ -111,66 +118,90 @@ public class Nordverden {
     static double pMagicDmg = 0.0;
     static double pRangedDmg = 0.0;
 
+    // Variables for IMS
+    static int pInvSpace = 5; // player inventory space
+    static ArrayList<String> invItems = new ArrayList<>(); // items in inventory
+
+    // Bakpacks
+    static boolean backpackEquiped = false;
     static boolean bSmallBag = false; // +2 inventory
     static boolean bRugsack = false; // +4 inventory
     static boolean bJanksportBackpack = false; // +5 inventory
     static boolean bLargeBackpack = false; // +10 inventory
     static boolean bQuatumBag = false; // +95 inventory
-//
-//Combat Variables
+
+    //Combat Variables
+    static boolean weaponEquipped = false;
+    static String pWeapon = "";
     static int combatStamina = pStamina;
     static int pHitChance = 0; // Character's hit chance (1-20) [<10 hits]
     static int pDisToTar = 0; // Character's distance to targeted enemy (>=2 is Melee <2 isRanged)
     static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
     static String pWeaponType = "none"; // type of weapon character is using
-    static String pDmgType = "none";
     static double dmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
     static double dmgRes = 0.0; // Character's damage resistance (depens on damage type)
     static int eDmgToP = 0; // damage done to player if enemy hits
 
-    static double pDamageCalc = ((pWeaponDmg*dmgMult) + (pStrenght*0.25));
+    static double pDamageCalc = ((pWeaponDmg*dmgMult) + (pStrenght*0.25)); // calculates character's damage
     static double pHurtCalc = (pHealth - (eDmgToP/(dmgRes+0.5)));
     
     static int eHitChance = 0; // Enemy's hit chance (1-20) [<10 hits]
     static int e1DisToP = 0; // Enemy(1) distance to player (>=2 melee, <2 ranged)
     static int e2DisTop = 0; // Enemy(2) distance to player (>=2 melee, <2 ranged)
     static int e3DisTop = 0; // Enemy(3) distance to player (>=2 melee, <2 ranged)
+
     // Enemy(s) health (chages depending on enemy)
-    static int e1Health = 0; 
-    static int e2Health = 0; 
-    static int e3Health = 0; 
+    static int e1Health = 0;
+    static int e2Health = 0;
+    static int e3Health = 0;
+
     // Enemy(s) damage (chages depending on enemy) [T1 = 10, T2 = 20, ... T5 = 50]
     static int e1Damage = 0; 
     static int e2Damage = 0;
     static int e3Damage = 0;
+
     // Enemy(s) name(s) [not important but still]
     static String e1Name = "";
     static String e2Name = "";
     static String e3Name = "";
-    
+
+    // Long Ahh List of Weapons
+    static ArrayList<String> t1Weapons = new ArrayList<>();
+    static ArrayList<String> t2Weapons = new ArrayList<>();
+    static ArrayList<String> t3Weapons = new ArrayList<>();
+    static ArrayList<String> t4Weapons = new ArrayList<>();
+    static ArrayList<String> t5Weapons = new ArrayList<>();
+
+
+// -->   End of VarHell   <---
 //
 
 
-// - - >     Misc. Functions     < - -
-// Function that takes the players's input
+
+// --->   Function Junction   <---
+// 
+
+
+
+    // Function that takes the players's input
     static void playerSelection(){
         pSel = "";
         pSel = input.next();
 
         if (pSel.equals("exit")) {
             System.out.println("\nGoodbye\n");
+            input.close();
             System.exit(0);
         }
 
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
-//
-// Functions that display character stats
+    // Functions that display character stats
     static void playerStatsDisplay() {
         pStatsDisplay = ("\n\n    Level ("+ pLevel +") ["+ pCurXp +"/"+ pNextLvl +" xp]"
-            + "\n    Health ("+ pHealth +")"
-            + "\n    Inventory Space ("+ pInv +")"
+            + "\n    Health ("+ pHealth +"/" + pMaxHealth + ")"
+            + "\n    Inventory Space ("+ pInvSpace +")"
             + "\n    Gold ("+ pGold +")"
             + "\n    Luck ("+ pLuck +")"
             + "\n    Class (" + pClass +")"
@@ -199,7 +230,6 @@ public class Nordverden {
 
         System.out.println(pStatsDisplay);
     }
-
     static void playerStatsInfo() {
         pStatsInfo = (
             "\n\n   Level                   [Level determines the ammount of points you have to distribute]\n"
@@ -238,11 +268,80 @@ public class Nordverden {
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
-//
 
 
-// - - >     Charactor creator     < - -
-// Function that initializes the character creator
+    // --->   Inventory Management System   <---
+
+    // Function that places items in the character's inventory
+    static void placeInInv(String item) {
+        System.out.println("\n    You found a " + item + "!\n");
+        if (invItems.size() < pInvSpace) {
+            invItems.add(item);
+        } else {
+            System.out.println("\n    Unfortunately you dropped the " + item + " and lost it");
+        }
+
+        item = "";
+    }
+
+    // Function that displays items in the character's inventory
+    public static void showInventory() {
+        System.out.println("\n    Inventory: " + invItems);
+        System.out.println("    Available slots: " + (pInvSpace - invItems.size()) + "\n");
+    }
+
+    // Function for if the player equips a weapon
+    public static void pEquipWeapon(String item) {
+
+    }
+
+    //Function that equips a backpack
+    static void equipBackpack() {
+        if (backpackEquiped == false) {
+            if (bSmallBag == true) {
+                System.out.println("    " + pName + " has equiped a Small Bag\n");
+                pInvSpace += 2;
+            } else if (bRugsack == true) {
+                System.out.println("   " + pName + " has equiped a Rugsack\n");
+                pInvSpace += 4;
+            }
+            
+            backpackEquiped = true;
+        } else if (backpackEquiped == true) {
+            System.out.println("    " + pName + " already has a backpack equipped.\n"
+                + "    Would you like to uneqip it?"
+            );
+            System.out.println("1. Keep Current backpack.\n2. Unequip backpack");
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    break;
+                case "2": 
+                    if (bSmallBag == true) {
+                        System.out.println("    " + pName + " has unequiped the Small Bag");
+                        pInvSpace -= 2;
+                        bSmallBag = false;
+                    } else if (bRugsack == true) {
+                        System.out.println("   " + pName + " has unequiped the Rugsack");
+                        pInvSpace -= 4;
+                        bRugsack = false;
+                    }
+                    backpackEquiped = false;
+                    equipBackpack();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    // ---> End of IMS   <---
+
+
+
+    // --->   Character Creator   <---
+
+    // Function that initializes the character creator
     static void characterSelection() {
         System.out.println("\n    Would you like to create a custom character or choose a premade character?\n"
             + "\n1. Create a Custom Character\n2. Choose a Preset\n"
@@ -275,7 +374,7 @@ public class Nordverden {
         }
     }
 
-// Function that modifies the character's stats   <<----- Very Important for character creator
+    // Function that modifies the character's stats   <<----- Very Important for character creator
     static void customizeStats() {
         assSkiPts = 0;
 
@@ -541,7 +640,7 @@ public class Nordverden {
         }
     }
 
-// Functions for if the player runs out of points
+    // Functions for if the player runs out of points
     static void ranOuttaSkiPts() {
         System.out.println("\n    You have run out of skill points to spend"
             + "\n   You can either confirm your stats or reset your skills\n"
@@ -556,7 +655,6 @@ public class Nordverden {
             default: System.out.println("\n         huh\n"); ranOuttaSkiPts();
         }
     }
-
     static void ranOuttaResPts() {
         System.out.println("\n    You have run out of resitance points to spend"
             + "\n   You can either confirm your stats or reset your resistances\n"
@@ -571,7 +669,6 @@ public class Nordverden {
             default: System.out.println("\n         huh\n"); ranOuttaResPts();
         }
     }
-
     static void ranOuttaDmgPts() {
         System.out.println("\n    You have run out of damage points to spend"
             + "\n   You can either confirm your stats or reset your dmg multipliers\n"
@@ -587,7 +684,7 @@ public class Nordverden {
         }
     }
 
-// Functions for assigning points to skills
+    // Functions for assigning points to skills
     static void assignStrPts() {
         assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Strenght\n");
@@ -623,7 +720,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assignSpePts() {
         assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Speech\n");
@@ -659,7 +755,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assignStaPts() {
         assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Stamina\n");
@@ -695,7 +790,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assignSorPts() {
         assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Sorcery\n");
@@ -731,7 +825,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assignSnePts() {
         assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Sneak\n");
@@ -768,7 +861,7 @@ public class Nordverden {
         customizeStats();
     }
 
-// Functions for assigning points to resistances
+    // Functions for assigning points to resistances
     static void assBladedResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Bladed Damage Resistance\n");
@@ -804,7 +897,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assBluntResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Blunt Damage Resistance\n");
@@ -840,7 +932,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assMagicResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Magic Damage Resistance\n");
@@ -876,7 +967,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assPoisonResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Poison Damage Resistance\n");
@@ -912,7 +1002,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assFireResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Fire Damage Resistance\n");
@@ -948,7 +1037,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assFrostResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Frost Damage Resistance\n");
@@ -985,7 +1073,7 @@ public class Nordverden {
         customizeStats();
     }
 
-// Functions for assigning points to damage mults.
+    // Functions for assigning points to damage mults.
     static void assUnarmedDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Unarmed Damage\n");
@@ -1021,7 +1109,6 @@ public class Nordverden {
 
         customizeStats();
     }
- 
     static void assBladedDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Bladed Damage\n");
@@ -1057,7 +1144,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assBluntDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Blunt Damage\n");
@@ -1093,7 +1179,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assHeavyDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Heavy Weapons Damage?\n");
@@ -1129,7 +1214,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assMagicDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Magic Damage\n");
@@ -1165,7 +1249,6 @@ public class Nordverden {
 
         customizeStats();
     }
-
     static void assRangedDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Ranged Damage\n");
@@ -1202,7 +1285,7 @@ public class Nordverden {
         customizeStats();
     }
 
-// Functions that resets the character's stats
+    // Functions that resets the character's stats
     static void resetSkills() {
         conSkills = false;
         System.out.println("\n    Are you sure you want to reset your skills?\n"
@@ -1228,7 +1311,6 @@ public class Nordverden {
             default: System.out.println("\n         Nah"); resetSkills();
         }
     }
-
     static void resetResists() {
         conResists = false;
         System.out.println("\n    Are you sure you want to reset your resistances?\n"
@@ -1255,7 +1337,6 @@ public class Nordverden {
             default: System.out.println("\n         cant do that"); resetSkills();
         }
     }
-
     static void resetDmgMults() {
         conDamage = false;
         System.out.println("\n    Are you sure you want to reset your damage multipliers?\n"
@@ -1282,7 +1363,6 @@ public class Nordverden {
             default: System.out.println("\n         cant do that"); resetSkills();
         }
     }
-
     static void resetAllStats() {
         conSkills = false;
         conResists = false;
@@ -1333,7 +1413,7 @@ public class Nordverden {
         }
     }
 
-// Function for choosing the character's race
+    // Functions for choosing the character's race
     static void viewRaceInfo() {
         System.out.println("\n____________________________________________________________________________________________________\n");
         System.out.println("\n    These are all the races found in Nordverden:\n\n"
@@ -1347,7 +1427,6 @@ public class Nordverden {
         );
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
-
     static void charRaceSel() {
         System.out.println("\n____________________________________________________________________________________________________\n");
 
@@ -1372,51 +1451,52 @@ public class Nordverden {
             System.out.println("\n        No clue what you did\n");
         }
     }
-
     static void charRaceSet() {
         if (pRace.equals("Verdian")) {
             pFrostRes += 0.5;
             pStrenght += 10;
-            pInv += 1;
+            pInvSpace += 1;
             pVerdian = true;
-            System.out.println("\n    Your character's is now a Vernian");
+            System.out.println("\n    Your character is now a Vernian");
         } else if (pRace.equals("Empirian")) {
             pCoins += 100;
             pSpeech +=10;
             pStrenght += 10;
             pEmpirian = true;
-            System.out.println("\n    Your character's is now a Empirian");
+            System.out.println("\n    Your character is now a Empirian");
         } else if (pRace.equals("Orc")) {
             pBladeRes += 0.5;
             pMagicRes += 0.5;
             pSpeech -= 50;
             pStrenght += 25;
             pOrc = true;
-            System.out.println("\n    Your character's is now a Orc");
+            System.out.println("\n    Your character is now a Orc");
         } else if (pRace.equals("Dark")) {
             pSorcery += 20;
             pFireRes += 0.25;
             pMagicRes += 0.5;
-            pHealth -= 50;
+            pMaxHealth -= 30;
+            pHealth -= 30;
             pDarkElf = true;
-            System.out.println("\n    Your character's is now a Dark Elf");
+            System.out.println("\n    Your character is now a Dark Elf");
         } else if (pRace.equals("Wood")) {
             pSorcery += 10;
             pPoisonRes += 0.25;
             pSpeech += 10;
-            pHealth -= 50;
+            pMaxHealth -= 30;
+            pHealth -= 30;
             pWoodElf = true;
-            System.out.println("\n    Your character's is now a Wood Elf");
+            System.out.println("\n    Your character is now a Wood Elf");
         } else if (pRace.equals("Nekohito")) {
             pSneak += 25;
             pStamina += 10;
             pSorcery += 5;
             pStrenght -= 10;
             pNekohito = true;
-            System.out.println("\n    Your character's is now a Nekohito");
+            System.out.println("\n    Your character is now a Nekohito");
         } else if (pRace.equals("Dragonborn")) {
             pDragonborn = true;
-            System.out.println("\n    Your character's is now a Dragonborn");
+            System.out.println("\n    Your character is now a Dragonborn");
         } else {
             System.out.println("How did you do that?");
         }
@@ -1429,7 +1509,7 @@ public class Nordverden {
                 if (pRace.equals("Vernian")) {
                     pFrostRes -= 0.5;
                     pStrenght -= 10;
-                    pInv -= 1;
+                    pInvSpace -= 1;
                     pVerdian = false;
                 } else if (pRace.equals("Empirian")) {
                     pCoins -= 100;
@@ -1446,13 +1526,15 @@ public class Nordverden {
                     pSorcery -= 20;
                     pFireRes -= 0.25;
                     pMagicRes -= 0.5;
-                    pHealth += 50;
+                    pMaxHealth += 30;
+                    pHealth += 30;
                     pDarkElf = false;
                 } else if (pRace.equals("Wood")) {
                     pSorcery -= 10;
                     pPoisonRes -= 0.25;
                     pSpeech -= 10;
-                    pHealth += 50;
+                    pMaxHealth += 30;
+                    pHealth += 30;
                     pWoodElf = false;
                 } else if (pRace.equals("Nekohito")) {
                     pSneak -= 25;
@@ -1474,7 +1556,7 @@ public class Nordverden {
         }
     }
 
-// Function for choosing the character's class
+    // Functions for choosing the character's class
     static void viewClassInfo() {
         System.out.println("\n____________________________________________________________________________________________________\n");
         System.out.println("\n    These are all the classes you can choose:\n"
@@ -1488,7 +1570,6 @@ public class Nordverden {
         System.out.println("\n____________________________________________________________________________________________________\n");
 
     }
-
     static void charClassSel() {
         System.out.println("\n____________________________________________________________________________________________________\n");
 
@@ -1514,38 +1595,37 @@ public class Nordverden {
 
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
-
     static void charClassSet() {
         if (pClass.equals("Villager")) {
             pSpeech += 15;
             pGold += 3;
-            System.out.println("\n    You are now a Vilager.\n");
+            System.out.println("\n    Your character is now a Vilager.\n");
         } else if (pClass.equals("Warrior")) {
             pStrenght += 15;
-            pInv -= 1;
+            pInvSpace -= 1;
             pWeaponDmg = 10;
             pWeaponType = "Bladed";
-            System.out.println("\n    You are now a Warrior.\n");
+            System.out.println("\n    Your character is now a Warrior.\n");
         } else if (pClass.equals("Tank")) {
             pBladeRes += 1;
             pBluntRes += 1;
-            System.out.println("\n    You are now a Tank.\n");
+            System.out.println("\n    Your character is now a Tank.\n");
         } else if (pClass.equals("Mage")) {
             pSorcery += 15;
-            pInv -= 1;
+            pInvSpace -= 1;
             pWeaponDmg = 10;
             pWeaponType = "Magic";
-            System.out.println("\n    You are now a Mage.\n");
+            System.out.println("\n    Your character is now a Mage.\n");
         } else if (pClass.equals("Archer")) {
             pSneak += 15;
-            pInv -= 1;
+            pInvSpace -= 1;
             pWeaponDmg = 10;
             pWeaponType = "Ranged";
-            System.out.println("\n    You are now a Archer.\n");
+            System.out.println("\n    Your character is now a Archer.\n");
         } else if (pClass.equals("Gambler")) {
             pLuck += 1;
             pGold -= 3;
-            System.out.println("\n    You are now a Gambler.\n");
+            System.out.println("\n    Your character is now a Gambler.\n");
         } else {
             System.out.println("How did you do that?");
         }
@@ -1560,7 +1640,7 @@ public class Nordverden {
                     pGold -= 3;
                 } else if (pClass.equals("Warrior")) {
                     pStrenght -= 15;
-                    pInv += 1;
+                    pInvSpace += 1;
                     pWeaponDmg = 0;
                     pWeaponType = "none";
                 } else if (pClass.equals("Tank")) {
@@ -1568,12 +1648,12 @@ public class Nordverden {
                     pBluntRes -= 1;
                 } else if (pClass.equals("Mage")) {
                     pSorcery -= 15;
-                    pInv += 1;
+                    pInvSpace += 1;
                     pWeaponDmg = 0;
                     pWeaponType = "none";
                 } else if (pClass.equals("Archer")) {
                     pSneak -= 15;
-                    pInv += 1;
+                    pInvSpace += 1;
                     pWeaponDmg = 0;
                     pWeaponType = "none";
                 } else if (pClass.equals("Gambler")) {
@@ -1590,7 +1670,8 @@ public class Nordverden {
             default: System.out.println("Nuh uh"); charClassSet();
         }
     }
-// Function for choosing the character's karma
+
+    //Function for choosing the character's karma
     static void startingKarma() {
         System.out.println("\n    Is your character good, neutral, or bad?");
         System.out.println("\n1. Good\n2. Neutral\n3. Bad\n");
@@ -1604,9 +1685,10 @@ public class Nordverden {
         }
 
         karmaSet = true;
-        customizeStats();
+        customizeStats();        
     }
-// Function for choosing character's starting equipment
+
+    // Function for choosing character's starting equipment
     static void startingEquipment() {
         System.out.println("\n    What will you take with you?\n    Note: You may only take one.\n");
         System.out.println("\n1. Rusty Sword\n2. Wooden Hammer\n3. Handmade Bow\n4. Stick Wand"
@@ -1622,30 +1704,115 @@ public class Nordverden {
             case "5": break;
             case "6": break;
             case "7": break;
-            case "8": pInv += 2; bSmallBag = true; break;
+            case "8": bSmallBag = true; equipBackpack(); break;
             case "9": pGold += ((rand.nextInt(5)) + 1); break;
             default:
         }
 
+        pStartEquip = true;
         customizeStats();
     }
+
+    // --->   End of Character Creator   <---
+
+
+
+    // --->   Combat Functions   <---
+
+    // Function that populates the weapon arrays
+    static void popWeaponArrays() {
+        // Tier 1 Weapons
+        t1Weapons.add("Fists");
+        t1Weapons.add("Rusty Sword");
+        t1Weapons.add("Wooden Hammer");
+        t1Weapons.add("Sledgehammer");
+        t1Weapons.add("Stick Wand");
+        t1Weapons.add("Handmade Bow");
+
+        // Tier 2 Weapons
+        t2Weapons.add("Boxing Gloves");
+        t2Weapons.add("War Sword");
+        t2Weapons.add("Baseball Bat");
+        t2Weapons.add("Woodsplitting Axe");
+        t2Weapons.add("College of Sorcery Wand");
+        t2Weapons.add("Ancient Longbow");
+
+        // Tier 3 Weapons
+        t3Weapons.add("Brass Knuckles");
+        t3Weapons.add("Mass Produced Katana");
+        t3Weapons.add("Mace");
+        t3Weapons.add("Warworn Greatsword");
+        t3Weapons.add("Crystal Staff");
+        t3Weapons.add("Compound Bow");
+
+        // Tier 4 Weapons
+        t4Weapons.add("Push Daggers");
+        t4Weapons.add("Claymore");
+        t4Weapons.add("Flail");
+        t4Weapons.add("Battleaxe");
+        t4Weapons.add("Elfwood Wand");
+        t4Weapons.add("Musket");
+
+        // Tier 5 Weapons
+        t5Weapons.add("Gunpowder Gloves");
+        t5Weapons.add("Nekohito Steel Katana");
+        t5Weapons.add("Veridian Warhammer");
+        t5Weapons.add("Empirian Greatsword");
+        t5Weapons.add("Archmage Staff");
+        t5Weapons.add("Barronn M8-AY .50 Cal Anti-Matiriel Rifle");
+    }
+
+    // Function that sets the weapon type and damage
+    public static void setWeaponStats(String item) {
+        if (t1Weapons.contains(item) || t2Weapons.contains(item) || t3Weapons.contains(item) || t4Weapons.contains(item) || t5Weapons.contains(item)) {
+            // Sets damage based on the tier
+            if (t1Weapons.contains(item)) {
+                pWeaponDmg = 10;
+            } else if (t2Weapons.contains(item)) {
+                pWeaponDmg = 20;
+            } else if (t3Weapons.contains(item)) {
+                pWeaponDmg = 30;
+            } else if (t4Weapons.contains(item)) {
+                pWeaponDmg = 40;
+            } else if (t5Weapons.contains(item)) {
+                pWeaponDmg = 50;
+            } else {
+                pWeaponDmg = 0; // if weapon is not found, no damage
+            }
+
+            // Sets weapon type
+            if (item.equals("Fists") || item.equals("Boxing Gloves") || item.equals("Brass Knuckles") || item.equals("Push Daggers") || item.equals("Gunpowder Gloves")) {
+                pWeaponType = "Unarmed";
+            } else if (item.equals("Rusty Sword") || item.equals("War Sword") || item.equals("Mass Produced Katana") || item.equals("Claymore") || item.equals("Nekohito Steel Katana")) {
+                pWeaponType = "Bladed";
+            } else if (item.equals("Wooden Hammer") || item.equals("Baseball Bat") || item.equals("Mace") || item.equals("Flail") || item.equals("Veridian Warhammer")) {
+                pWeaponType = "Blunt";
+            } else if (item.equals("Sledgehammer") || item.equals("Woodsplitting Axe") || item.equals("Warworn Greatsword") || item.equals("Battleaxe") || item.equals("Empirian Greatsword")) {
+                pWeaponType = "Heavy";
+            } else if (item.equals("Stick Wand") || item.equals("College of Sorcery Wand") || item.equals("Crystal Staff") || item.equals("Elfwood Wand") || item.equals("Archmage Staff")) {
+                pWeaponType = "Magic";
+            } else if (item.equals("Handmade Bow") || item.equals("Ancient Longbow") || item.equals("Compound Bow") || item.equals("Musket") || item.equals("Barronn M8-AY .50 Cal Anti-Matiriel Rifle")) {
+                pWeaponType = "Ranged";
+            } else {
+                System.out.println("    What?");
+            }
+            pWeapon = item;
+            item = "";
+        } else {
+            System.out.println("    Thats not a weapon");
+        }
+    }
+
+// --->   Leaving Function Junction   <---
 //
 
 
 
 // This should run everything
+//
     public static void main(String args[]){
 
-        String welcomeMsg = ( "\n"
-                            + "\n    Welcome to"
-                            + "\n          __              _                   _            "
-                            + "\n       /\\ \\ \\___  _ __ __| |_   _____ _ __ __| | ___ _ __  "
-                            + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
-                            + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
-                            + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-                            + "\n                                       Version 0.011.100624"
-                            + "\n" 
-        );
+        popWeaponArrays();
 
         System.out.println(welcomeMsg);
 

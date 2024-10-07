@@ -59,3 +59,12 @@ Update 12 --- Oct. 7th, 2024
 * Added functions to make weapons work
 * Need to fix the class system to work with the ims
 * Cleaned up comments
+
+Update 13 --- Oct. 7th, 2024
+* Got help from Kanishq and started the missile logic locator
+* Missile logic locator uses the player's location to figure out where they can go
+* Added list of locations in Nordverden (might change in the future)
+* Added funtion that finds the player's location and tells them where they are
+* Need to work on the Nekomura passport system (non-passport holders should get deported to Nordverden)
+* Need to fix class and starting equipment functions to work with IMS
+* Need to work on the armour system

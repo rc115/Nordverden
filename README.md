@@ -68,3 +68,18 @@ Update 13 --- Oct. 7th, 2024
 * Need to work on the Nekomura passport system (non-passport holders should get deported to Nordverden)
 * Need to fix class and starting equipment functions to work with IMS
 * Need to work on the armour system
+
+Update 14 --- Oct. 8th, 2024
+* Added a bunch of variables for the armour system
+* Added list with all weapons in the game
+* Started work on the Menu Sytem
+   * The menu system will let the player do actions such as using items, starting combat, or moving location
+* Started work on the use item function that will let players equip weapons/armour or drink potions
+* Added method that displays the inventory
+* Finished the starting equipment and now works with the IMS
+* Extended the weapon equipper in case the player already has a weapon equipped
+* Added an infinite loop for testing menu
+* Need to add Armour System   <--- Next
+* Need to make locations worth visiting (populating and adding quests)
+* Need to add starting locations   <--- Next
+* Need to add Kanishq to the github so he can upload updates too

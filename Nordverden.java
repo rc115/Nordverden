@@ -26,6 +26,10 @@ public class Nordverden {
     static Scanner input = new Scanner(System.in);
     static Random rand = new Random();
 
+
+
+
+
 // --->   VarHell Starts here  <---
 // (Variables are static to be used globally)
 
@@ -37,7 +41,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.013.100724"
+        + "\n                                       Version 0.014.100824"
         + "\n" 
     );
 
@@ -133,9 +137,25 @@ public class Nordverden {
     static boolean bQuatumBag = false; // +95 inventory
     static boolean bBlackHole = false; // 0 inventory
 
+    // Damage resistance Armour
+    static boolean armourEquipped = false;
+    static boolean aLeather = false; // +0.5 bladed res
+    static boolean aBarbarian = false; // +0.5 bladed res +0.5 blunt res
+    static boolean aChainmail = false; // +1.0 bladed res
+    static boolean aPlate = false; // +1.5 bladed res
+    static boolean aKnight = false; // +2.0 bladed res +0.5 blunt res
+    static boolean aRiot = false; // +2.0 blunt res +0.5 bladed res
+    static boolean aBikini = false; // +1.0 bladed res +1.0 blunt res
+    // Other Armours
+    static boolean aMage = false; // +1.0 magic res
+    static boolean aNecro = false; // +1.5 magic res
+    static boolean aElven = false; // +2.0 magic res
+    static boolean aHoodie = false; // +1.5 frost res
+    static boolean aJorts = false; // +2.0 frost res
+    static boolean aHazmat = false; // +5.0 poison res
+
     //Combat Variables
     static boolean weaponEquipped = false;
-    static boolean armourEquipped = false;
     static String pWeapon = "";
     static String pArmour = "";
     static int combatStamina = pStamina;
@@ -171,6 +191,7 @@ public class Nordverden {
     static String e3Name = "";
 
     // Long Ahh List of Weapons
+    static ArrayList<String> allWeapons = new ArrayList<>();
     static ArrayList<String> t1Weapons = new ArrayList<>();
     static ArrayList<String> t2Weapons = new ArrayList<>();
     static ArrayList<String> t3Weapons = new ArrayList<>();
@@ -185,9 +206,15 @@ public class Nordverden {
 
 
 
+
+
+
+
+
+
+
 // --->   Function Junction   <---
 // 
-
 
     // Function that displays character's info
     static void pDisplayCharacter() {
@@ -213,6 +240,10 @@ public class Nordverden {
             System.out.println("\nGoodbye\n");
             input.close();
             System.exit(0);
+        }
+
+        if (pSel.equals("menu")) {
+            openMenu();
         }
 
         System.out.println("\n____________________________________________________________________________________________________\n");
@@ -291,13 +322,16 @@ public class Nordverden {
 
 
 
+
+
     // --->   Inventory Management System   <---
 
     // Function that places items in the character's inventory
     static void placeInInv(String item) {
-        System.out.println("\n    You found a " + item + "!\n");
+        System.out.println("\n    "+pName+" put the " + item + " in "+proPos+" inventory\n");
         if (invItems.size() < pInvSpace) {
             invItems.add(item);
+            pInvSpace -= 1;
         } else {
             System.out.println("\n    Unfortunately you dropped the " + item + " and lost it");
         }
@@ -305,15 +339,47 @@ public class Nordverden {
         item = "";
     }
 
-    // Function that displays items in the character's inventory
-    public static void showInventory() {
-        System.out.println("\n    Inventory: " + invItems);
-        System.out.println("    Available slots: " + (pInvSpace - invItems.size()) + "\n");
+    // Function that lets user use an item
+    static void useItem() {
+        if (invItems.isEmpty()) {
+            System.out.println(pName + "'s inventory is empty.");
+            return;
+        }
+
+        System.out.println("    Select an item to use:\n");
+        for (int i = 0; i < invItems.size(); i++) {
+            System.out.println((i + 1) +". " + invItems.get(i));
+        }
+
+        int choice = 0;
+
+        while (choice < 1 || choice > invItems.size()) {
+            System.out.print("Enter your choice (1-" + invItems.size() + "): ");
+            if (input.hasNextInt()) {
+                choice = input.nextInt();
+                if (choice < 1 || choice > invItems.size()) {
+                    System.out.println("Invalid choice. Please try again.");
+                }
+            } else {
+                System.out.println("That's not a valid number. Please try again.");
+                input.next(); // Clear the invalid input
+            }
+        }
+
+        String item = invItems.get(choice - 1);
+
+        if (allWeapons.contains(item)){
+            isWeapon(item);
+        }
+        // isArmour(item);
+        // isPotion(item);
     }
 
-    // Function for if the player equips a weapon
-    public static void pEquipWeapon(String item) {
-        System.out.println("    Do you want to equip the " + item);
+
+    // Function that displays items in the character's inventory
+    static void showInventory() {
+        System.out.println("\n    Inventory: " + invItems);
+        System.out.println("    Available slots: " + pInvSpace + "\n");
     }
 
     //Function that equips a backpack
@@ -364,11 +430,11 @@ public class Nordverden {
                         bJanksportBackpack = false;
                     } else if (bLargeBackpack == true) {
                         System.out.println("   " + pName + " has unequiped the Camping Bag\n");
-                        pInvSpace += 10;
+                        pInvSpace -= 10;
                         bLargeBackpack = false;
                     } else if (bQuatumBag == true) {
-                        System.out.println("   " + pName + " has unequiped the Black Hole\n");
-                        pInvSpace += 95;
+                        System.out.println("   " + pName + " has unequiped the QIIS MK1 Backpack\n");
+                        pInvSpace -= 95;
                         bQuatumBag = false;
                     } 
 
@@ -382,7 +448,10 @@ public class Nordverden {
             System.out.println("   Idk");
         }
     }
+
     // ---> End of IMS   <---
+
+
 
 
 
@@ -1503,7 +1572,7 @@ public class Nordverden {
             pStrenght += 10;
             pInvSpace += 1;
             pVerdian = true;
-            System.out.println("\n    Your character is now a Vernian");
+            System.out.println("\n    Your character is now a Verdian");
         } else if (pRace.equals("Empirian")) {
             pCoins += 100;
             pSpeech +=10;
@@ -1539,6 +1608,7 @@ public class Nordverden {
             pSorcery += 5;
             pStrenght -= 10;
             pNekohito = true;
+            pNekoPassport = true;
             System.out.println("\n    Your character is now a Nekohito");
         } else if (pRace.equals("Dragonborn")) {
             pDragonborn = true;
@@ -1552,7 +1622,7 @@ public class Nordverden {
         switch(pSel) {
             case "1": pRaceSet = true; customizeStats(); break;
             case "2": 
-                if (pRace.equals("Vernian")) {
+                if (pRace.equals("Verdian")) {
                     pFrostRes -= 0.5;
                     pStrenght -= 10;
                     pInvSpace -= 1;
@@ -1648,9 +1718,7 @@ public class Nordverden {
             System.out.println("\n    Your character is now a Vilager.\n");
         } else if (pClass.equals("Warrior")) {
             pStrenght += 15;
-            pInvSpace -= 1;
-            pWeaponDmg = 10;
-            pWeaponType = "Bladed";
+            placeInInv("Rusty Sword");
             System.out.println("\n    Your character is now a Warrior.\n");
         } else if (pClass.equals("Tank")) {
             pBladeRes += 1;
@@ -1658,15 +1726,11 @@ public class Nordverden {
             System.out.println("\n    Your character is now a Tank.\n");
         } else if (pClass.equals("Mage")) {
             pSorcery += 15;
-            pInvSpace -= 1;
-            pWeaponDmg = 10;
-            pWeaponType = "Magic";
+            placeInInv("Stick Wand");
             System.out.println("\n    Your character is now a Mage.\n");
         } else if (pClass.equals("Archer")) {
             pSneak += 15;
-            pInvSpace -= 1;
-            pWeaponDmg = 10;
-            pWeaponType = "Ranged";
+            placeInInv("Handmade Bow");
             System.out.println("\n    Your character is now a Archer.\n");
         } else if (pClass.equals("Gambler")) {
             pLuck += 1;
@@ -1687,21 +1751,18 @@ public class Nordverden {
                 } else if (pClass.equals("Warrior")) {
                     pStrenght -= 15;
                     pInvSpace += 1;
-                    pWeaponDmg = 0;
-                    pWeaponType = "none";
+                    invItems.remove("Rusty Sword");
                 } else if (pClass.equals("Tank")) {
                     pBladeRes -= 1;
                     pBluntRes -= 1;
                 } else if (pClass.equals("Mage")) {
                     pSorcery -= 15;
                     pInvSpace += 1;
-                    pWeaponDmg = 0;
-                    pWeaponType = "none";
+                    invItems.remove("Stick Wand");
                 } else if (pClass.equals("Archer")) {
                     pSneak -= 15;
                     pInvSpace += 1;
-                    pWeaponDmg = 0;
-                    pWeaponType = "none";
+                    invItems.remove("Handmade Bow");
                 } else if (pClass.equals("Gambler")) {
                     pLuck -= 1;
                     pGold += 3;
@@ -1743,13 +1804,13 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "1": setWeaponStats("Rusty Sword"); break;
-            case "2": setWeaponStats("Wooden Hammer"); break;
-            case "3": setWeaponStats("Handmade Bow"); break;
-            case "4": setWeaponStats("Stick Wand"); break;
-            case "5": break;
-            case "6": break;
-            case "7": break;
+            case "1": placeInInv("Rusty Sword"); break;
+            case "2": placeInInv("Wooden Hammer"); break;
+            case "3": placeInInv("Handmade Bow"); break;
+            case "4": placeInInv("Stick Wand"); break;
+            case "5": placeInInv("Leather Armour");break;
+            case "6": placeInInv("Stamina Potion");break;
+            case "7": placeInInv("Health Potion");break;
             case "8": bSmallBag = true; equipBackpack(); break;
             case "9": pGold += ((rand.nextInt(5)) + 1); break;
             default:
@@ -1760,6 +1821,8 @@ public class Nordverden {
     }
 
     // --->   End of Character Creator   <---
+
+
 
 
 
@@ -1794,7 +1857,7 @@ public class Nordverden {
                 + "\n6. "+pName+" can go Southwest to go towards the River."
                 + "\n7. "+pName+" can go West towards the Northern Mountains."
                 + "\n8. "+pName+" can go Northwest towards the Nothern Mountains"
-                + "\n9. Enter the Capital."
+                + "\n9. Enter the Capital.\n"
             );
 
             playerSelection();
@@ -1820,6 +1883,7 @@ public class Nordverden {
                 + "\n6. "+pName+" cannot go Southwest."
                 + "\n7. "+pName+" cannot go West."
                 + "\n8. "+pName+" can go Northwest to cross the Fishy Islands."
+                + "\n9. Stay in Nekomura\n"
             );
 
             playerSelection();
@@ -1830,8 +1894,11 @@ public class Nordverden {
                 case "4":
                 case "5":
                 case "6":
-                case "7": System.out.println("    "+pName+" cannot go there"); pMover("Nekomura"); break;
-                case "8": System.out.println("    "+pName+" goes back to Nordverden."); playerLocator("{temp}"); break;
+                case "7": System.out.println("    "+pName+" cannot go there.\n"); pMover("Nekomura"); break;
+                case "8": System.out.println("    "+pName+" goes back to Nordverden.\n");
+                    playerLocator("Coast");
+                    break;
+                case "9": System.out.println("    "+pName+" stayed in Nekomura"); break;
                 default: System.out.println("Can't go there."); pMover(pLocation);
             }
         } else if (pLocation.equals("Desert")) {
@@ -1844,6 +1911,7 @@ public class Nordverden {
                 + "\n6. "+pName+" can go Southwest to the Cave."
                 + "\n7. "+pName+" can go West to the Cave."
                 + "\n8. "+pName+" can go Northwest to the River."
+                + "\n9. Go to the desert Village\n"
             );
 
             playerSelection();
@@ -2131,6 +2199,8 @@ public class Nordverden {
 
 
 
+
+
     // --->   Combat Functions   <---
 
     // Function that populates the weapon arrays
@@ -2174,52 +2244,156 @@ public class Nordverden {
         t5Weapons.add("Empirian Greatsword");
         t5Weapons.add("Archmage Staff");
         t5Weapons.add("Barronn M8-AY .50 Cal Anti-Matiriel Rifle");
+
+        // populates the allWeapons Array
+        allWeapons.add("Fists");
+        allWeapons.add("Rusty Sword");
+        allWeapons.add("Wooden Hammer");
+        allWeapons.add("Sledgehammer");
+        allWeapons.add("Stick Wand");
+        allWeapons.add("Handmade Bow");
+        allWeapons.add("Boxing Gloves");
+        allWeapons.add("War Sword");
+        allWeapons.add("Baseball Bat");
+        allWeapons.add("Woodsplitting Axe");
+        allWeapons.add("College of Sorcery Wand");
+        allWeapons.add("Ancient Longbow");
+        allWeapons.add("Brass Knuckles");
+        allWeapons.add("Mass Produced Katana");
+        allWeapons.add("Mace");
+        allWeapons.add("Warworn Greatsword");
+        allWeapons.add("Crystal Staff");
+        allWeapons.add("Compound Bow");
+        allWeapons.add("Push Daggers");
+        allWeapons.add("Claymore");
+        allWeapons.add("Flail");
+        allWeapons.add("Battleaxe");
+        allWeapons.add("Elfwood Wand");
+        allWeapons.add("Musket");
+        allWeapons.add("Gunpowder Gloves");
+        allWeapons.add("Nekohito Steel Katana");
+        allWeapons.add("Veridian Warhammer");
+        allWeapons.add("Empirian Greatsword");
+        allWeapons.add("Archmage Staff");
+        allWeapons.add("Barronn M8-AY .50 Cal Anti-Matiriel Rifle");
     }
 
-    // Function that sets the weapon type and damage
-    public static void setWeaponStats(String item) {
-        if (t1Weapons.contains(item) || t2Weapons.contains(item) || t3Weapons.contains(item) || t4Weapons.contains(item) || t5Weapons.contains(item)) {
-            // Sets damage based on the tier
-            if (t1Weapons.contains(item)) {
-                pWeaponDmg = 10;
-            } else if (t2Weapons.contains(item)) {
-                pWeaponDmg = 20;
-            } else if (t3Weapons.contains(item)) {
-                pWeaponDmg = 30;
-            } else if (t4Weapons.contains(item)) {
-                pWeaponDmg = 40;
-            } else if (t5Weapons.contains(item)) {
-                pWeaponDmg = 50;
-            } else {
-                pWeaponDmg = 0; // if weapon is not found, no damage
-            }
+    // Function that determines if the item is a weapon
+    static void isWeapon(String item) {
+        System.out.println("\n____________________________________________________________________________________________________\n");
+        System.out.println("    " + item + " is a weapon.");
+        System.out.println("1. Equip Weapon\n2. Keep in inventory\n");
 
-            // Sets weapon type
-            if (item.equals("Fists") || item.equals("Boxing Gloves") || item.equals("Brass Knuckles") || item.equals("Push Daggers") || item.equals("Gunpowder Gloves")) {
-                pWeaponType = "Unarmed";
-            } else if (item.equals("Rusty Sword") || item.equals("War Sword") || item.equals("Mass Produced Katana") || item.equals("Claymore") || item.equals("Nekohito Steel Katana")) {
-                pWeaponType = "Bladed";
-            } else if (item.equals("Wooden Hammer") || item.equals("Baseball Bat") || item.equals("Mace") || item.equals("Flail") || item.equals("Veridian Warhammer")) {
-                pWeaponType = "Blunt";
-            } else if (item.equals("Sledgehammer") || item.equals("Woodsplitting Axe") || item.equals("Warworn Greatsword") || item.equals("Battleaxe") || item.equals("Empirian Greatsword")) {
-                pWeaponType = "Heavy";
-            } else if (item.equals("Stick Wand") || item.equals("College of Sorcery Wand") || item.equals("Crystal Staff") || item.equals("Elfwood Wand") || item.equals("Archmage Staff")) {
-                pWeaponType = "Magic";
-            } else if (item.equals("Handmade Bow") || item.equals("Ancient Longbow") || item.equals("Compound Bow") || item.equals("Musket") || item.equals("Barronn M8-AY .50 Cal Anti-Matiriel Rifle")) {
-                pWeaponType = "Ranged";
-            } else {
-                System.out.println("    What?");
-            }
-            pWeapon = item;
-            System.out.println("    " + pName + " has equipped a " + pWeapon + "!\n");
-            item = "";
-        } else {
-            System.out.println("    Thats not a weapon");
+        playerSelection();
+        switch(pSel) {
+            case "1": setWeaponStats(item); break;
+            case "2": System.out.println("    " + item + " was sent back to "+proPos+" inventory"); break;
+            default: System.out.println("not possible"); isWeapon(item);
         }
     }
 
+    // Function that sets the weapon type and damage
+    static void setWeaponStats(String item) {
+        if (weaponEquipped == false) {
+            if (allWeapons.contains(item)) {
+                // Sets damage based on the tier
+                if (t1Weapons.contains(item)) {
+                    pWeaponDmg = 10;
+                } else if (t2Weapons.contains(item)) {
+                    pWeaponDmg = 20;
+                } else if (t3Weapons.contains(item)) {
+                    pWeaponDmg = 30;
+                } else if (t4Weapons.contains(item)) {
+                    pWeaponDmg = 40;
+                } else if (t5Weapons.contains(item)) {
+                    pWeaponDmg = 50;
+                } else {
+                    pWeaponDmg = 0; // if weapon is not found, no damage
+                }
+
+                // Sets weapon type
+                if (item.equals("Fists") || item.equals("Boxing Gloves") || item.equals("Brass Knuckles") || item.equals("Push Daggers") || item.equals("Gunpowder Gloves")) {
+                    pWeaponType = "Unarmed";
+                } else if (item.equals("Rusty Sword") || item.equals("War Sword") || item.equals("Mass Produced Katana") || item.equals("Claymore") || item.equals("Nekohito Steel Katana")) {
+                    pWeaponType = "Bladed";
+                } else if (item.equals("Wooden Hammer") || item.equals("Baseball Bat") || item.equals("Mace") || item.equals("Flail") || item.equals("Veridian Warhammer")) {
+                    pWeaponType = "Blunt";
+                } else if (item.equals("Sledgehammer") || item.equals("Woodsplitting Axe") || item.equals("Warworn Greatsword") || item.equals("Battleaxe") || item.equals("Empirian Greatsword")) {
+                    pWeaponType = "Heavy";
+                } else if (item.equals("Stick Wand") || item.equals("College of Sorcery Wand") || item.equals("Crystal Staff") || item.equals("Elfwood Wand") || item.equals("Archmage Staff")) {
+                    pWeaponType = "Magic";
+                } else if (item.equals("Handmade Bow") || item.equals("Ancient Longbow") || item.equals("Compound Bow") || item.equals("Musket") || item.equals("Barronn M8-AY .50 Cal Anti-Matiriel Rifle")) {
+                    pWeaponType = "Ranged";
+                } else {
+                    System.out.println("    What?");
+                }
+                pWeapon = item;
+                weaponEquipped = true;
+                System.out.println("    " + pName + " has equipped a " + pWeapon + "!");
+                item = "";
+            }
+
+            pInvSpace -= 1;
+        } else {
+            System.out.println("    You already have a weapon. Do you want to drop your "+pWeapon+"?\n"
+                + "\n1. Keep current weapon\n2. Drop " + pWeapon + "\n"
+            );
+
+            playerSelection();
+            switch (pSel) {
+                case "1": System.out.println("    " + pName + " kept " + proPos + " "+ pWeapon 
+                        + ".\n    The " + item + " was sent to " + proPos +" inventory."
+                    );
+                    placeInInv(item);
+                    break;
+                case "2": System.out.println("    You dropped your " + pWeapon + " and it fell through the floor.");
+                    weaponEquipped = false;
+                    invItems.remove(pWeapon);
+                    pWeapon = "none";
+                    pWeaponDmg = 0;
+                    pWeaponType = "none";
+                    pInvSpace += 1;
+                    setWeaponStats(item);
+                    break;
+                default: System.out.println("    Nope"); setWeaponStats(item);
+            }
+        }
+    }
+
+    // --->   End of Combat Functions   <---
+
+
+
+
+
+    // --->   Options Menu   <---
+
+    // --->   Funtion that allows player to use the menu   <---
+    // (lets character use items, equip weapons/armour, and start combat)
+    static void openMenu() {
+        System.out.println("\n    What would you like to do?\n"
+            + "\n1. Open Inventory\n2. Use Item\n3. Sneak\n4. Combat\n5. Move\n"
+        );
+
+        playerSelection();
+        switch (pSel) {
+            case "1": showInventory(); break;
+            case "2": useItem(); break;
+            case "3": break;
+            case "4": break;
+            case "5": pMover(pLocation); break;
+            default: System.out.println("Thats not an option."); break;
+        }
+    }
 // --->   Leaving Function Junction   <---
 //
+
+
+
+
+
+
+
 
 
 
@@ -2228,12 +2402,20 @@ public class Nordverden {
     public static void main(String args[]){
 
         popWeaponArrays();
+        popLocList();
 
         System.out.println(welcomeMsg);
 
         characterSelection();
+
         System.out.println("This is where the game would start");
+
+        while (true) {
+            playerSelection();
+        }
 
     }
 }
 // End of the program
+
+

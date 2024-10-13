@@ -83,3 +83,28 @@ Update 14 --- Oct. 8th, 2024
 * Need to make locations worth visiting (populating and adding quests)
 * Need to add starting locations   <--- Next
 * Need to add Kanishq to the github so he can upload updates too
+
+Update 15 --- Oct. 13th, 2024
+* Massive update after a short break
+* Finished character display
+* added a bunch of comments and spaces to clean up code
+* added a default preset to speed up character creator
+* finnally added the starting locations
+* fixed the movement functions to work together better
+* added a passport checkpoint to nekomura
+* started work on "rooms", rooms will include:
+   * places to rest
+   * questgivers
+   * shops
+   * npcs
+   * loot
+* added a special start location that introduces 2 potential party members
+* Need to populate rooms
+* Need to start combat system and enemys
+* Need to work on potions (not as important)
+* Need to find a way to generate caves so the player can level up quickly
+* Need to add quests and rewards
+* Need to add pretty much everything on the spreadsheet (Seems like a lot ngl)
+* So far the 80% of the "bones" are done
+* Need at least 70% of the "meat" to count this as a game, currently at 0-5%
+* I need some sleep, its 3:54 AM rn been coding since 1:43 PM 💀

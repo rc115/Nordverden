@@ -12,7 +12,7 @@
 *  \_\ \/ \___/|_|  \__,_| \_/ \___|_|  \__,_|\___|_| |_|
 *                                                     
 * 
-* Inspirations: Fallout 1 & 2 by Interplay, TES: Skyrim by Bethesda, and Magic The Noah
+* Inspirations: Fallout 1 & 2 by Interplay, TES: Skyrim by Bethesda, and the youtuber Magic The Noah
 * 
 */
 
@@ -25,6 +25,12 @@ import java.util.ArrayList;
 public class Nordverden {
     static Scanner input = new Scanner(System.in);
     static Random rand = new Random();
+//
+
+
+
+
+
 
 
 
@@ -41,7 +47,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.014.100824"
+        + "\n                                       Version 0.015.101324"
         + "\n" 
     );
 
@@ -68,6 +74,7 @@ public class Nordverden {
     static boolean pClassSet = false; // var for if the player set their character's class
     static boolean karmaSet = false; // var for if the player set their character's karma
     static boolean pStartEquip = false; // var for if the player choose their starting equipment
+    static boolean pStartLocation = false;
 
     // boolean variables for each race
     static boolean pVerdian = false;
@@ -78,6 +85,7 @@ public class Nordverden {
     static boolean pNekohito = false;
     static boolean pDragonborn = false;
     static boolean pNekoPassport = false;
+    static boolean pForrestKey = false;
 
     static int pGold = 5; // Nordverden currency
     static int pCoins = 0; // Empirian currency
@@ -126,7 +134,7 @@ public class Nordverden {
 
     // Variables for IMS
     static int pInvSpace = 5; // player inventory space
-    static ArrayList<String> invItems = new ArrayList<>(); // items in inventory
+    static ArrayList<String> invItems = new ArrayList<>(); // items in inventory (array list needed)
 
     // Bakpacks
     static boolean backpackEquiped = false;
@@ -190,8 +198,8 @@ public class Nordverden {
     static String e2Name = "";
     static String e3Name = "";
 
-    // Long Ahh List of Weapons
-    static ArrayList<String> allWeapons = new ArrayList<>();
+    // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
+    static ArrayList<String> allWeapons = new ArrayList<>(); 
     static ArrayList<String> t1Weapons = new ArrayList<>();
     static ArrayList<String> t2Weapons = new ArrayList<>();
     static ArrayList<String> t3Weapons = new ArrayList<>();
@@ -200,6 +208,14 @@ public class Nordverden {
 
     // Location Array
     static ArrayList<String> locList = new ArrayList<>();
+
+    // preset booleans
+    static boolean preVerdian = false;
+    static boolean preEmpirian = false;
+    static boolean preOrc = false;
+    static boolean preDElf = false;
+    static boolean preWElf = false;
+    static boolean preNekohito = false;
 
 // -->   End of VarHell   <---
 //
@@ -216,6 +232,8 @@ public class Nordverden {
 // --->   Function Junction   <---
 // 
 
+    // --->   Misc. Functions   <---
+
     // Function that displays character's info
     static void pDisplayCharacter() {
         System.out.println("    This is your character:\n"
@@ -223,12 +241,35 @@ public class Nordverden {
             + "    Race: " + pRace + "\n"
             + "    Class: " + pClass + "\n"
             + "    Health: " + pHealth + "/" + pMaxHealth + "\n"
-            + "    Level: " + pLevel + " (" + pCurXp + "/" + pNextLvl + ")\n\n"
+            + "    Level: " + pLevel + " (" + pCurXp + "/" + pNextLvl + ")\n"
             + "    Karma: " + pKarma + "\n"
+            + "    Passport: " +pNekoPassport + "\n\n"
 
-            + "    These are " + proPos + " stats:\n"
-            + "    "
+            + "    These are " + proPos + " skills:\n"
+            + "    Strenght ("+ pStrenght +"/100)\n"
+            + "    Speech ("+ pSpeech +"/100)\n"
+            + "    Stamina ("+ pStamina +"/100)\n"
+            + "    Sorcery ("+ pSorcery +"/100)\n"
+            + "    Sneak ("+ pSneak +"/100)\n\n"
+
+            + "    These are " + proPos + " damage resistances:\n"
+            + "    Bladed Damage Res. ("+ pBladeRes +")\n"
+            + "    Blunt Damage Res. ("+ pBluntRes +")\n"
+            + "    Magic Res. ("+ pMagicRes +")\n"
+            + "    Poison Res. ("+ pPoisonRes +")\n"
+            + "    Fire Res. ("+ pFireRes +")\n"
+            + "    Frost Res. ("+ pFrostRes +")\n\n"
+
+            + "    These are " + proPos + " damage multipliers:\n"
+            + "    Unarmed Damage ("+ pUnarmedDmg +")\n"
+            + "    Bladed Damage ("+ pBladeDmg +")\n"
+            + "    Blunt Damage ("+ pBluntDmg +")\n"
+            + "    Heavy Weapons Damage ("+ pHeavyDmg +")\n"
+            + "    Magic Damage ("+ pMagicDmg +")\n"
+            + "    Long Range Damage ("+ pRangedDmg +")\n"
         );
+
+        showInventory();
     }
 
     // Function that takes the players's input
@@ -320,6 +361,8 @@ public class Nordverden {
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
+    // --->   End of Misc Functions   <---
+
 
 
 
@@ -339,47 +382,46 @@ public class Nordverden {
         item = "";
     }
 
-    // Function that lets user use an item
+    // Function that lets user use an item (pretty complicated ngl)
     static void useItem() {
-        if (invItems.isEmpty()) {
+        if (invItems.isEmpty()) { // Cancels useItem func if char's inv is empty
             System.out.println(pName + "'s inventory is empty.");
             return;
         }
 
         System.out.println("    Select an item to use:\n");
-        for (int i = 0; i < invItems.size(); i++) {
-            System.out.println((i + 1) +". " + invItems.get(i));
+        for (int i = 0; i < invItems.size(); i++) { // runs until every item in inv is printed
+            System.out.println((i + 1) +". " + invItems.get(i)); // prints out every item in inventory
         }
 
-        int choice = 0;
 
-        while (choice < 1 || choice > invItems.size()) {
+        int choice = 0; // doesnt use player selection because choice needs to be an int
+        while (choice < 1 || choice > invItems.size()) { // runs until player selects an item
             System.out.print("Enter your choice (1-" + invItems.size() + "): ");
-            if (input.hasNextInt()) {
+            if (input.hasNextInt()) { // validates user's input to ensure it can be used later
                 choice = input.nextInt();
-                if (choice < 1 || choice > invItems.size()) {
+                if (choice < 1 || choice > invItems.size()) { // checks if its in the range of items
                     System.out.println("Invalid choice. Please try again.");
                 }
-            } else {
+            } else { // doesnt set choice if its not an integer
                 System.out.println("That's not a valid number. Please try again.");
                 input.next(); // Clear the invalid input
             }
         }
 
-        String item = invItems.get(choice - 1);
+        String item = invItems.get(choice - 1); // sets item based on player's choice
 
-        if (allWeapons.contains(item)){
+        if (allWeapons.contains(item)){ // checks if the selected item is a weapon
             isWeapon(item);
         }
         // isArmour(item);
         // isPotion(item);
     }
 
-
     // Function that displays items in the character's inventory
     static void showInventory() {
-        System.out.println("\n    Inventory: " + invItems);
-        System.out.println("    Available slots: " + pInvSpace + "\n");
+        System.out.println("\n    Items: " + invItems);
+        System.out.println("    Inventory Space: " + pInvSpace + "\n");
     }
 
     //Function that equips a backpack
@@ -457,38 +499,41 @@ public class Nordverden {
 
     // --->   Character Creator   <---
 
-    //
     // Function that initializes the character creator
     static void characterSelection() {
         System.out.println("\n    Would you like to create a custom character or choose a premade character?\n"
-            + "\n1. Create a Custom Character\n2. Choose a Preset\n"
+            + "\n1. Create a Custom Character\n2. Use the default stats\n3. View info on stats\n"
         );
 
         playerSelection();
-        if (pSel.equals("1")) {
-            System.out.println("\n    Would you like to view the info on all stats "
-                + "or modify them right now?\n"
-                + "\n1. View info on stats\n2. Customize stats\n"
-            );
-
-            playerSelection();
-            switch(pSel) {
-                case "2":
-                    customizeStats();
-                    break;
-                case "1": 
-                    playerStatsInfo(); 
-                    characterSelection();
-                    break;
-                default: System.out.println("\n           no... its either 1 or 2\n"); characterSelection();
-            }
-        } else if (pSel.equals("2")) {
-            System.out.println("\n    That's not in the game yet sorry.");
-            characterSelection();
-        } else{
-            System.out.println("\n        That didn't work for some reason.");
-            characterSelection();
+        switch (pSel) {
+            case "1": customizeStats(); break;
+            case "2": defaultStats(); break;
+            case "3": playerStatsDisplay(); characterSelection(); break;
+            default: System.out.println("That didn't work"); characterSelection();
         }
+    }
+
+    // Function that sets the default stats
+    static void defaultStats() {
+        pStrenght = 10;
+        pSpeech = 10;
+        pStamina = 30;
+        skillPts = 0;
+        conSkills = true;
+        pBladeRes = 1.0;
+        pBluntRes = 1.0;
+        pMagicRes = 0.25;
+        pPoisonRes = 0.25;
+        pFireRes = 0.25;
+        pFrostRes = 0.25;
+        resistPts = 0;
+        conResists = true;
+        pBladeDmg = 1.0;
+        pBluntDmg = 1.0;
+        damagePts = 0;
+        conDamage = true;
+        customizeStats();
     }
 
     // Function that modifies the character's stats   <<----- Very Important for character creator
@@ -540,7 +585,6 @@ public class Nordverden {
 
             System.out.println("\n____________________________________________________________________________________________________\n");
         }
-
 
         // confirms the character's skills
         if ((skillPts == 0) && (conSkills == false)){
@@ -615,16 +659,15 @@ public class Nordverden {
             }
         }
 
-
         // starts the stat modification process
         if (conFinalStats == false) {
             // starts the skill point distribution chain
             if (skillPts > 0) {
                 System.out.println("\n    You have " + skillPts + " skill points to spend.");
                 System.out.println("    Which Skill would you like to modify?"
-                    + "\n\n1. Strenght ("+ pStrenght +"/100) [10 recommended]"
-                    + "\n2. Speech ("+ pSpeech +"/100) [10 recommended]"
-                    + "\n3. Stamina ("+ pStamina +"/100) [30 recommended]"
+                    + "\n\n1. Strenght ("+ pStrenght +"/100)"
+                    + "\n2. Speech ("+ pSpeech +"/100)"
+                    + "\n3. Stamina ("+ pStamina +"/100)"
                     + "\n4. Sorcery ("+ pSorcery +"/100)"
                     + "\n5. Sneak ("+ pSneak +"/100)"
                     + "\n6. Reset Skills\n"
@@ -644,11 +687,11 @@ public class Nordverden {
             } else if (resistPts > 0) {
                 System.out.println("\n    You have " + resistPts + " resistance points to spend.");
                 System.out.println("    Which damage resistance would you like to modify?"
-                    + "\n\n1. Bladed Damage Res. ("+ pBladeRes +") [1.0 recommended]"
-                    + "\n2. Blunt Damage Res. ("+ pBluntRes +") [0.5 recommended]"
-                    + "\n3. Magic Res. ("+ pMagicRes +") [0.5 recommended]"
-                    + "\n4. Poison Res. ("+ pPoisonRes +") [0.5 recommended]"
-                    + "\n5. Fire Res. ("+ pFireRes +") [0.5 recommended]"
+                    + "\n\n1. Bladed Damage Res. ("+ pBladeRes +")"
+                    + "\n2. Blunt Damage Res. ("+ pBluntRes +")"
+                    + "\n3. Magic Res. ("+ pMagicRes +")"
+                    + "\n4. Poison Res. ("+ pPoisonRes +")"
+                    + "\n5. Fire Res. ("+ pFireRes +")"
                     + "\n6. Frost Res. ("+ pFrostRes +")"
                     + "\n7. Reset Resistances\n"
                 );
@@ -669,8 +712,8 @@ public class Nordverden {
                 System.out.println("\n    You have " + damagePts + " damage points to spend.");
                 System.out.println("    Which damage multiplier would you like to modify?"
                     + "\n\n1. Unarmed Damage ("+ pUnarmedDmg +")"
-                    + "\n2. Bladed Damage ("+ pBladeDmg +") [1.0 Recommended]"
-                    + "\n3. Blunt Damage ("+ pBluntDmg +") [1.0 recommended]"
+                    + "\n2. Bladed Damage ("+ pBladeDmg +")"
+                    + "\n3. Blunt Damage ("+ pBluntDmg +")"
                     + "\n4. Heavy Weapons ("+ pHeavyDmg +")"
                     + "\n5. Magic Damage ("+ pMagicDmg +")"
                     + "\n6. Ranged Damage ("+ pRangedDmg +")"
@@ -735,7 +778,6 @@ public class Nordverden {
             }
         }
 
-
         // lets player choose their character's class
         if (pClassSet == false){
             charClassSel();
@@ -754,6 +796,11 @@ public class Nordverden {
         // lets the player choose their starting equipment
         if (pStartEquip == false) {
             startingEquipment();
+        }
+
+        // lets the player choose their starting location
+        if (pStartLocation == false) {
+            startingLocation();
         }
     }
 
@@ -1547,7 +1594,7 @@ public class Nordverden {
     static void charRaceSel() {
         if (pRace.equals("")) {
             System.out.println("\n    Choose your character's Race\n"
-                + "\n1. Verdian [Recommended]\n2. Empirian\n3. Orc\n4. Dark Elf\n5. Wood Elf\n6. Nekohito\n7. Dragonborn\n8. View Info on Races\n"
+                + "\n1. Verdian\n2. Empirian\n3. Orc\n4. Dark Elf\n5. Wood Elf\n6. Nekohito\n7. Dragonborn\n8. View Info on Races\n"
             );
 
             playerSelection();
@@ -1606,7 +1653,7 @@ public class Nordverden {
             pSneak += 25;
             pStamina += 10;
             pSorcery += 5;
-            pStrenght -= 10;
+            pStrenght -= 15;
             pNekohito = true;
             pNekoPassport = true;
             System.out.println("\n    Your character is now a Nekohito");
@@ -1656,7 +1703,7 @@ public class Nordverden {
                     pSneak -= 25;
                     pStamina -= 10;
                     pSorcery -= 5;
-                    pStrenght += 10;
+                    pStrenght += 15;
                     pNekohito = false;
                 } else if (pRace.equals("Dragonborn")) {
                     pDragonborn = false;
@@ -1691,7 +1738,7 @@ public class Nordverden {
 
         if (pClass.equals("")) {
             System.out.println("\n    Choose your character's class\n"
-                + "\n1. Villager\n2. Warrior [Recommended]\n3. Tank\n4. Mage\n5. Archer\n6. Gambler\n7. View Class info\n"
+                + "\n1. Villager\n2. Warrior\n3. Tank\n4. Mage\n5. Archer\n6. Gambler\n7. View Class info\n"
             );
             
             playerSelection();
@@ -1813,11 +1860,131 @@ public class Nordverden {
             case "7": placeInInv("Health Potion");break;
             case "8": bSmallBag = true; equipBackpack(); break;
             case "9": pGold += ((rand.nextInt(5)) + 1); break;
-            default:
+            default: System.out.println("Cant"); startingEquipment();
         }
 
         pStartEquip = true;
         customizeStats();
+    }
+
+    // Function for starting locations
+    static void startingLocation() {
+        System.out.println("\n    Where will your journey start?"
+            + "\n    Note: Some locations are not suitable for certain builds.\n"
+        );
+        System.out.println("\n1. River\n2. Desert\n3. Nekomura\n4. Orc Territory"
+            + "\n5. Barbarian Territory\n6. Prisoner of the Empire\n7. View Character\n"
+        );
+
+        playerSelection();
+        switch(pSel) {
+            case "1":
+                System.out.println("    " + pName + " hears the sounds of running water nearby.\n");
+                playerLocator("River");
+                break;
+            case "2":
+                System.out.println("    The schorching heat causes sweat to bead on " + pName + "'s face.\n");
+                playerLocator("Desert");
+                break;
+            case "3":
+                System.out.println("    " + pName + " got on a boat headed to Nekomura.\n");
+                playerLocator("Nekomura");
+                break;
+            case "4":
+                System.out.println("    " + pName + " has wandered into orc territory.\n");
+                playerLocator("Orcs");
+                break;
+            case "5":
+                System.out.println("    " + pName + " stumbled into barbarian territory.\n");
+                playerLocator("Barbarians");
+                break;
+            case "6":
+                System.out.println("    " + pName + " was captured trying to leave Nordverden.\n");
+                empirianPrisoner();
+                break;
+            case "7": pDisplayCharacter(); startingLocation(); break;
+            default: System.out.println("Cant"); startingLocation();
+        }
+
+        pStartLocation = true;
+        customizeStats();
+    }
+
+    // Function for the empirian prisoner start
+    static void empirianPrisoner() {
+        String[] statements = { // string array with the text blob
+            "    " + pName + " opens " + proPos + " eyes.",
+            "    There's three carts being transported by Empirian Soldiers on horsedrawn carts.",
+            "    "+pName+" is on the last one with three prisoners sitting with " + proObj + ",",
+            "    " + proSub + " looks down to see " + proPos + " hands are tied aswell.",
+            "    The convoy seems to be going towards a small desert village a few kilometers away.",
+            "    One of the prisoner's starts talking to " + proObj + ".",
+            "",
+            "Astrid: Hey you! You finally woke up.",
+            "I was starting to think the grunts hit you a bit too hard.",
+            "You were trying to leave Nordverden on the west coast I'm guessing.",
+            "Us? We were sent by the king to sabotage one of their ships.",
+            "A classic case of wrong place wrong time I suppose.",
+            "They might take it easy on you if you manage to convince them you're not with us.",
+            "Good luck though. Empirians don't spare prisoners of wa...",
+            "",
+            "Empirian Guard: Be quiet! You're lucky I have orders to follow.",
+            "If not you wouldn't even make it to the guillotine.",
+            "Your stunt cost the Empire thousands of coins.",
+            "You will all pay for your crimes regardless of what you say.",
+            "",
+            "    The cart stops inside {tempDesertVillage}.",
+            "",
+            "Empirian Guard: Get off already! What are you waiting for?",
+            "",
+            "    One by one each prisoner steps out of the cart until it's just " + pName + ".",
+            "    The guard shoves " + proObj + " and " + proSub + " is forced to line up with the rest.",
+            "    An officer begins to list off the names of the prisoner's and their crimes.",
+            "",
+            "Empirian Officer: These prisoner's have all committed unforgivable crimes against",
+            "the Great Empire of the Wise Emperor Brutus the Fourth.",
+            "For these crimes they will be tried for terrorism and sentenced to death by guillotine.",
+            "Leon bring up the first prisoner.",
+            "",
+            "    The guard standing next to the officer goes out into the line of prisoners",
+            "    and takes the person on the far side of where "+pName+" is.",
+            "    This repeats until the prisoners on the first cart were gone",
+            "    Just as the soldiers were ready to take next set of prisoners forward,",
+            "    a large bomb was set off behind the guillotine sending rubble flying everywhere.",
+            "    In the chaos the remaining prisoners take the opportunity to flee",
+            "    while the soldiers are distracted."
+        };
+
+        // Neded to slow text chunk to let player read it better
+        for (String statement : statements) { 
+            System.out.println(statement);
+            try { // credits to Gray on stack overflow for sleep method
+                Thread.sleep(2000); // 2 sec wait time (feels too fast and too slow at the same time)
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        System.out.println("\nAstrid: Hey! Come with us we know a way out through the sewers.\n\n"
+        + "    At the same time she says that "+pName+" sees Leon lying on the floor under some rubble.\n"
+        + "\n1. Go with Astrid\n2. Save Leon\n3. Run towards the desert\n"
+        );
+
+        playerSelection();
+        switch (pSel) {
+            case "1":
+
+                break;
+            case "2":
+
+                break;
+            case "3":
+                System.out.println("    "+pName+" takes the opportunity and escapes {tempDesertVillage}.");
+                playerLocator("Desert");
+                break;
+            default:
+                break;
+        }
     }
 
     // --->   End of Character Creator   <---
@@ -1828,53 +1995,106 @@ public class Nordverden {
 
     // --->   Missile Logic (it knows where it is because it knows where it isnt)   <---
 
-    // All Possible Locations
+    // All Possible Locations (func needed to populate locations because its an array list)
     static void popLocList() {
-        locList.add("Capital"); // Northern most point of the map
-        locList.add("Nekomura"); // Eastern most point of the map
-        locList.add("Desert"); // Center of the map
-        locList.add("Barbarians"); // Southern most point of the map
-        locList.add("Colony"); // Western most point of the map
-        locList.add("River"); // East of {Colony}, Southwest of {Capital}, Northwest of {Desert}
-        locList.add("Orcs"); // East of {Desert}, South of {Forrest}, West of {Coast}, North of {Plains}
-        locList.add("Coast"); // East of {Orcs}, West of {Nekomura}
-        locList.add("Plains"); // South of {Orcs}, East of {Barbarians}
-        locList.add("Forrest"); // Southeast of {College}, Northeast of {Orcs}, Northwest of {Coast}
-        locList.add("Cave"); // South of {River}, Southwest of {Desert}, East of {Colony}
-        locList.add("College"); // East of {Capital}, West of {Forrest}, Northwest of {Orcs}
+        locList.add("Capital");
+        locList.add("Nekomura");
+        locList.add("Desert");
+        locList.add("Barbarians");
+        locList.add("Colony");
+        locList.add("River");
+        locList.add("Orcs");
+        locList.add("Coast");
+        locList.add("Plains");
+        locList.add("Forrest");
+        locList.add("Mountains");
+        locList.add("College");
 
     }
 
-    // Funtion that lets player choose their movement
+    // All Possible "Rooms" (same as locations)
+    static void popRoomList() {
+        locList.add("nordCapital");
+        locList.add("norCave");
+        locList.add("nekoCity");
+        locList.add("desVill");
+        locList.add("desTown");
+        locList.add("plaVill");
+        locList.add("BarCamp");
+        locList.add("souCave");
+        locList.add("empColony");
+        locList.add("rivVill");
+        locList.add("lake");
+        locList.add("orcCamp");
+        locList.add("easCave");
+        locList.add("coastVill");
+        locList.add("hiddenForrest");
+        locList.add("plaTown");
+        locList.add("cryCave");
+        locList.add("colSor");
+        locList.add("afterlife");
+
+    }
+
+    // Funtion that lets player choose where to go (Probably not the best way to do it)
     static void pMover(String pLocation) {
         if (pLocation.equals("Capital")){
-            System.out.println("    The capital is the northern most point in Nordverden."
+            System.out.println("    {tempNordCapital} is the biggest city in Nordverden."
                 + "\n1. "+pName+" cannot go North."
                 + "\n2. "+pName+" can go Northeast to go towards the College of Sorcery."
                 + "\n3. "+pName+" can go East to go towards the Forrest."
                 + "\n4. "+pName+" can go Southeast to go to Orc Territory."
                 + "\n5. "+pName+" can go South towards the desert."
                 + "\n6. "+pName+" can go Southwest to go towards the River."
-                + "\n7. "+pName+" can go West towards the Northern Mountains."
-                + "\n8. "+pName+" can go Northwest towards the Nothern Mountains"
-                + "\n9. Enter the Capital.\n"
+                + "\n7. "+pName+" can go West towards the Northern Caves."
+                + "\n8. "+pName+" cannot go Northwest"
+                + "\n9. Go to the Capital.\n"
             );
 
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" cannot go north"); pMover(pLocation); break;
-                case "2": System.out.println("    "+pName+" goes northeast."); playerLocator("College"); break;
-                case "3": System.out.println("    "+pName+" goes East"); playerLocator("Forrest"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast"); playerLocator("Orcs"); break;
-                case "5": System.out.println("    "+pName+" goes South"); playerLocator("Desert"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest"); playerLocator("River"); break;
-                case "7": System.out.println("    "+pName+" goes West"); playerLocator("{temp}"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest"); playerLocator("{temp}"); break;
-                case "9": System.out.println("    "+pName+" Enters the capital"); break;
-                default: System.out.println("Cant go there"); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" cannot go North");
+                    pMover(pLocation);
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" goes Northeast.");
+                    playerLocator("College");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East");
+                    playerLocator("Forrest");
+                    break;
+                case "4":
+                    System.out.println("    "+pName+" goes Southeast");
+                    playerLocator("Orcs");
+                    break;
+                case "5":
+                    System.out.println("    "+pName+" goes South");
+                    playerLocator("Desert");
+                    break;
+                case "6":
+                    System.out.println("    "+pName+" goes Southwest");
+                    playerLocator("River");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West");
+                    charIsIn("norCave");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" cannot go Northwest");
+                    pMover(pLocation);
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" Went into {tempNordCapital}");
+                    charIsIn("nordCapital");
+                    break;
+                default:
+                    System.out.println("Cant go there");
+                    pMover(pLocation);
             }
         } else if (pLocation.equals("Nekomura")) {
-            System.out.println("    Nekomura is a remote island to the east of Nordverden."
+            System.out.println("    Nekomura is a remote island to the east of Nordverden.\n"
                 + "\n1. "+pName+" cannot go North."
                 + "\n2. "+pName+" cannot go Northeast."
                 + "\n3. "+pName+" cannot go East."
@@ -1882,8 +2102,8 @@ public class Nordverden {
                 + "\n5. "+pName+" cannot go South."
                 + "\n6. "+pName+" cannot go Southwest."
                 + "\n7. "+pName+" cannot go West."
-                + "\n8. "+pName+" can go Northwest to cross the Fishy Islands."
-                + "\n9. Stay in Nekomura\n"
+                + "\n8. "+pName+" can go Northwest to take a boat to Nordverden."
+                + "\n9. Head to the Nekomura city.\n"
             );
 
             playerSelection();
@@ -1894,253 +2114,548 @@ public class Nordverden {
                 case "4":
                 case "5":
                 case "6":
-                case "7": System.out.println("    "+pName+" cannot go there.\n"); pMover("Nekomura"); break;
-                case "8": System.out.println("    "+pName+" goes back to Nordverden.\n");
+                case "7":
+                    System.out.println("    "+pName+" cannot go there.\n");
+                    pMover("Nekomura");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" went back to Nordverden.\n");
                     playerLocator("Coast");
                     break;
-                case "9": System.out.println("    "+pName+" stayed in Nekomura"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "9":
+                    System.out.println("    "+pName+" went towards {tempNekoCity}.");
+                    charIsIn("nekoCity");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover(pLocation);
             }
         } else if (pLocation.equals("Desert")) {
-            System.out.println("    The Desert is in the center of the map."
+            System.out.println("    The Desert is in the center of the map.\n"
                 + "\n1. "+pName+" can go North to the Capital."
-                + "\n2. "+pName+" can go Northeast to Orc Territory."
+                + "\n2. "+pName+" can go Northeast to the Forrest."
                 + "\n3. "+pName+" can go East to Orc Territory."
-                + "\n4. "+pName+" can go Southeast to Barbarian Territory."
+                + "\n4. "+pName+" can go Southeast to the Plains."
                 + "\n5. "+pName+" can go South to Barbarian Territory."
-                + "\n6. "+pName+" can go Southwest to the Cave."
-                + "\n7. "+pName+" can go West to the Cave."
+                + "\n6. "+pName+" can go Southwest to the Mountains."
+                + "\n7. "+pName+" can go West to {tempDesVill}."
                 + "\n8. "+pName+" can go Northwest to the River."
-                + "\n9. Go to the desert Village\n"
+                + "\n9. Go to the desert town\n"
             );
 
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("Capital"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("Orcs"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Orcs"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Barbarians"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Barbarians"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Cave"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Cave"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("River"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" goes North.");
+                    playerLocator("Capital");
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" goes Northeast.");
+                    playerLocator("Forrest");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    playerLocator("Orcs");
+                    break;
+                case "4":
+                    System.out.println("    "+pName+" goes Southeast.");
+                    playerLocator("Plains");
+                    break;
+                case "5":
+                    System.out.println("    "+pName+" goes South.");
+                    playerLocator("Barbarians");
+                    break;
+                case "6":
+                    System.out.println("    "+pName+" goes Southwest.");
+                    playerLocator("Mountains");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West.");
+                    charIsIn("desVill");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" goes Northwest.");
+                    playerLocator("River");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" went to {tempDesertTown}.");
+                    charIsIn("desTown");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover(pLocation);
             }
         } else if (pLocation.equals("Barbarians")) {
-            System.out.println("    Barbarian territory is the southernmost point."
-                + "\n1. "+pName+" cannot go South."
-                + "\n2. "+pName+" can go Northeast to the Plains."
+            System.out.println("    Barbarian territory is occupied by outlaws.\n"
+                + "\n1. "+pName+" can go North to the Desert."
+                + "\n2. "+pName+" can go Northeast to Orc territory."
                 + "\n3. "+pName+" can go East to the Plains."
-                + "\n4. "+pName+" can go Southeast to {temp}."
-                + "\n5. "+pName+" can go North to the Desert."
-                + "\n6. "+pName+" can go Northwest to the Cave."
-                + "\n7. "+pName+" can go West to {temp}."
-                + "\n8. "+pName+" can go Southwest to {temp}."
+                + "\n4. "+pName+" cannot go Southeast."
+                + "\n5. "+pName+" cannot go South."
+                + "\n6. "+pName+" cannot go Southwest."
+                + "\n7. "+pName+" can go West to {tempPlaVill}."
+                + "\n8. "+pName+" can go Northwest to the Great Mountains."
+                + "\n9. Try to go to the Barbarian camp.\n"
             );
-    
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" cannot go South."); pMover(pLocation); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("Plains"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Plains"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("{temp}"); break;
-                case "5": System.out.println("    "+pName+" goes North."); playerLocator("Desert"); break;
-                case "6": System.out.println("    "+pName+" goes Northwest."); playerLocator("Cave"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("{temp}"); break;
-                case "8": System.out.println("    "+pName+" goes Southwest."); playerLocator("{temp}"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" goes North.");
+                    playerLocator("Desert");
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" goes Northeast.");
+                    playerLocator("Orcs");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    playerLocator("Plains");
+                    break;
+                case "4":
+                case "5":
+                case "6":
+                    System.out.println("    "+pName+" cannot go there.");
+                    pMover("Barbarians");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West.");
+                    charIsIn("plaVill");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" goes Northwest.");
+                    playerLocator("Mountains");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" went to the Barbarian camp.");
+                    charIsIn("barCamp");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover(pLocation);
             }
         } else if (pLocation.equals("Colony")) {
-            System.out.println("    The Colony is in the west."
-                + "\n1. "+pName+" cannot go West."
-                + "\n2. "+pName+" can go Northeast to the River."
-                + "\n3. "+pName+" can go East to the Cave."
-                + "\n4. "+pName+" can go Southeast to the Desert."
-                + "\n5. "+pName+" can go South to {temp}."
-                + "\n6. "+pName+" can go Southwest to {temp}."
-                + "\n7. "+pName+" can go Northwest to {temp}."
-                + "\n8. "+pName+" can go North to the Capital."
+            System.out.println("    {empColony} is an Empirian colony on the west coast.\n"
+            + "\n1. "+pName+" can go North towards the Northern Caves."
+            + "\n2. "+pName+" can go Northeast to the River."
+            + "\n3. "+pName+" can go East to the Desert."
+            + "\n4. "+pName+" can go Southeast to the Mountains."
+            + "\n5. "+pName+" can go South to Southern Caves."
+            + "\n6. "+pName+" cannot go Southwest."
+            + "\n7. "+pName+" cannot go West."
+            + "\n8. "+pName+" cannot go Northwest."
+            + "\n9. Go to the Empirian town.\n"
             );
-    
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" cannot go West."); pMover(pLocation); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("River"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Cave"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Desert"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("{temp}"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("{temp}"); break;
-                case "7": System.out.println("    "+pName+" goes Northwest."); playerLocator("{temp}"); break;
-                case "8": System.out.println("    "+pName+" goes North."); playerLocator("Capital"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" goes North.");
+                    charIsIn("norCave");
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" goes Northeast.");
+                    playerLocator("River");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    playerLocator("Desert");
+                    break;
+                case "4":
+                    System.out.println("    "+pName+" goes Southeast.");
+                    playerLocator("Mountains");
+                    break;
+                case "5":
+                    System.out.println("    "+pName+" goes South.");
+                    charIsIn("souCave");
+                    break;
+                case "6":
+                case "7":
+                case "8":
+                    System.out.println("    "+pName+" cannot go there.");
+                    pMover("Colony");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" went to {tempEmpColony}.");
+                    charIsIn("empColony");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover(pLocation);
             }
         } else if (pLocation.equals("River")) {
-            System.out.println("    The River is located east of the Colony."
-                + "\n1. "+pName+" can go North to the Capital."
-                + "\n2. "+pName+" can go Northeast to the College."
-                + "\n3. "+pName+" can go East to the Desert."
-                + "\n4. "+pName+" can go Southeast to the Cave."
-                + "\n5. "+pName+" can go South to the Desert."
-                + "\n6. "+pName+" can go Southwest to the Colony."
-                + "\n7. "+pName+" can go West to the Colony."
-                + "\n8. "+pName+" can go Northwest to the Capital."
-            );
-        
-            playerSelection();
-            switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("Capital"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("College"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Desert"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Cave"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Desert"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Colony"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Colony"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("Capital"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+            System.out.println("    The River is the main food source of the capital.\n"
+            + "\n1. "+pName+" can go North to the Capital."
+            + "\n2. "+pName+" can go Northeast to the Capital."
+            + "\n3. "+pName+" can go East to the Forrest."
+            + "\n4. "+pName+" can go Southeast to the Desert."
+            + "\n5. "+pName+" can go South to the Great Mountains."
+            + "\n6. "+pName+" can go Southwest to {tempDesVill}."
+            + "\n7. "+pName+" can go West to the Colony."
+            + "\n8. "+pName+" can go Northwest to the Northern Caves."
+            + "\n9. Go to {riverVillage}.\n"
+        );
+
+        playerSelection();
+        switch(pSel) {
+            case "1":
+            case "2":
+                System.out.println("    "+pName+" goes Northeast.");
+                playerLocator("Capital");
+                break;
+            case "3":
+                System.out.println("    "+pName+" goes East.");
+                playerLocator("Forrest");
+                break;
+            case "4":
+                System.out.println("    "+pName+" goes Southeast");
+                playerLocator("Desert");
+                break;
+            case "5":
+                System.out.println("    "+pName+" goes South");
+                playerLocator("Mountains");
+                break;
+            case "6":
+                System.out.println("    "+pName+" goes Southwest.");
+                charIsIn("desVill");
+                break;            
+            case "7":
+                System.out.println("    "+pName+" goes West.");
+                playerLocator("Colony");
+                break;
+            case "8":
+                System.out.println("    "+pName+" goes Northwest.");
+                charIsIn("norCave");
+                break;
+            case "9":
+                System.out.println("    "+pName+" went to {tempRiverVillage}.");
+                charIsIn("rivVill");
+                break;
+            default:
+                System.out.println("Can't go there.");
+                pMover(pLocation);
             }
         } else if (pLocation.equals("Orcs")) {
-            System.out.println("    Orc Territory is located east of the Desert."
-                + "\n1. "+pName+" can go North to the Forrest."
-                + "\n2. "+pName+" can go Northeast to the College."
-                + "\n3. "+pName+" can go East to the Coast."
-                + "\n4. "+pName+" can go Southeast to the Plains."
-                + "\n5. "+pName+" can go South to the Desert."
-                + "\n6. "+pName+" can go Southwest to the Cave."
-                + "\n7. "+pName+" can go West to the Desert."
-                + "\n8. "+pName+" can go Northwest to the River."
-            );
-        
-            playerSelection();
-            switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("Forrest"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("College"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Coast"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Plains"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Desert"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Cave"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Desert"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("River"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+            System.out.println("    Orc Territory is a large mountain occupied by Orcs.\n"
+            + "\n1. "+pName+" can go North towards the College of Sorcery."
+            + "\n2. "+pName+" can go Northeast towards the Forrest."
+            + "\n3. "+pName+" can go East towards the Coast."
+            + "\n4. "+pName+" can go Southeast towards the Lake."
+            + "\n5. "+pName+" can go South towards the Plains."
+            + "\n6. "+pName+" can go Southwest towards Barbarian territory."
+            + "\n7. "+pName+" can go West towards the Desert."
+            + "\n8. "+pName+" can go Northwest towards the Capital"
+            + "\n9. Try to enter the Orc Camp.\n"
+        );
+
+        playerSelection();
+        switch(pSel) {
+            case "1":
+                System.out.println("    "+pName+" goes North");
+                playerLocator("College");
+                break;
+            case "2":
+                System.out.println("    "+pName+" goes Northeast.");
+                playerLocator("Forrest");
+                break;
+            case "3":
+                System.out.println("    "+pName+" goes East");
+                playerLocator("Coast");
+                break;
+            case "4":
+                System.out.println("    "+pName+" goes Southeast");
+                charIsIn("lake");
+                break;
+            case "5":
+                System.out.println("    "+pName+" goes South");
+                playerLocator("Plains");
+                break;
+            case "6":
+                System.out.println("    "+pName+" goes Southwest");
+                playerLocator("Barbarians");
+                break;
+            case "7":
+                System.out.println("    "+pName+" goes West");
+                playerLocator("Desert");
+                break;
+            case "8":
+                System.out.println("    "+pName+" goes Northwest");
+                playerLocator("Capital");
+                break;
+            case "9":
+                System.out.println("    "+pName+" Went to the Orc Camp");
+                charIsIn("orcCamp");
+                break;
+            default:
+                System.out.println("Cant go there");
+                pMover(pLocation);
             }
         } else if (pLocation.equals("Coast")) {
-            System.out.println("    The Coast is located east of Orc Territory."
-                + "\n1. "+pName+" cannot go East."
-                + "\n2. "+pName+" can go Northeast to {temp}."
+            System.out.println("    The East Coast is the only way to get to Nekomura.\n"
+                + "\n1. "+pName+" can go North towards the Eastern caves."
+                + "\n2. "+pName+" cannot go Northeast."
                 + "\n3. "+pName+" can go East to Nekomura."
-                + "\n4. "+pName+" can go Southeast to {temp}."
-                + "\n5. "+pName+" can go South to Orc Territory."
-                + "\n6. "+pName+" can go Southwest to Orc Territory."
+                + "\n4. "+pName+" cannot go Southeast."
+                + "\n5. "+pName+" cannot go South."
+                + "\n6. "+pName+" can go Southwest towards the Lake."
                 + "\n7. "+pName+" can go West to Orc Territory."
                 + "\n8. "+pName+" can go Northwest to the Forrest."
+                + "\n9. Go towards the Coastal Village\n"
             );
-        
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" cannot go East."); pMover(pLocation); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("{temp}"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Nekomura"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("{temp}"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Orcs"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Orcs"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Orcs"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("Forrest"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+            case "1":
+                System.out.println("    "+pName+" goes North");
+                charIsIn("easCave");
+                break;
+            case "3":
+                System.out.println("    "+pName+" goes East");
+                playerLocator("Nekomura");
+                break;
+            case "2":
+            case "4":
+            case "5":
+                System.out.println("    "+pName+" cannot go there");
+                pMover("Coast");
+                break;
+            case "6":
+                System.out.println("    "+pName+" goes Southwest");
+                charIsIn("lake");
+                break;
+            case "7":
+                System.out.println("    "+pName+" goes West");
+                playerLocator("Orcs");
+                break;
+            case "8":
+                System.out.println("    "+pName+" goes Northwest");
+                playerLocator("Forrest");
+                break;
+            case "9":
+                System.out.println("    "+pName+" Went to {tempCoastalVillage}");
+                charIsIn("coastVill");
+                break;
+            default:
+                System.out.println("Cant go there");
+                pMover(pLocation);
             }
         } else if (pLocation.equals("Plains")) {
-            System.out.println("    The Plains are located south of Orc Territory."
-                + "\n1. "+pName+" can go North to Orc Territory."
-                + "\n2. "+pName+" can go Northeast to the Coast."
-                + "\n3. "+pName+" can go East to {temp}."
-                + "\n4. "+pName+" can go Southeast to {temp}."
+            System.out.println("    The Plains are dangerous due to the proximity to Orcs and Barbarians.\n"
+                + "\n1. "+pName+" can go North to Orc territory."
+                + "\n2. "+pName+" can go Northeast to the Lake."
+                + "\n3. "+pName+" can go East to the coast."
+                + "\n4. "+pName+" cannot go Southeast."
                 + "\n5. "+pName+" cannot go South."
-                + "\n6. "+pName+" can go Southwest to the Cave."
-                + "\n7. "+pName+" can go West to the Barbarians."
+                + "\n6. "+pName+" cannot go Southwest."
+                + "\n7. "+pName+" can go West to Barbarian territory."
                 + "\n8. "+pName+" can go Northwest to the Desert."
+                + "\n9. "+pName+" go to the Plains Town.\n"
             );
-        
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("Orcs"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("Coast"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("{temp}"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("{temp}"); break;
-                case "5": System.out.println("    "+pName+" cannot go South."); pMover(pLocation); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Cave"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Barbarians"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("Desert"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" goes North.");
+                    playerLocator("Orcs");
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" goes Northeast.");
+                    charIsIn("lake");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    playerLocator("Coast");
+                    break;
+                case "4":
+                case "5":
+                case "6":
+                    System.out.println("    "+pName+" cannot go there.");
+                    pMover("Plains");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West.");
+                    playerLocator("Barbarians");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" goes Northwest.");
+                    playerLocator("Desert");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" went to {tempPlainsTown}.");
+                    charIsIn("plaTown");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover("Plains");
             }
         } else if (pLocation.equals("Forrest")) {
-            System.out.println("    The Forrest is located southeast of the College."
-                + "\n1. "+pName+" can go North to the College."
-                + "\n2. "+pName+" can go Northeast to the Capital."
-                + "\n3. "+pName+" can go East to the Coast."
-                + "\n4. "+pName+" can go Southeast to Orc Territory."
-                + "\n5. "+pName+" can go South to Orc Territory."
-                + "\n6. "+pName+" can go Southwest to Orc Territory."
-                + "\n7. "+pName+" can go West to the River."
-                + "\n8. "+pName+" can go Northwest to the College."
+            System.out.println("    The Forrest is rumoured to hide the remaining wood elf civilization."
+                + "\n1. "+pName+" can go North towards the College."
+                + "\n2. "+pName+" cannot go Northeast."
+                + "\n3. "+pName+" can go East towards the Eastern Caves."
+                + "\n4. "+pName+" can go Southeast towards the Coast."
+                + "\n5. "+pName+" can go South towards Orc Territory."
+                + "\n6. "+pName+" can go Southwest towards the Desert."
+                + "\n7. "+pName+" can go West towards the Capital."
+                + "\n8. "+pName+" can go Northwest towards the College."
+                + "\n9. Try to find the hidden forrest.\n"
             );
-        
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("College"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("Capital"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Coast"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Orcs"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Orcs"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Orcs"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("River"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("College"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" goes North");
+                    playerLocator("College");
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" cannot go Northeast.");
+                    pMover("Forrest");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    charIsIn("easCave");
+                    break;
+                case "4":
+                    System.out.println("    "+pName+" goes Southeast.");
+                    playerLocator("Coast");
+                    break;
+                case "5":
+                    System.out.println("    "+pName+" goes South.");
+                    playerLocator("Orcs");
+                    break;
+                case "6":
+                    System.out.println("    "+pName+" goes Southwest.");
+                    playerLocator("Desert");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West.");
+                    playerLocator("Capital");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" goes Northwest to the College.");
+                    playerLocator("College");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" walks around for a while.");
+                    if (pForrestKey == true){
+                        System.out.println("    The key begins to glow. "
+                            + pName + " is transported into the hidden forrest."
+                        );
+                        charIsIn("hiddenForrest");
+                    } else {
+                        System.out.println("    But "+proObj+" didn't find anything");
+                    }
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover("Forrest");
             }
-        } else if (pLocation.equals("Cave")) {
-            System.out.println("    The Cave is located southwest of the Desert."
+        } else if (pLocation.equals("Mountains")) {
+            System.out.println("    The Mountains used to be used for magic crystal mining."
                 + "\n1. "+pName+" can go North to the River."
                 + "\n2. "+pName+" can go Northeast to the Desert."
                 + "\n3. "+pName+" can go East to Orc Territory."
-                + "\n4. "+pName+" can go Southeast to Orc Territory."
-                + "\n5. "+pName+" can go South to the Barbarians."
-                + "\n6. "+pName+" can go Southwest to the Colony."
-                + "\n7. "+pName+" can go West to the Colony."
-                + "\n8. "+pName+" can go Northwest to the River."
+                + "\n4. "+pName+" can go Southeast to Barbarian territory."
+                + "\n5. "+pName+" can go South to {tempPlainsVillage}."
+                + "\n6. "+pName+" can go Southwest to the Southern Caves."
+                + "\n7. "+pName+" can go West to the the Colony."
+                + "\n8. "+pName+" can go Northwest to {tempDesertVillage}."
+                + "\n9. Enter the crystal mine.\n"
             );
-        
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("River"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("Desert"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Orcs"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Orcs"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Barbarians"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("Colony"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Colony"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("River"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                    System.out.println("    "+pName+" goes North.");
+                    playerLocator("River");
+                    break;
+                case "2":
+                    System.out.println("    "+pName+" goes Northeast.");
+                    playerLocator("Desert");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    playerLocator("Orcs");
+                    break;
+                case "4":
+                    System.out.println("    "+pName+" goes Southeast.");
+                    playerLocator("Barbarians");
+                    break;
+                case "5":
+                    System.out.println("    "+pName+" goes South.");
+                    charIsIn("plaVill");
+                    break;
+                case "6":
+                    System.out.println("    "+pName+" goes Southwest.");
+                    charIsIn("souCave");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West to the Colony.");
+                    playerLocator("Colony");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" goes Northwest to {tempDesertVillage}.");
+                    charIsIn("desVill");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" went into the cave.");
+                    charIsIn("cryCave");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover("Mountains");
             }
         } else if (pLocation.equals("College")) {
-            System.out.println("    The College of Sorcery is northeast of the Capital."
-                + "\n1. "+pName+" can go North to the Capital."
-                + "\n2. "+pName+" can go Northeast to {temp}."
+            System.out.println("    The College of Sorcery only accepts the best mages."
+                + "\n1. "+pName+" cannot go North."
+                + "\n2. "+pName+" cannot go Northeast."
                 + "\n3. "+pName+" can go East to the Forrest."
-                + "\n4. "+pName+" can go Southeast to Orc Territory."
-                + "\n5. "+pName+" can go South to the Desert."
-                + "\n6. "+pName+" can go Southwest to the River."
+                + "\n4. "+pName+" can go Southeast to the Forrest."
+                + "\n5. "+pName+" can go South to Orc territory."
+                + "\n6. "+pName+" can go Southwest to the Desert."
                 + "\n7. "+pName+" can go West to the Capital."
-                + "\n8. "+pName+" can go Northwest to {temp}."
+                + "\n8. "+pName+" cannot go Northwest."
+                + "\n9. Apply to the College of Sorcery"
             );
-        
+
             playerSelection();
             switch(pSel) {
-                case "1": System.out.println("    "+pName+" goes North."); playerLocator("Capital"); break;
-                case "2": System.out.println("    "+pName+" goes Northeast."); playerLocator("{temp}"); break;
-                case "3": System.out.println("    "+pName+" goes East."); playerLocator("Forrest"); break;
-                case "4": System.out.println("    "+pName+" goes Southeast."); playerLocator("Orcs"); break;
-                case "5": System.out.println("    "+pName+" goes South."); playerLocator("Desert"); break;
-                case "6": System.out.println("    "+pName+" goes Southwest."); playerLocator("River"); break;
-                case "7": System.out.println("    "+pName+" goes West."); playerLocator("Capital"); break;
-                case "8": System.out.println("    "+pName+" goes Northwest."); playerLocator("{temp}"); break;
-                default: System.out.println("Can't go there."); pMover(pLocation);
+                case "1":
+                case "2":
+                    System.out.println("    "+pName+" cannot go there.");
+                    pMover("College");
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" goes East.");
+                    playerLocator("Forrest");
+                    break;
+                case "4":
+                    System.out.println("    "+pName+" goes Southeast.");
+                    playerLocator("Forrest");
+                    break;
+                case "5":
+                    System.out.println("    "+pName+" goes South.");
+                    playerLocator("Orcs");
+                    break;
+                case "6":
+                    System.out.println("    "+pName+" goes Southwest.");
+                    playerLocator("Desert");
+                    break;
+                case "7":
+                    System.out.println("    "+pName+" goes West.");
+                    playerLocator("Capital");
+                    break;
+                case "8":
+                    System.out.println("    "+pName+" cannot go Northwest.");
+                    pMover("College");
+                    break;
+                case "9":
+                    System.out.println("    "+pName+" went into the College");
+                    charIsIn("colSor");
+                    break;
+                default:
+                    System.out.println("Can't go there.");
+                    pMover("College");
             }
         }
     }
@@ -2152,8 +2667,7 @@ public class Nordverden {
                 System.out.println("    " + pName + " is in the Capital\n");
                 pLocation = Location;
             } else if (Location.equals("Nekomura")) {
-                System.out.println("    " + pName + " now in Nekomura\n");
-                pLocation = Location;
+                nekoCheckpoint();
             } else if (Location.equals("Desert")) {
                 System.out.println("    " + pName + " is in the Desert\n");
                 pLocation = Location;
@@ -2178,8 +2692,8 @@ public class Nordverden {
             } else if (Location.equals("Forrest")) {
                 System.out.println("    " + pName + " is in the Forrest\n");
                 pLocation = Location;
-            } else if (Location.equals("Cave")) {
-                System.out.println("    " + pName + " is in the Cave of Misery\n");
+            } else if (Location.equals("Mountains")) {
+                System.out.println("    " + pName + " is at the Great Mountains\n");
                 pLocation = Location;
             } else if (Location.equals("College")) {
                 System.out.println("    " + pName + " is outside the College of Sorcery\n");
@@ -2193,6 +2707,22 @@ public class Nordverden {
         }
 
         pMover(pLocation);
+    }
+
+    // Funtion that populates each location
+    static void charIsIn(String room) {
+
+    }
+
+    // Function that ensures character has a passport
+    static void nekoCheckpoint() {
+        if (pNekoPassport == true) {
+            System.out.println("    " + pName + " passed the checkpoint and was allowed to stay.\n");
+            pLocation = "Nekomura";
+        } else {
+            System.out.println("    " + pName + " did not pass the checkpoint and was deported.\n");
+            pLocation = "Coast";
+        }
     }
 
     // --->   End of Missile Logic <---
@@ -2385,6 +2915,13 @@ public class Nordverden {
             default: System.out.println("Thats not an option."); break;
         }
     }
+
+    // --->   End of Options Menu   <---
+
+
+
+
+
 // --->   Leaving Function Junction   <---
 //
 
@@ -2408,7 +2945,7 @@ public class Nordverden {
 
         characterSelection();
 
-        System.out.println("This is where the game would start");
+        System.out.println("\n\nThis is a statement to indicate everything finished\n\n");
 
         while (true) {
             playerSelection();

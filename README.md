@@ -108,3 +108,36 @@ Update 15 --- Oct. 13th, 2024
 * So far the 80% of the "bones" are done
 * Need at least 70% of the "meat" to count this as a game, currently at 0-5%
 * I need some sleep, its 3:54 AM rn been coding since 1:43 PM 💀
+
+Update 16 --- Oct. 13th, 2024
+* Another massive update 🥲
+* Added pain and suffering
+* Finnally found the difference between methods and functions
+* Added a class to handle NPCs
+   * NPC have their own stats
+   * NPCs can either be neutral or hostile
+* Added a combat system (pain)
+   * Turn based system
+   * A "20 sided die" determines hit chance
+   * If Player gets a 20 they do double damage
+   * Player gets bodied if there are more than two enemies
+   * Player damage is based on their weapon and damage multiplier
+* Added a dynamic enemy system (suffering)
+   * Array list handles NPCs in area
+   * If player initiate combat neutral NPCs will fight back
+   * If a hostile NPC is present they will start combat
+   * Enemy damage is based on a Tiered system (T1 = 10, T2 = 20, etc)
+   * Damage resistance is based on player's resistance to enemy's attack
+   * Different enemies have different damage types
+* Added a leveling system that gets exponentially harder
+* Added an afterlife in case the player dies (they will)
+* Need to add a companion system to balace multi-enemy combat
+* Need to impliment stamina system to give player multiple attacks per turn
+* Theres a bunch of bugs now because of the combat system
+   * Game crashes if player doesnt input an int when prompted to choose an enemy
+   * If strenght is negative it heals the enemy (kinda funny might keep)
+   * Player can go into combat without a weapon (might be a feature)
+   * Probably more that I havent found yet
+   * Still havent fixed the other game breaking bugs in char creator
+   * Left a bunch of debugging things everywhere
+* Might take another short break after this ngl

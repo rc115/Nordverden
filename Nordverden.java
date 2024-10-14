@@ -22,10 +22,57 @@ import java.util.Random;
 import java.util.ArrayList;
 
 
+// Class needed for dynamic enemies system :U+1F972:
+class NPC { 
+    String name; // Npc's name
+    int health; // how much health it has
+    int damage; // how much damage it deals
+    String dmgType; // What type of damage it does
+    int exp; // how much exp it drops
+    boolean isHostile; // Will it attack if char gets close
+
+    // Method that sets enemies stats
+    public NPC(String name, int health, int damage, String dmgType, int exp, boolean isHostile) {
+        this.name = name;
+        this.health = health;
+        this.damage = damage;
+        this.dmgType = dmgType;
+        this.exp = exp;
+        this.isHostile = isHostile;
+    }
+
+    // Function that is called if the enemy dies
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    // Method that damages targeted enemy
+    public void gotHurt(double damage) {
+        health -= damage;
+    }
+
+    // Function for a simple stat display to show how much health is remaining
+    public String showHealth() {
+        return name + " (Health: " + health + ")";
+    }
+
+    // Function that returns exp dropped by enemy
+    public int expGained() {
+        return exp;
+    }
+}
+
+
+
 public class Nordverden {
     static Scanner input = new Scanner(System.in);
     static Random rand = new Random();
 //
+
+
+
+
+
 
 
 
@@ -47,7 +94,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.015.101324"
+        + "\n                                       Version 0.016.101324"
         + "\n" 
     );
 
@@ -163,40 +210,24 @@ public class Nordverden {
     static boolean aHazmat = false; // +5.0 poison res
 
     //Combat Variables
+    static boolean inCombat = false;
     static boolean weaponEquipped = false;
     static String pWeapon = "";
     static String pArmour = "";
     static int combatStamina = pStamina;
     static int pHitChance = 0; // Character's hit chance (1-20) [<10 hits]
+    static int eHitChance = 0; // enemy hit chance
     static int pDisToTar = 0; // Character's distance to targeted enemy (>=2 is Melee <2 isRanged)
     static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
     static String pWeaponType = "none"; // type of weapon character is using
-    static double dmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
-    static double dmgRes = 0.0; // Character's damage resistance (depens on damage type)
+    static double cDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
+    static double cDmgRes = 0.0; // Character's damage resistance (depens on damage type)
     static int eDmgToP = 0; // damage done to player if enemy hits
+    static String eDmgType; // type of damage enemy does
 
-    static double pDamageCalc = ((pWeaponDmg*dmgMult) + (pStrenght*0.25)); // calculates character's damage
-    static double pHurtCalc = (pHealth - (eDmgToP/(dmgRes+0.5)));
+    static double pDamageCalc = ((pWeaponDmg*cDmgMult) + (pStrenght*0.25)); // calculates character's damage
     
-    static int eHitChance = 0; // Enemy's hit chance (1-20) [<10 hits]
-    static int e1DisToP = 0; // Enemy(1) distance to player (>=2 melee, <2 ranged)
-    static int e2DisTop = 0; // Enemy(2) distance to player (>=2 melee, <2 ranged)
-    static int e3DisTop = 0; // Enemy(3) distance to player (>=2 melee, <2 ranged)
-
-    // Enemy(s) health (chages depending on enemy)
-    static int e1Health = 0;
-    static int e2Health = 0;
-    static int e3Health = 0;
-
-    // Enemy(s) damage (chages depending on enemy) [T1 = 10, T2 = 20, ... T5 = 50]
-    static int e1Damage = 0; 
-    static int e2Damage = 0;
-    static int e3Damage = 0;
-
-    // Enemy(s) name(s) [not important but still]
-    static String e1Name = "";
-    static String e2Name = "";
-    static String e3Name = "";
+    static ArrayList<NPC> enemies = new ArrayList<>(); // Array list that uses enemy class to determine the enemies stats, name, etc
 
     // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
     static ArrayList<String> allWeapons = new ArrayList<>(); 
@@ -229,12 +260,17 @@ public class Nordverden {
 
 
 
+
+
+
+
+
 // --->   Function Junction   <---
 // 
 
-    // --->   Misc. Functions   <---
+    // --->   Misc. Methods   <---
 
-    // Function that displays character's info
+    // Method that displays character's info
     static void pDisplayCharacter() {
         System.out.println("    This is your character:\n"
             + "    Name: " + pName + " (" + proSub + "/" + proObj + "/" + proPos + ")\n"
@@ -266,13 +302,16 @@ public class Nordverden {
             + "    Blunt Damage ("+ pBluntDmg +")\n"
             + "    Heavy Weapons Damage ("+ pHeavyDmg +")\n"
             + "    Magic Damage ("+ pMagicDmg +")\n"
-            + "    Long Range Damage ("+ pRangedDmg +")\n"
+            + "    Long Range Damage ("+ pRangedDmg +")\n\n"
+
+            + "    Weapon: " + pWeapon + "\n"
+            + "    Armour: " + pArmour
         );
 
         showInventory();
     }
 
-    // Function that takes the players's input
+    // Method that takes the players's input
     static void playerSelection(){
         pSel = "";
         pSel = input.next();
@@ -290,7 +329,7 @@ public class Nordverden {
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
-    // Functions that display character stats
+    // Methods that display character stats
     static void playerStatsDisplay() {
         pStatsDisplay = ("\n\n    Level ("+ pLevel +") ["+ pCurXp +"/"+ pNextLvl +" xp]"
             + "\n    Health ("+ pHealth +"/" + pMaxHealth + ")"
@@ -361,7 +400,7 @@ public class Nordverden {
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
-    // --->   End of Misc Functions   <---
+    // --->   End of Misc Methods   <---
 
 
 
@@ -369,7 +408,7 @@ public class Nordverden {
 
     // --->   Inventory Management System   <---
 
-    // Function that places items in the character's inventory
+    // Method that places items in the character's inventory
     static void placeInInv(String item) {
         System.out.println("\n    "+pName+" put the " + item + " in "+proPos+" inventory\n");
         if (invItems.size() < pInvSpace) {
@@ -382,7 +421,7 @@ public class Nordverden {
         item = "";
     }
 
-    // Function that lets user use an item (pretty complicated ngl)
+    // Method that lets user use an item (pretty complicated ngl)
     static void useItem() {
         if (invItems.isEmpty()) { // Cancels useItem func if char's inv is empty
             System.out.println(pName + "'s inventory is empty.");
@@ -418,13 +457,13 @@ public class Nordverden {
         // isPotion(item);
     }
 
-    // Function that displays items in the character's inventory
+    // Method that displays items in the character's inventory
     static void showInventory() {
         System.out.println("\n    Items: " + invItems);
         System.out.println("    Inventory Space: " + pInvSpace + "\n");
     }
 
-    //Function that equips a backpack
+    //Method that equips a backpack
     static void equipBackpack() {
         if (backpackEquiped == false) {
             if (bSmallBag == true) {
@@ -499,7 +538,7 @@ public class Nordverden {
 
     // --->   Character Creator   <---
 
-    // Function that initializes the character creator
+    // Method that initializes the character creator
     static void characterSelection() {
         System.out.println("\n    Would you like to create a custom character or choose a premade character?\n"
             + "\n1. Create a Custom Character\n2. Use the default stats\n3. View info on stats\n"
@@ -514,7 +553,7 @@ public class Nordverden {
         }
     }
 
-    // Function that sets the default stats
+    // Method that sets the default stats
     static void defaultStats() {
         pStrenght = 10;
         pSpeech = 10;
@@ -536,7 +575,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Function that modifies the character's stats   <<----- Very Important for character creator
+    // Method that modifies the character's stats   <<----- Very Important for character creator
     static void customizeStats() {
         assSkiPts = 0;
 
@@ -804,7 +843,7 @@ public class Nordverden {
         }
     }
 
-    // Functions for if the player runs out of points
+    // Methods for if the player runs out of points
     static void ranOuttaSkiPts() {
         System.out.println("\n    You have run out of skill points to spend"
             + "\n   You can either confirm your stats or reset your skills\n"
@@ -848,7 +887,7 @@ public class Nordverden {
         }
     }
 
-    // Functions for assigning points to skills
+    // Methods for assigning points to skills
     static void assignStrPts() {
         assSkiPts = 0;
         System.out.println("\n    How many points would you like to assign to Strenght\n");
@@ -1025,7 +1064,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Functions for assigning points to resistances
+    // Methods for assigning points to resistances
     static void assBladedResPts() {
         assResPts = 0;
         System.out.println("\n    How many points would you like to assign to Bladed Damage Resistance\n");
@@ -1237,7 +1276,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Functions for assigning points to damage mults.
+    // Methods for assigning points to damage mults.
     static void assUnarmedDmgPts() {
         assDmgPts = 0;
         System.out.println("\n    How many points would you like to assign to Unarmed Damage\n");
@@ -1449,7 +1488,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Functions that resets the character's stats
+    // Methods that resets the character's stats
     static void resetSkills() {
         conSkills = false;
         System.out.println("\n    Are you sure you want to reset your skills?\n"
@@ -1577,7 +1616,7 @@ public class Nordverden {
         }
     }
 
-    // Functions for choosing the character's race
+    // Methods for choosing the character's race
     static void viewRaceInfo() {
         System.out.println("\n____________________________________________________________________________________________________\n");
         System.out.println("\n    These are all the races found in Nordverden:\n\n"
@@ -1719,7 +1758,7 @@ public class Nordverden {
         }
     }
 
-    // Functions for choosing the character's class
+    // Methods for choosing the character's class
     static void viewClassInfo() {
         System.out.println("\n____________________________________________________________________________________________________\n");
         System.out.println("\n    These are all the classes you can choose:\n"
@@ -1825,7 +1864,7 @@ public class Nordverden {
         }
     }
 
-    //Function for choosing the character's karma
+    //Method for choosing the character's karma
     static void startingKarma() {
         System.out.println("\n    Is your character good, neutral, or bad?");
         System.out.println("\n1. Good\n2. Neutral\n3. Bad\n");
@@ -1842,7 +1881,7 @@ public class Nordverden {
         customizeStats();        
     }
 
-    // Function for choosing character's starting equipment
+    // Method for choosing character's starting equipment
     static void startingEquipment() {
         System.out.println("\n    What will you take with you?\n    Note: You may only take one.\n");
         System.out.println("\n1. Rusty Sword\n2. Wooden Hammer\n3. Handmade Bow\n4. Stick Wand"
@@ -1867,7 +1906,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Function for starting locations
+    // Method for starting locations
     static void startingLocation() {
         System.out.println("\n    Where will your journey start?"
             + "\n    Note: Some locations are not suitable for certain builds.\n"
@@ -1910,7 +1949,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Function for the empirian prisoner start
+    // Method for the empirian prisoner start
     static void empirianPrisoner() {
         String[] statements = { // string array with the text blob
             "    " + pName + " opens " + proPos + " eyes.",
@@ -1993,6 +2032,31 @@ public class Nordverden {
 
 
 
+    // --->   Leveling System   <---
+
+    // Function that handles the xp curve (gets progressively harder to level up)
+    static int levelCurve() {
+        return 10 * (pLevel * pLevel) + 90;
+    }
+
+    // Method that levels char up if they have enough xp
+    static void levelUp() {
+        while (pCurXp >= pNextLvl && pLevel < 46) { // while loop makes sure char can level up more than once
+            pCurXp -= pNextLvl;
+            pLevel++;
+            System.out.println("    "+pName+" Leveled Up!\n    New Level: " + pLevel);
+
+            pNextLvl = levelCurve();
+            System.out.println("    Next level: " +pCurXp + "/" + pNextLvl);            
+        }
+    }
+
+    // --->   End of Leveling System   <---
+
+
+
+
+
     // --->   Missile Logic (it knows where it is because it knows where it isnt)   <---
 
     // All Possible Locations (func needed to populate locations because its an array list)
@@ -2012,7 +2076,7 @@ public class Nordverden {
 
     }
 
-    // All Possible "Rooms" (same as locations)
+    // All Possible "Rooms" (not used just wanted a list of them)
     static void popRoomList() {
         locList.add("nordCapital");
         locList.add("norCave");
@@ -2020,7 +2084,7 @@ public class Nordverden {
         locList.add("desVill");
         locList.add("desTown");
         locList.add("plaVill");
-        locList.add("BarCamp");
+        locList.add("barCamp");
         locList.add("souCave");
         locList.add("empColony");
         locList.add("rivVill");
@@ -2032,7 +2096,7 @@ public class Nordverden {
         locList.add("plaTown");
         locList.add("cryCave");
         locList.add("colSor");
-        locList.add("afterlife");
+        locList.add("gulag");
 
     }
 
@@ -2657,10 +2721,18 @@ public class Nordverden {
                     System.out.println("Can't go there.");
                     pMover("College");
             }
+        } else if (pLocation.equals("Void")) {
+            System.out.println("Mysterious Traveler: How did you end up here?\n");
+            while (true) {
+                playerSelection();
+            }
+        } else {
+            System.out.println("\n\nGo to the void!\n\n");
+            pMover("Void");
         }
     }
 
-    // Function that determines the player's location
+    // Method that determines the player's location
     static void playerLocator(String Location) {
         if (locList.contains(Location)) {
             if (Location.equals("Capital")) {
@@ -2703,18 +2775,40 @@ public class Nordverden {
             }
         } else {
             System.out.println("    You are stuck in the void");
-            pLocation = "The Void";
+            pLocation = "Void";
         }
 
         pMover(pLocation);
     }
 
-    // Funtion that populates each location
+    // Funtion that sends cahr to the correct room
     static void charIsIn(String room) {
-
+        if (room.equals("gulag")) {
+            theGulag();
+        }
     }
 
-    // Function that ensures character has a passport
+    // Room for player's death
+    static void theGulag() {
+        System.out.println("    "+pName+" woke up in an empty arena...");
+        System.out.println("    The only way to escape is by facing YOUR weakness.");
+        System.out.println("    Prepare for combat or quit.");
+        pHealth = pMaxHealth;
+
+        playerSelection();
+
+        int xpNeeded = pNextLvl - pCurXp;
+        enemies.clear();
+        enemies.add(new NPC(pName, pMaxHealth, pWeaponDmg, pWeaponType, xpNeeded, true));
+        gotMad();
+
+        enemies.clear();
+        pLives += 2;
+        System.out.println("    "+pName+" has lived to fight another day...");
+        startingLocation();
+    }
+
+    // Method that ensures character has a passport
     static void nekoCheckpoint() {
         if (pNekoPassport == true) {
             System.out.println("    " + pName + " passed the checkpoint and was allowed to stay.\n");
@@ -2731,9 +2825,199 @@ public class Nordverden {
 
 
 
-    // --->   Combat Functions   <---
+    // --->   Combat Methods   <---
 
-    // Function that populates the weapon arrays
+    // Method that initializes combat
+    static void combat() {
+        while (inCombat) { // Starts bombat
+
+            showEnemies(); // Shows list of enemies
+            System.out.println("\n   "+pName+"'s Health: "+pHealth+"/"+pMaxHealth+"\n");
+            pTurn(); // Player goes first
+
+            if (theyAreDead()) {
+                System.out.println("\n    "+pName+" has triumphed!");
+                for (int i = 0; i < enemies.size(); i++) { // for loop to reward player with exp
+                    pCurXp += enemies.get(i).expGained();
+                    levelUp();
+                }
+                break;
+            }
+
+            eTurn(); // if char has not won next enemy will attack
+
+            if (isCharDead()) {
+                if (pLives == 1) { // Sends char to the gulag if they die
+                    System.out.println("\n    "+pName+" has died...");
+                    pLives -= 1;
+                    charIsIn("gulag");
+                    break;
+                } else if (pLives <= 0) { // ends game if they lose in the gulag
+                    System.out.println("\n    "+pName+" has died...");
+                    System.out.println("    "+pName+"'s journey has ended.");
+                    System.out.println("\nGoodbye\n");
+                    input.close();
+                    System.exit(0);
+                } else { // continues battle if they have more lives left
+                    System.out.println("\n    "+pName+" has died...");
+                    System.out.println("    BUT THAT DID NOT STOP " +pName+ "!");
+                    pLives -= 1;
+                    pHealth = pMaxHealth;
+                }
+
+            }
+        }
+
+        System.out.println("\n   "+pName+"'s Health: "+pHealth+"/"+pMaxHealth+"\n");
+        inCombat = false;
+        System.out.println("    The battlefield is quiet.");
+        enemies.clear();
+        System.out.println("\n____________________________________________________________________________________________________\n");
+    }
+
+    // Method that displays list of npcs and their health
+    static void showEnemies() {
+        System.out.println("\nEnemies in view:");
+        for (int i = 0; i < enemies.size(); i++) { // for loop to display enemies (same as inv)
+            System.out.println((i + 1) + ". " + enemies.get(i).showHealth());
+        }
+    }
+
+    // Method that starts combat if NPC is hostile
+    static void gotMad() {
+        if (isBadArea()) {
+            System.out.println("    Someone got mad!\n");
+            inCombat = true;
+            combat();
+        } else {
+            System.out.println("    Everyone is chill.\n");
+        }
+
+    }
+
+    // Function that checks if there are hostile enemies nearby
+    static boolean isBadArea() {
+        for (NPC enemy : enemies) { // checks every npc to see if any is hostile
+            if (enemy.isHostile) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Method for the players turn
+    static void pTurn() {
+        int choice = 0;
+        System.out.print("\n    Who will "+pName+" attack? (1-" + enemies.size() + "): ");
+
+        choice = input.nextInt() - 1;
+
+        if (choice < 0 || choice >= enemies.size()) { // input validation to make sure player selects valid enemy
+            System.out.println("nuh uh");
+            return;
+        }
+
+        NPC target = enemies.get(choice);
+        pHitChance = rand.nextInt(20) + 1 + pLuck;
+
+        if (pHitChance < 10) {
+            System.out.println("    "+pName+" missed!");
+        } else if (pHitChance == 20) {
+            System.out.println("\n*Critical Hit!*\n");
+            setDamageMultiplier(pWeaponType);
+            pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
+            int Damage = (int)(pDamageCalc);
+            Damage *= 2;
+
+            target.gotHurt(Damage);
+            System.out.println("    "+pName+" hit "+target.name+" with "+proPos+" "+pWeapon+" and did "+Damage+" damage!");
+        } else {
+            setDamageMultiplier(pWeaponType);
+            pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
+            int Damage = (int)(pDamageCalc);
+
+            target.gotHurt(Damage);
+            System.out.println("    "+pName+" hit "+target.name+" with "+proPos+" "+pWeapon+" and did "+Damage+" damage!");
+        }
+    }
+
+    // Function that checks if all enemies in sight are dead
+    static boolean theyAreDead() {
+        return enemies.stream().allMatch(NPC::isDead); // checks if they are all dead (i am)
+    }
+
+    // Function that checks if char died
+    static boolean isCharDead() {
+        return pHealth <= 0; // checks if char's health dropped to 0
+    }
+
+    // Method for the enemies turn (i sHoUlD aDd A sYsTeM fOr MuLtIpLe EnEmIeS - Naive Rigo)
+    static void eTurn() {
+        for (NPC enemy : enemies) { // looks like jargon but lets every enemy attack
+            if (!enemy.isDead()) { // if the enemy attacking is alive
+                eHitChance = rand.nextInt(20) + 1;
+
+                if (eHitChance < 10) {
+                    System.out.println("    "+enemy.name+" missed!");
+                } else { // if enemy attack hits it hurts the player depending on the enemy damage and char's dmg res
+                    eDmgType = enemy.dmgType;
+                    setDamageResistance(eDmgType);
+                    eDmgToP = (int)(enemy.damage / (cDmgRes + 0.5));
+                    eDmgToP = Math.max(eDmgToP, 0); // Makes sure the enemies damage cant be lower than 0 or it would heal the player lol
+                    pHealth -= eDmgToP;
+                    System.out.println("    "+enemy.name+" hit "+pName+" and did "+eDmgToP+" damage!");
+                }
+            }
+        }
+    }
+
+    // Method that sets damage multiplier based on weapon type
+    static void setDamageMultiplier(String pWeaponType) {
+        if (pWeaponType.equals("Unarmed")) {
+            cDmgMult = pUnarmedDmg;
+        } else if (pWeaponType.equals("Bladed")) {
+            cDmgMult = pBladeDmg;
+        } else if (pWeaponType.equals("Blunt")) {
+            cDmgMult = pBluntDmg;
+        } else if (pWeaponType.equals("Heavy")) {
+            cDmgMult = pHeavyDmg;
+        } else if (pWeaponType.equals("Magic")) {
+            cDmgMult = pMagicDmg;
+        } else if (pWeaponType.equals("Ranged")) {
+            cDmgMult = pRangedDmg;
+        } else {
+            cDmgMult = 0;
+        }
+    }
+
+    // Method that sets damage resistances based on the enemy's damage type
+    static void setDamageResistance(String eDmgType) {
+        if (eDmgType.equals("Bladed")) {
+            cDmgRes = pBladeRes;
+        } else if (eDmgType.equals("Blunt")) {
+            cDmgRes = pBluntRes;
+        } else if (eDmgType.equals("Magic")) {
+            cDmgRes = pMagicRes;
+        } else if (eDmgType.equals("Poison")) {
+            cDmgRes = pPoisonRes;
+        } else if (eDmgType.equals("Fire")) {
+            cDmgRes = pFireRes;
+        } else if (eDmgType.equals("Frost")) {
+            cDmgRes = pFrostRes;
+        } else {
+            cDmgRes = 0;
+        }
+    }
+
+    // Method adds three enemies to the enemies Array (for testing) [combat with multiple enemies is hard asf ngl]
+    static void tempPopEnemiesArray() {
+        //enemies.add(new NPC("Villager", 50, 10, "Blunt", 50, false)); // T1 Enemies have 50 health and do 10 damage
+        //enemies.add(new NPC("Town Guard", 75, 20, "Bladed", 100, false)); // T2 Enemies have 75 health and do 20 damage
+        enemies.add(new NPC("Orc", 75, 20, "Blunt", 100, true)); // Hostile enemies will initiate combat first
+        // More will be added later js got too lazy
+    }
+
+    // Method that populates the weapon arrays
     static void popWeaponArrays() {
         // Tier 1 Weapons
         t1Weapons.add("Fists");
@@ -2808,7 +3092,7 @@ public class Nordverden {
         allWeapons.add("Barronn M8-AY .50 Cal Anti-Matiriel Rifle");
     }
 
-    // Function that determines if the item is a weapon
+    // Method that determines if the item is a weapon
     static void isWeapon(String item) {
         System.out.println("\n____________________________________________________________________________________________________\n");
         System.out.println("    " + item + " is a weapon.");
@@ -2822,7 +3106,7 @@ public class Nordverden {
         }
     }
 
-    // Function that sets the weapon type and damage
+    // Method that sets the weapon type and damage
     static void setWeaponStats(String item) {
         if (weaponEquipped == false) {
             if (allWeapons.contains(item)) {
@@ -2890,7 +3174,7 @@ public class Nordverden {
         }
     }
 
-    // --->   End of Combat Functions   <---
+    // --->   End of Combat Methods   <---
 
 
 
@@ -2910,7 +3194,7 @@ public class Nordverden {
             case "1": showInventory(); break;
             case "2": useItem(); break;
             case "3": break;
-            case "4": break;
+            case "4": gotMad(); inCombat = true; combat(); break;
             case "5": pMover(pLocation); break;
             default: System.out.println("Thats not an option."); break;
         }
@@ -2934,6 +3218,11 @@ public class Nordverden {
 
 
 
+
+
+
+
+
 // This should run everything
 //
     public static void main(String args[]){
@@ -2947,8 +3236,13 @@ public class Nordverden {
 
         System.out.println("\n\nThis is a statement to indicate everything finished\n\n");
 
-        while (true) {
-            playerSelection();
+        tempPopEnemiesArray();
+        pHealth -= 50;
+        gotMad();
+
+        // nightmare loop (for debugging ofc)
+        for (int i = 0; i < 50; i++) {
+            System.out.println("Nightmare");
         }
 
     }

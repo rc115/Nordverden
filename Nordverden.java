@@ -22,47 +22,6 @@ import java.util.Random;
 import java.util.ArrayList;
 
 
-// Class needed for dynamic enemies system :U+1F972:
-class NPC { 
-    String name; // Npc's name
-    int health; // how much health it has
-    int damage; // how much damage it deals
-    String dmgType; // What type of damage it does
-    int exp; // how much exp it drops
-    boolean isHostile; // Will it attack if char gets close
-
-    // Method that sets enemies stats
-    public NPC(String name, int health, int damage, String dmgType, int exp, boolean isHostile) {
-        this.name = name;
-        this.health = health;
-        this.damage = damage;
-        this.dmgType = dmgType;
-        this.exp = exp;
-        this.isHostile = isHostile;
-    }
-
-    // Function that is called if the enemy dies
-    public boolean isDead() {
-        return health <= 0;
-    }
-
-    // Method that damages targeted enemy
-    public void gotHurt(double damage) {
-        health -= damage;
-    }
-
-    // Function for a simple stat display to show how much health is remaining
-    public String showHealth() {
-        return name + " (Health: " + health + ")";
-    }
-
-    // Function that returns exp dropped by enemy
-    public int expGained() {
-        return exp;
-    }
-}
-
-
 
 public class Nordverden {
     static Scanner input = new Scanner(System.in);
@@ -94,7 +53,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.016.101324"
+        + "\n                                       Version 0.017.101524"
         + "\n" 
     );
 
@@ -225,9 +184,16 @@ public class Nordverden {
     static int eDmgToP = 0; // damage done to player if enemy hits
     static String eDmgType; // type of damage enemy does
 
-    static double pDamageCalc = ((pWeaponDmg*cDmgMult) + (pStrenght*0.25)); // calculates character's damage
+    static double pDamageCalc = ((pWeaponDmg*cDmgMult) + (pStrenght*0.25)); // function to calculate character's damage
     
-    static ArrayList<NPC> enemies = new ArrayList<>(); // Array list that uses enemy class to determine the enemies stats, name, etc
+    //static ArrayList<NPC> enemies = new ArrayList<>(); // Array list that uses NPC class to determine the enemies stats, name, etc
+    // Individual array lists used for each enemy stat
+    static ArrayList<String> npcName = new ArrayList<>(); // NPC names
+    static ArrayList<Integer> npcHealth = new ArrayList<>(); // NPC health
+    static ArrayList<Integer> npcDamage = new ArrayList<>(); // NPC damage
+    static ArrayList<String> npcDamageType = new ArrayList<>(); // NPC damage type
+    static ArrayList<Integer> npcExp = new ArrayList<>(); // NPC experience
+    static ArrayList<Boolean> npcHostile = new ArrayList<>(); // Whether NPC is hostile
 
     // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
     static ArrayList<String> allWeapons = new ArrayList<>(); 
@@ -2045,10 +2011,39 @@ public class Nordverden {
             pCurXp -= pNextLvl;
             pLevel++;
             System.out.println("    "+pName+" Leveled Up!\n    New Level: " + pLevel);
+            lvlUpStats();
 
             pNextLvl = levelCurve();
-            System.out.println("    Next level: " +pCurXp + "/" + pNextLvl);            
+            System.out.println("    Next level: " +pCurXp + "/" + pNextLvl);
         }
+    }
+
+    static void lvlUpStats() {
+        System.out.println("    What skill do you want to improve?\n");
+        System.out.println("1. Strenght\n2. Speech\n3. Stamina\n4. Sorcery\n5. Sneak");
+
+        playerSelection();
+        switch(pSel) {
+            case "1": pStrenght += 10; break;
+            case "2": pSpeech += 10; break;
+            case "3": pStamina += 10; break;
+            case "4": pSorcery += 10; break;
+            case "5": pSneak += 10; break;
+            default: System.out.println("Nuh uh");
+        }
+
+        pBladeRes += 0.1;
+        pBluntRes += 0.1;
+        pMagicRes += 0.1;
+        pPoisonRes += 0.1;
+        pFireRes += 0.1;
+        pFrostRes += 0.1;
+        pUnarmedDmg += 0.1;
+        pBladeDmg += 0.1;
+        pBluntDmg += 0.1;
+        pHeavyDmg += 0.1;
+        pMagicDmg += 0.1;
+        pRangedDmg += 0.1;
     }
 
     // --->   End of Leveling System   <---
@@ -2798,11 +2793,12 @@ public class Nordverden {
         playerSelection();
 
         int xpNeeded = pNextLvl - pCurXp;
-        enemies.clear();
-        enemies.add(new NPC(pName, pMaxHealth, pWeaponDmg, pWeaponType, xpNeeded, true));
+        clearNPCs();
+        addNPC(pName, pMaxHealth, pWeaponDmg, pWeaponType, xpNeeded, true);
         gotMad();
 
-        enemies.clear();
+        clearNPCs();
+        inCombat = false;
         pLives += 2;
         System.out.println("    "+pName+" has lived to fight another day...");
         startingLocation();
@@ -2831,14 +2827,18 @@ public class Nordverden {
     static void combat() {
         while (inCombat) { // Starts bombat
 
-            showEnemies(); // Shows list of enemies
-            System.out.println("\n   "+pName+"'s Health: "+pHealth+"/"+pMaxHealth+"\n");
+            System.out.println("\n    Enemies in view:");
+            for (int i = 0; i < npcName.size(); i++) { // for loop to display enemies (same as inv)
+                System.out.println((i + 1) + ". " + npcName.get(i) + " (Health: " + npcHealth.get(i) + ")");
+            }
+
+            System.out.println("\n    "+pName+"'s Health: "+pHealth+"/"+pMaxHealth+"\n");
             pTurn(); // Player goes first
 
             if (theyAreDead()) {
                 System.out.println("\n    "+pName+" has triumphed!");
-                for (int i = 0; i < enemies.size(); i++) { // for loop to reward player with exp
-                    pCurXp += enemies.get(i).expGained();
+                for (int i = 0; i < npcName.size(); i++) { // for loop to reward player with exp
+                    pCurXp += npcExp.get(i);
                     levelUp();
                 }
                 break;
@@ -2871,15 +2871,15 @@ public class Nordverden {
         System.out.println("\n   "+pName+"'s Health: "+pHealth+"/"+pMaxHealth+"\n");
         inCombat = false;
         System.out.println("    The battlefield is quiet.");
-        enemies.clear();
+        clearNPCs();
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
     // Method that displays list of npcs and their health
     static void showEnemies() {
         System.out.println("\nEnemies in view:");
-        for (int i = 0; i < enemies.size(); i++) { // for loop to display enemies (same as inv)
-            System.out.println((i + 1) + ". " + enemies.get(i).showHealth());
+        for (int i = 0; i < npcName.size(); i++) { // for loop to display enemies (same as inv)
+            System.out.println((i + 1) + ". " + npcName.get(i) + " (Health: " + npcHealth.get(i) + ")");
         }
     }
 
@@ -2897,8 +2897,8 @@ public class Nordverden {
 
     // Function that checks if there are hostile enemies nearby
     static boolean isBadArea() {
-        for (NPC enemy : enemies) { // checks every npc to see if any is hostile
-            if (enemy.isHostile) {
+        for (boolean hostile : npcHostile) {
+            if (hostile) {
                 return true;
             }
         }
@@ -2907,43 +2907,51 @@ public class Nordverden {
 
     // Method for the players turn
     static void pTurn() {
-        int choice = 0;
-        System.out.print("\n    Who will "+pName+" attack? (1-" + enemies.size() + "): ");
+        for (int i = 0; i < (pStamina/10); i++) {
+            int choice = 0;
+            System.out.print("\n    Who will "+pName+" attack? (1-" + npcName.size() + "): ");
+            choice = input.nextInt() - 1;
 
-        choice = input.nextInt() - 1;
+            if (choice < 0 || choice >= npcName.size()) { // input validation to make sure player selects valid enemy
+                System.out.println("nuh uh");
+                return;
+            }
 
-        if (choice < 0 || choice >= enemies.size()) { // input validation to make sure player selects valid enemy
-            System.out.println("nuh uh");
-            return;
+            pHitChance = rand.nextInt(20) + 1 + pLuck;
+
+            if (pHitChance < 10) {
+                System.out.println("    "+pName+" missed!");
+            } else if (pHitChance == 20) {
+                System.out.println("\n*Critical Hit!*\n");
+                setDamageMultiplier(pWeaponType);
+                pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
+                int damage = (int)(pDamageCalc);
+                damage *= 2;
+
+                npcHealth.set(choice, npcHealth.get(choice) - damage);
+                System.out.println("    " + pName + " hit " + npcName.get(choice) + " and did " + damage + " damage!");
+            } else {
+                setDamageMultiplier(pWeaponType);
+                pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
+                int damage = (int)(pDamageCalc);
+
+                npcHealth.set(choice, npcHealth.get(choice) - damage);
+                System.out.println("    " + pName + " hit " + npcName.get(choice) + " and did " + damage + " damage!");
+            }            
         }
 
-        NPC target = enemies.get(choice);
-        pHitChance = rand.nextInt(20) + 1 + pLuck;
-
-        if (pHitChance < 10) {
-            System.out.println("    "+pName+" missed!");
-        } else if (pHitChance == 20) {
-            System.out.println("\n*Critical Hit!*\n");
-            setDamageMultiplier(pWeaponType);
-            pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
-            int Damage = (int)(pDamageCalc);
-            Damage *= 2;
-
-            target.gotHurt(Damage);
-            System.out.println("    "+pName+" hit "+target.name+" with "+proPos+" "+pWeapon+" and did "+Damage+" damage!");
-        } else {
-            setDamageMultiplier(pWeaponType);
-            pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
-            int Damage = (int)(pDamageCalc);
-
-            target.gotHurt(Damage);
-            System.out.println("    "+pName+" hit "+target.name+" with "+proPos+" "+pWeapon+" and did "+Damage+" damage!");
-        }
+        System.out.println("\n    "+pName+" ran out of stamina.");
+        System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
     // Function that checks if all enemies in sight are dead
     static boolean theyAreDead() {
-        return enemies.stream().allMatch(NPC::isDead); // checks if they are all dead (i am)
+        for (int i = 0; i < npcHealth.size(); i++) {
+            if (npcHealth.get(i) > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Function that checks if char died
@@ -2953,19 +2961,20 @@ public class Nordverden {
 
     // Method for the enemies turn (i sHoUlD aDd A sYsTeM fOr MuLtIpLe EnEmIeS - Naive Rigo)
     static void eTurn() {
-        for (NPC enemy : enemies) { // looks like jargon but lets every enemy attack
-            if (!enemy.isDead()) { // if the enemy attacking is alive
+        for (int i = 0; i < npcName.size(); i++) { // looks like jargon but lets every enemy attack
+            if (npcHealth.get(i) > 0) { // if the enemy attacking is alive
                 eHitChance = rand.nextInt(20) + 1;
+                eDmgToP = npcDamage.get(i);
 
                 if (eHitChance < 10) {
-                    System.out.println("    "+enemy.name+" missed!");
+                    System.out.println("    "+npcName.get(i)+" missed!");
                 } else { // if enemy attack hits it hurts the player depending on the enemy damage and char's dmg res
-                    eDmgType = enemy.dmgType;
+                    eDmgType = npcDamageType.get(i);
                     setDamageResistance(eDmgType);
-                    eDmgToP = (int)(enemy.damage / (cDmgRes + 0.5));
+                    eDmgToP = (int)(eDmgToP / (cDmgRes + 0.5));
                     eDmgToP = Math.max(eDmgToP, 0); // Makes sure the enemies damage cant be lower than 0 or it would heal the player lol
                     pHealth -= eDmgToP;
-                    System.out.println("    "+enemy.name+" hit "+pName+" and did "+eDmgToP+" damage!");
+                    System.out.println("    "+npcName.get(i)+" hit "+pName+" and did "+eDmgToP+" damage!");
                 }
             }
         }
@@ -3009,12 +3018,23 @@ public class Nordverden {
         }
     }
 
-    // Method adds three enemies to the enemies Array (for testing) [combat with multiple enemies is hard asf ngl]
-    static void tempPopEnemiesArray() {
-        //enemies.add(new NPC("Villager", 50, 10, "Blunt", 50, false)); // T1 Enemies have 50 health and do 10 damage
-        //enemies.add(new NPC("Town Guard", 75, 20, "Bladed", 100, false)); // T2 Enemies have 75 health and do 20 damage
-        enemies.add(new NPC("Orc", 75, 20, "Blunt", 100, true)); // Hostile enemies will initiate combat first
-        // More will be added later js got too lazy
+    // Add NPC to the lists
+    static void addNPC(String name, int health, int damage, String dType, int exp, boolean hostile) {
+        npcName.add(name);
+        npcHealth.add(health);
+        npcDamage.add(damage);
+        npcDamageType.add(dType);
+        npcExp.add(exp);
+        npcHostile.add(hostile);
+    }
+
+    // Clear NPCs from area
+    static void clearNPCs() {
+        npcName.clear();
+        npcHealth.clear();
+        npcDamage.clear();
+        npcExp.clear();
+        npcHostile.clear();
     }
 
     // Method that populates the weapon arrays
@@ -3234,9 +3254,10 @@ public class Nordverden {
 
         characterSelection();
 
-        System.out.println("\n\nThis is a statement to indicate everything finished\n\n");
+        System.out.println("\n\nThis is a statement to indicate the game has started\n\n");
 
-        tempPopEnemiesArray();
+        addNPC("Silly Fella", 100, 10, "Blade", 100, true);
+        addNPC("Goober", 100, 10, "Blunt", 100, true);
         pHealth -= 50;
         gotMad();
 

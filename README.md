@@ -141,3 +141,10 @@ Update 16 --- Oct. 13th, 2024
    * Still havent fixed the other game breaking bugs in char creator
    * Left a bunch of debugging things everywhere
 * Might take another short break after this ngl
+
+Update 17 --- Oct. 15th, 2024
+* Found out I couldn't use classes on the final :(
+* Rewrote the majority of the combat system to work around the limitations
+* Also expanded the level system to improve stats every leve
+* Made it so that stamina directly affects how many moves the player has per turn
+

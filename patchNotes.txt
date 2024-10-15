@@ -148,3 +148,5 @@ Update 17 --- Oct. 15th, 2024
 * Also expanded the level system to improve stats every leve
 * Made it so that stamina directly affects how many moves the player has per turn
 
+Update 18 --- Oct. 15th, 2024
+* Added framework for armour

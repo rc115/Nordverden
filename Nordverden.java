@@ -431,55 +431,55 @@ public class Nordverden {
 
     //Method that equips a backpack
     static void equipBackpack() {
-        if (backpackEquiped == false) {
-            if (bSmallBag == true) {
+        if (!backpackEquiped) {
+            if (bSmallBag) {
                 System.out.println("    " + pName + " has equiped a Small Bag\n");
                 pInvSpace += 2;
-            } else if (bRugsack == true) {
+            } else if (bRugsack) {
                 System.out.println("   " + pName + " has equiped a Rugsack\n");
                 pInvSpace += 4;
-            } else if (bJanksportBackpack == true) {
+            } else if (bJanksportBackpack) {
                 System.out.println("   " + pName + " has equiped a Janksport\n");
                 pInvSpace += 5;
-            } else if (bLargeBackpack == true) {
+            } else if (bLargeBackpack) {
                 System.out.println("   " + pName + " has equiped a Camping Bag\n");
                 pInvSpace += 10;
-            } else if (bQuatumBag == true) {
+            } else if (bQuatumBag) {
                 System.out.println("   " + pName + " has equiped a QIIS MK1 Backpack\n");
                 pInvSpace += 95;
-            } else if (bBlackHole == true) {
+            } else if (bBlackHole) {
                 System.out.println("   " + pName + " has unfortunately equiped a Black Hole\n");
                 pInvSpace = 0;
             }
             backpackEquiped = true;
-        } else if (backpackEquiped == true) {
+        } else if (backpackEquiped) {
             System.out.println("    " + pName + " already has a backpack equipped.\n"
                 + "    Would you like to uneqip it?"
             );
-            System.out.println("1. Keep Current backpack.\n2. Unequip backpack");
+            System.out.println("1. Keep Current backpack.\n2. Unequip Backpack\n");
 
             playerSelection();
             switch (pSel) {
                 case "1":
                     break;
                 case "2": 
-                    if (bSmallBag == true) {
+                    if (bSmallBag) {
                         System.out.println("    " + pName + " has unequiped the Small Bag");
                         pInvSpace -= 2;
                         bSmallBag = false;
-                    } else if (bRugsack == true) {
+                    } else if (bRugsack) {
                         System.out.println("   " + pName + " has unequiped the Rugsack");
                         pInvSpace -= 4;
                         bRugsack = false;
-                    } else if (bJanksportBackpack == true) {
+                    } else if (bJanksportBackpack) {
                         System.out.println("   " + pName + " has unequiped the Janksport\n");
                         pInvSpace -= 5;
                         bJanksportBackpack = false;
-                    } else if (bLargeBackpack == true) {
+                    } else if (bLargeBackpack) {
                         System.out.println("   " + pName + " has unequiped the Camping Bag\n");
                         pInvSpace -= 10;
                         bLargeBackpack = false;
-                    } else if (bQuatumBag == true) {
+                    } else if (bQuatumBag) {
                         System.out.println("   " + pName + " has unequiped the QIIS MK1 Backpack\n");
                         pInvSpace -= 95;
                         bQuatumBag = false;
@@ -489,13 +489,123 @@ public class Nordverden {
                     equipBackpack();
                     break;
                 default:
+                    System.out.println("cant do that");
+                    equipBackpack();
                     break;
             }
         } else {
-            System.out.println("   Idk");
+            System.out.println("Smt happened");
         }
     }
 
+    // Method that equips Armour
+    static void equipArmour() {
+        if (!armourEquipped) {
+            if (aLeather) {
+                System.out.println("    " + pName + " has equiped Leather Armour\n");
+
+            } else if (aBarbarian) {
+                System.out.println("   " + pName + " has equiped Barbarian Armour\n");
+
+            } else if (aChainmail) {
+                System.out.println("   " + pName + " has equiped Chainmail Armour\n");
+
+            } else if (aPlate) {
+                System.out.println("   " + pName + " has equiped Plate Armour\n");
+
+            } else if (aKnight) {
+                System.out.println("   " + pName + " has equiped a set of Knight Armour\n");
+
+            } else if (aRiot) {
+                System.out.println("   " + pName + " has equiped Riot Armour\n");
+
+            } else if (aBikini) {
+                System.out.println("   " + pName + " has equiped a Bikini?\n");
+
+            } else if (aMage) {
+                System.out.println("   " + pName + " has equiped Mage Robes\n");
+
+            } else if (aNecro) {
+                System.out.println("   " + pName + " has equiped Necromancer Robes\n");
+
+            } else if (aElven) {
+                System.out.println("   " + pName + " has equiped Elven Armour\n");
+
+            } else if (aHoodie) {
+                System.out.println("   " + pName + " has equiped a Hoodie\n");
+
+            } else if (aJorts) {
+                System.out.println("   " + pName + " has equiped a T-Shirt and Jorts\n");
+
+            } else if (aHazmat) {
+                System.out.println("   " + pName + " has equiped a Hazmat Suit\n");
+
+            }
+            armourEquipped = true;
+        } else if (armourEquipped) {
+            System.out.println("    " + pName + " already has armour equipped.\n"
+                + "    Would you like to uneqip it?"
+            );
+            System.out.println("1. Keep Current Armour.\n2. Unequip Armour\n");
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    break;
+                case "2": 
+                    if (aLeather) {
+                        System.out.println("    " + pName + " has unequiped Leather Armour\n");
+        
+                    } else if (aBarbarian) {
+                        System.out.println("   " + pName + " has unequiped Barbarian Armour\n");
+        
+                    } else if (aChainmail) {
+                        System.out.println("   " + pName + " has unequiped Chainmail Armour\n");
+        
+                    } else if (aPlate) {
+                        System.out.println("   " + pName + " has unequiped Plate Armour\n");
+        
+                    } else if (aKnight) {
+                        System.out.println("   " + pName + " has unequiped a set of Knight Armour\n");
+        
+                    } else if (aRiot) {
+                        System.out.println("   " + pName + " has unequiped Riot Armour\n");
+        
+                    } else if (aBikini) {
+                        System.out.println("   " + pName + " has unequiped the Bikini\n");
+        
+                    } else if (aMage) {
+                        System.out.println("   " + pName + " has unequiped Mage Robes\n");
+        
+                    } else if (aNecro) {
+                        System.out.println("   " + pName + " has unequiped Necromancer Robes\n");
+        
+                    } else if (aElven) {
+                        System.out.println("   " + pName + " has unequiped Elven Armour\n");
+        
+                    } else if (aHoodie) {
+                        System.out.println("   " + pName + " has unequiped the Hoodie\n");
+        
+                    } else if (aJorts) {
+                        System.out.println("   " + pName + " has unequiped T-Shirt and Jorts\n");
+        
+                    } else if (aHazmat) {
+                        System.out.println("   " + pName + " has unequiped the Hazmat Suit\n");
+        
+                    }
+
+                    armourEquipped = false;
+                    equipArmour();
+                    break;
+                default:
+                    System.out.println("error: nah");
+                    equipArmour();
+                    break;
+            }
+        } else {
+            System.out.println("Smt happened");
+        }
+    }
     // ---> End of IMS   <---
 
 
@@ -592,7 +702,7 @@ public class Nordverden {
         }
 
         // confirms the character's skills
-        if ((skillPts == 0) && (conSkills == false)){
+        if ((skillPts == 0) && (!conSkills)){
             System.out.println("\n____________________________________________________________________________________________________\n");
             System.out.println("\n    You have run out of skill points.\n");
             System.out.println("\n    Your skills are:"
@@ -618,7 +728,7 @@ public class Nordverden {
             }
         }
         // confirms the character's resitances
-        if ((resistPts == 0) && (conResists == false)){
+        if ((resistPts == 0) && (!conResists)){
             System.out.println("\n____________________________________________________________________________________________________\n");
             System.out.println("\n    You have run out of resistance points.\n");
             System.out.println("\n    Your resistances are:"
@@ -641,7 +751,7 @@ public class Nordverden {
             }
         }
         // Confirms the character's damage multipliers
-        if ((damagePts == 0) && (conDamage == false)){
+        if ((damagePts == 0) && (!conDamage)){
             System.out.println("\n____________________________________________________________________________________________________\n");
             System.out.println("\n    You have run out of damage points.\n");
             System.out.println("\n    Your damage multipliers are:"
@@ -665,7 +775,7 @@ public class Nordverden {
         }
 
         // starts the stat modification process
-        if (conFinalStats == false) {
+        if (!conFinalStats) {
             // starts the skill point distribution chain
             if (skillPts > 0) {
                 System.out.println("\n    You have " + skillPts + " skill points to spend.");
@@ -737,7 +847,7 @@ public class Nordverden {
                     default: System.out.println("\n         cannot do that for some reason\n"); customizeStats();
                 }
             // confirms the player's final stats
-            } else if (conSkills == true && conResists == true && conDamage == true) {
+            } else if (conSkills && conResists && conDamage) {
                 System.out.println("\n    You have finished setting your character's stats."
                     + "\n    These are your finalized character stats:\n"
 
@@ -784,27 +894,27 @@ public class Nordverden {
         }
 
         // lets player choose their character's class
-        if (pClassSet == false){
+        if (!pClassSet){
             charClassSel();
         }
 
         // lets the player choose their character's race
-        if (pRaceSet == false) {
+        if (!pRaceSet) {
             charRaceSel();
         }
 
         // lets the player choose their character's karma
-        if (karmaSet == false) {
+        if (!karmaSet) {
             startingKarma();
         }
 
         // lets the player choose their starting equipment
-        if (pStartEquip == false) {
+        if (!pStartEquip) {
             startingEquipment();
         }
 
         // lets the player choose their starting location
-        if (pStartLocation == false) {
+        if (!pStartLocation) {
             startingLocation();
         }
     }
@@ -2596,7 +2706,7 @@ public class Nordverden {
                     break;
                 case "9":
                     System.out.println("    "+pName+" walks around for a while.");
-                    if (pForrestKey == true){
+                    if (pForrestKey){
                         System.out.println("    The key begins to glow. "
                             + pName + " is transported into the hidden forrest."
                         );
@@ -2806,7 +2916,7 @@ public class Nordverden {
 
     // Method that ensures character has a passport
     static void nekoCheckpoint() {
-        if (pNekoPassport == true) {
+        if (pNekoPassport) {
             System.out.println("    " + pName + " passed the checkpoint and was allowed to stay.\n");
             pLocation = "Nekomura";
         } else {
@@ -3128,7 +3238,7 @@ public class Nordverden {
 
     // Method that sets the weapon type and damage
     static void setWeaponStats(String item) {
-        if (weaponEquipped == false) {
+        if (!weaponEquipped) {
             if (allWeapons.contains(item)) {
                 // Sets damage based on the tier
                 if (t1Weapons.contains(item)) {

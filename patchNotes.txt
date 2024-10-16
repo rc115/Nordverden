@@ -107,10 +107,10 @@ Update 15 --- Oct. 13th, 2024
 * Need to add pretty much everything on the spreadsheet (Seems like a lot ngl)
 * So far the 80% of the "bones" are done
 * Need at least 70% of the "meat" to count this as a game, currently at 0-5%
-* I need some sleep, its 3:54 AM rn been coding since 1:43 PM 💀
+* I need some sleep, its 3:54 AM rn been coding since 1:43 PM
 
 Update 16 --- Oct. 13th, 2024
-* Another massive update 🥲
+* Another massive update
 * Added pain and suffering
 * Finnally found the difference between methods and functions
 * Added a class to handle NPCs
@@ -150,3 +150,12 @@ Update 17 --- Oct. 15th, 2024
 
 Update 18 --- Oct. 15th, 2024
 * Added framework for armour
+
+Update 19 --- Oct. 15th, 2024
+* Started work on companion system
+* Finished half of the tutorial
+* Might remove charIsInRoom Method (not really needed)
+* Character can get way too strong right after the start 
+   * lvl 3 orc + warrior + leather armour = 70 strength, 25 damage, and 2.09 blade res.
+   * With a companion player might be able to kill a dragon by level 5 (power scaling is out of wack rn)
+* Might be bugged because of equiping weapon after starting equipment

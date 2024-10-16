@@ -53,7 +53,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.018.101524"
+        + "\n                                       Version 0.019.101524"
         + "\n" 
     );
 
@@ -68,14 +68,24 @@ public class Nordverden {
     static String pClass = "";
     static String pLocation = "";
 
+
     static int pLives = 1; // ammount of lives the character has
     static int pLevel = 1; //character's level. +10 skill pointsMax lvl 46 (lvl 5 = 1000 total xp needed)
     static int pCurXp = 0; // current expirience points
     static int pNextLvl = (10*(pLevel*pLevel) + 90); // ammount of xp needed to level up
     static int pHealth = 100; // character's health
     static int pMaxHealth = 100;
-    static int pKarma = 0;
 
+    // char's reputation
+    static int pKarma = 0; // (-10< [Bounty Hunters], <10[Mercenaries])
+    // -10[kill on sight] < -5[locks quests] < 0[neutral] < 5[Allied] < 10[Special access]
+    static int verdRep = 0;
+    static int empiRep = 0;
+    static int nekoRep = 0;
+    static int wElfRep = 0;
+    static int dElfRep = 0;
+
+    static boolean tutComplete = false;
     static boolean pRaceSet = false; // var for if the player set their character's race
     static boolean pClassSet = false; // var for if the player set their character's class
     static boolean karmaSet = false; // var for if the player set their character's karma
@@ -179,13 +189,22 @@ public class Nordverden {
     static int pDisToTar = 0; // Character's distance to targeted enemy (>=2 is Melee <2 isRanged)
     static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
     static String pWeaponType = "none"; // type of weapon character is using
-    static double cDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
-    static double cDmgRes = 0.0; // Character's damage resistance (depens on damage type)
+    static double pDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
+    static double pDmgRes = 0.0; // Character's damage resistance (depens on damage type)
     static int eDmgToP = 0; // damage done to player if enemy hits
     static String eDmgType; // type of damage enemy does
 
-    static double pDamageCalc = ((pWeaponDmg*cDmgMult) + (pStrenght*0.25)); // function to calculate character's damage
-    
+    static double pDamageCalc = ((pWeaponDmg*pDmgMult) + (pStrenght*0.25)); // Equation to calculate character's damage
+
+    // Companion variables
+    static boolean hasCompanion = false; // var for if the player has a companion
+    static String cName = "";
+    static int cHealth = 0;
+    static int cDamage = 0;
+    static double cDmgRes = 0;
+    static boolean astridDied = false;
+    static boolean leonDied = false;
+
     //static ArrayList<NPC> enemies = new ArrayList<>(); // Array list that uses NPC class to determine the enemies stats, name, etc
     // Individual array lists used for each enemy stat
     static ArrayList<String> npcName = new ArrayList<>(); // NPC names
@@ -389,7 +408,7 @@ public class Nordverden {
 
     // Method that lets user use an item (pretty complicated ngl)
     static void useItem() {
-        if (invItems.isEmpty()) { // Cancels useItem func if char's inv is empty
+        if (invItems.isEmpty()) { // Cancels useItem method if char's inv is empty
             System.out.println(pName + "'s inventory is empty.");
             return;
         }
@@ -503,7 +522,7 @@ public class Nordverden {
         if (!armourEquipped) {
             if (aLeather) {
                 System.out.println("    " + pName + " has equiped Leather Armour\n");
-
+                pBladeRes += 0.5;
             } else if (aBarbarian) {
                 System.out.println("   " + pName + " has equiped Barbarian Armour\n");
 
@@ -555,7 +574,7 @@ public class Nordverden {
                 case "2": 
                     if (aLeather) {
                         System.out.println("    " + pName + " has unequiped Leather Armour\n");
-        
+                        pBladeRes -= 0.5;
                     } else if (aBarbarian) {
                         System.out.println("   " + pName + " has unequiped Barbarian Armour\n");
         
@@ -911,6 +930,21 @@ public class Nordverden {
         // lets the player choose their starting equipment
         if (!pStartEquip) {
             startingEquipment();
+        }
+
+        // Asks the player if they want to do the tutorial
+        if (conFinalStats && pClassSet && pRaceSet && karmaSet && pStartEquip && !tutComplete) {
+            System.out.println("\n____________________________________________________________________________________________________\n");
+            System.out.println("    You have finished making your character!");
+            System.out.println("    Would you like to do the tutorial?\n");
+            System.out.println("1. Do the tutorial\n2. Choose an alternate start\n");
+
+            playerSelection();
+            switch (pSel) {
+                case "1": empirianPrisoner(); break;
+                case "2": break;
+                default: System.out.println("stop"); customizeStats();
+            }
         }
 
         // lets the player choose their starting location
@@ -1880,7 +1914,7 @@ public class Nordverden {
             System.out.println("\n    Your character is now a Vilager.\n");
         } else if (pClass.equals("Warrior")) {
             pStrenght += 15;
-            placeInInv("Rusty Sword");
+            setWeaponStats("Rusty Sword");
             System.out.println("\n    Your character is now a Warrior.\n");
         } else if (pClass.equals("Tank")) {
             pBladeRes += 1;
@@ -1888,11 +1922,11 @@ public class Nordverden {
             System.out.println("\n    Your character is now a Tank.\n");
         } else if (pClass.equals("Mage")) {
             pSorcery += 15;
-            placeInInv("Stick Wand");
+            setWeaponStats("Stick Wand");
             System.out.println("\n    Your character is now a Mage.\n");
         } else if (pClass.equals("Archer")) {
             pSneak += 15;
-            placeInInv("Handmade Bow");
+            setWeaponStats("Handmade Bow");
             System.out.println("\n    Your character is now a Archer.\n");
         } else if (pClass.equals("Gambler")) {
             pLuck += 1;
@@ -1966,11 +2000,11 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "1": placeInInv("Rusty Sword"); break;
-            case "2": placeInInv("Wooden Hammer"); break;
-            case "3": placeInInv("Handmade Bow"); break;
-            case "4": placeInInv("Stick Wand"); break;
-            case "5": placeInInv("Leather Armour");break;
+            case "1": setWeaponStats("Rusty Sword"); break;
+            case "2": setWeaponStats("Wooden Hammer"); break;
+            case "3": setWeaponStats("Handmade Bow"); break;
+            case "4": setWeaponStats("Stick Wand"); break;
+            case "5": aLeather = true; equipArmour(); break;
             case "6": placeInInv("Stamina Potion");break;
             case "7": placeInInv("Health Potion");break;
             case "8": bSmallBag = true; equipBackpack(); break;
@@ -1988,7 +2022,7 @@ public class Nordverden {
             + "\n    Note: Some locations are not suitable for certain builds.\n"
         );
         System.out.println("\n1. River\n2. Desert\n3. Nekomura\n4. Orc Territory"
-            + "\n5. Barbarian Territory\n6. Prisoner of the Empire\n7. View Character\n"
+            + "\n5. Barbarian Territory\n6. View Character\n"
         );
 
         playerSelection();
@@ -2013,11 +2047,7 @@ public class Nordverden {
                 System.out.println("    " + pName + " stumbled into barbarian territory.\n");
                 playerLocator("Barbarians");
                 break;
-            case "6":
-                System.out.println("    " + pName + " was captured trying to leave Nordverden.\n");
-                empirianPrisoner();
-                break;
-            case "7": pDisplayCharacter(); startingLocation(); break;
+            case "6": pDisplayCharacter(); startingLocation(); break;
             default: System.out.println("Cant"); startingLocation();
         }
 
@@ -2027,84 +2057,213 @@ public class Nordverden {
 
     // Method for the empirian prisoner start
     static void empirianPrisoner() {
+        if (!tutComplete) {
+            pStartLocation = true;
+            tutComplete = true;
+            String[] statements = { // string array with the text blob
+                "    " + pName + " opens " + proPos + " eyes.",
+                "    There's three carts being transported by Empirian Soldiers on horsedrawn carts.",
+                "    "+pName+" is on the last one with three prisoners sitting with " + proObj + ",",
+                "    " + proSub + " looks down to see " + proPos + " hands are tied aswell.",
+                "    The convoy seems to be going towards a small desert village a few kilometers away.",
+                "    One of the prisoner's starts talking to " + proObj + ".",
+                "",
+                "Astrid: Hey you! You finally woke up.",
+                "I was starting to think the grunts hit you a bit too hard.",
+                "You were trying to leave Nordverden on the west coast I'm guessing.",
+                "Us? We were sent by the king to sabotage one of their ships.",
+                "A classic case of wrong place wrong time I suppose.",
+                "They might take it easy on you if you manage to convince them you're not with us.",
+                "Good luck though. Empirians don't spare prisoners of wa...",
+                "",
+                "Empirian Guard: Be quiet! You're lucky I have orders to follow.",
+                "If not you wouldn't even make it to the guillotine.",
+                "Your stunt cost the Empire thousands of coins.",
+                "You will all pay for your crimes regardless of what you say.",
+                "",
+                "    The cart stops inside {tempDesertVillage}.",
+                "",
+                "Empirian Guard: Get off already! What are you waiting for?",
+                "",
+                "    One by one each prisoner steps out of the cart until it's just " + pName + ".",
+                "    The guard shoves " + proObj + " and " + proSub + " is forced to line up with the rest.",
+                "    An officer begins to list off the names of the prisoner's and their crimes.",
+                "",
+                "Empirian Officer: These prisoner's have all committed unforgivable crimes against",
+                "the Great Empire of the Wise Emperor Brutus the Fourth.",
+                "For these crimes they will be tried for terrorism and sentenced to death by guillotine.",
+                "Leon bring up the first prisoner.",
+                "",
+                "    The guard standing next to the officer goes out into the line of prisoners",
+                "    and takes the person on the far side of where "+pName+" is.",
+                "    This repeats until the prisoners on the first cart were gone",
+                "    Just as the soldiers were ready to take next set of prisoners forward,",
+                "    a large bomb was set off behind the guillotine sending rubble flying everywhere.",
+                "    In the chaos the remaining prisoners take the opportunity to flee",
+                "    while the soldiers are distracted."
+            };
+
+            // Neded to slow text chunk to let player read it better
+            for (String statement : statements) { 
+                System.out.println(statement);
+                try { // credits to Gray on stack overflow for sleep method
+                    Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            System.out.println("\nAstrid: Hey! Come with us we know a way out through the sewers.\n\n"
+            + "    At the same time she says that "+pName+" sees Leon lying on the floor under some rubble.\n"
+            + "\n1. Go with Astrid\n2. Save Leon\n3. Run towards the desert\n"
+            );
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    goWithAstrid();
+                    break;
+                case "2":
+                    saveLeon();
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" takes the opportunity and escapes {tempDesertVillage}.");
+                    playerLocator("Desert");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            System.out.println("\n    "+pName+" already did this before...\n");
+            pStartLocation = false;
+            startingLocation();
+        }
+
+    }
+
+    // method for if char goes with Astrid
+    static void goWithAstrid() {
+        empiRep -= 2;
+
         String[] statements = { // string array with the text blob
-            "    " + pName + " opens " + proPos + " eyes.",
-            "    There's three carts being transported by Empirian Soldiers on horsedrawn carts.",
-            "    "+pName+" is on the last one with three prisoners sitting with " + proObj + ",",
-            "    " + proSub + " looks down to see " + proPos + " hands are tied aswell.",
-            "    The convoy seems to be going towards a small desert village a few kilometers away.",
-            "    One of the prisoner's starts talking to " + proObj + ".",
+            "    "+pName+" followed Astrid.",
             "",
-            "Astrid: Hey you! You finally woke up.",
-            "I was starting to think the grunts hit you a bit too hard.",
-            "You were trying to leave Nordverden on the west coast I'm guessing.",
-            "Us? We were sent by the king to sabotage one of their ships.",
-            "A classic case of wrong place wrong time I suppose.",
-            "They might take it easy on you if you manage to convince them you're not with us.",
-            "Good luck though. Empirians don't spare prisoners of wa...",
+            "Astrid: Over here! Herry before the guards come after us!",
             "",
-            "Empirian Guard: Be quiet! You're lucky I have orders to follow.",
-            "If not you wouldn't even make it to the guillotine.",
-            "Your stunt cost the Empire thousands of coins.",
-            "You will all pay for your crimes regardless of what you say.",
+            "    " + pName + " and Astrid climb down the sewers with a small group of survivors",
+            "    A few feet into the tunnel the group hears voices behind them",
             "",
-            "    The cart stops inside {tempDesertVillage}.",
+            "Astrid: Dritt! De jager oss! Keep going I'll stay back to hold them off.",
             "",
-            "Empirian Guard: Get off already! What are you waiting for?",
+            "    " + pName + " decides its better if they both fight back...",
             "",
-            "    One by one each prisoner steps out of the cart until it's just " + pName + ".",
-            "    The guard shoves " + proObj + " and " + proSub + " is forced to line up with the rest.",
-            "    An officer begins to list off the names of the prisoner's and their crimes.",
-            "",
-            "Empirian Officer: These prisoner's have all committed unforgivable crimes against",
-            "the Great Empire of the Wise Emperor Brutus the Fourth.",
-            "For these crimes they will be tried for terrorism and sentenced to death by guillotine.",
-            "Leon bring up the first prisoner.",
-            "",
-            "    The guard standing next to the officer goes out into the line of prisoners",
-            "    and takes the person on the far side of where "+pName+" is.",
-            "    This repeats until the prisoners on the first cart were gone",
-            "    Just as the soldiers were ready to take next set of prisoners forward,",
-            "    a large bomb was set off behind the guillotine sending rubble flying everywhere.",
-            "    In the chaos the remaining prisoners take the opportunity to flee",
-            "    while the soldiers are distracted."
+            "Astrid: What are you doing? "
         };
 
         // Neded to slow text chunk to let player read it better
         for (String statement : statements) { 
             System.out.println(statement);
-            try { // credits to Gray on stack overflow for sleep method
-                Thread.sleep(2000); // 2 sec wait time (feels too fast and too slow at the same time)
+            try {
+                Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
 
-        System.out.println("\nAstrid: Hey! Come with us we know a way out through the sewers.\n\n"
-        + "    At the same time she says that "+pName+" sees Leon lying on the floor under some rubble.\n"
-        + "\n1. Go with Astrid\n2. Save Leon\n3. Run towards the desert\n"
-        );
+        boolean fightWithAstrid = false;
+        int astridChance = rand.nextInt(20);
+        if (!weaponEquipped) {
+            System.out.print("Are you daft? You don't even have a weapon! Get out while you can.\n\n"
+                + "1. Run Away\n2. Stay and Fight\n"
+            );
 
-        playerSelection();
-        switch (pSel) {
-            case "1":
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    System.out.println("\n    " + pName + " ran away with the rest of the group...\n"
+                        + "    They continue traveling until one of the survivors tells the group they can exit from a hatch nearby.\n"
+                        + "    The group exits the tunnel and are left near a river in the desert.\n\n"
+                        + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
+                        + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
+                    );
+                    playerLocator("Desert");
+                    if (astridChance < 6) {
+                        astridDied = true;
+                    }
+                    break;
+                default: System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n"); setWeaponStats("Fists"); fightWithAstrid = true;
+            }
+        } else {
+            System.out.println("Astrid: What? Are you sure? You look a little green.");
+            if (pOrc || pWoodElf) {
+                System.out.println("Astrid: I didn't mean it like... nevermind.");
+            }
+            System.out.println("\n1. Fight with Astrid\n2. Run Away\n");
 
-                break;
-            case "2":
-
-                break;
-            case "3":
-                System.out.println("    "+pName+" takes the opportunity and escapes {tempDesertVillage}.");
-                playerLocator("Desert");
-                break;
-            default:
-                break;
+            playerSelection();
+            switch (pSel) {
+                case "2":
+                    System.out.println("\n    " + pName + " ran away with the rest of the group...\n"
+                        + "    They continue traveling until one of the survivors tells the group they can exit from a hatch nearby.\n"
+                        + "    The group exits the tunnel and are left near a river in the desert.\n\n"
+                        + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
+                        + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
+                    );
+                    playerLocator("Desert");
+                    if (astridChance < 6) {
+                        astridDied = true;
+                    }
+                    break;
+                default: System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n"); fightWithAstrid = true;
+            }
         }
+
+        if (fightWithAstrid) {
+            System.out.println("\nAstrid: Fine let's do this together.\n\n");
+
+            recruitComp("Astrid");
+
+            addNPC("Wounded Soldier", 60, 20, "Bladed", 50, true);
+            addNPC("Wounded Soldier", 55, 20, "Bladed", 50, true);
+            addNPC("Wounded Soldier", 70, 20, "Bladed", 50, true);
+            
+            gotMad();
+        }
+
+    }
+
+    // method for if char tries to save Leon
+    static void saveLeon() {
+        verdRep -= 2;
+        System.out.println("    "+pName+" went over to help Leon.");
+
     }
 
     // --->   End of Character Creator   <---
 
 
+
+
+
+    // --->   Companion System   <---
+
+    // Method that sets companion stats
+    static void recruitComp(String name) {
+        if (name.equals("Astrid") && !astridDied) {
+            cName = "Astrid";
+            cDamage = 20;
+            cDmgRes = 1.5;
+            cHealth = 150;
+
+        } else if (name.equals("Leon") && !leonDied) {
+            cName = "Leon";
+            cDamage = 30;
+            cDmgRes = 1.5;
+            cHealth = 100;
+        }
+
+        System.out.println(cName + " has joined " + pName + "'s party.");
+    }
 
 
 
@@ -2142,18 +2301,18 @@ public class Nordverden {
             default: System.out.println("Nuh uh");
         }
 
-        pBladeRes += 0.1;
-        pBluntRes += 0.1;
-        pMagicRes += 0.1;
-        pPoisonRes += 0.1;
-        pFireRes += 0.1;
-        pFrostRes += 0.1;
-        pUnarmedDmg += 0.1;
-        pBladeDmg += 0.1;
-        pBluntDmg += 0.1;
-        pHeavyDmg += 0.1;
-        pMagicDmg += 0.1;
-        pRangedDmg += 0.1;
+        pBladeRes += 0.05;
+        pBluntRes += 0.05;
+        pMagicRes += 0.05;
+        pPoisonRes += 0.05;
+        pFireRes += 0.05;
+        pFrostRes += 0.05;
+        pUnarmedDmg += 0.05;
+        pBladeDmg += 0.05;
+        pBluntDmg += 0.05;
+        pHeavyDmg += 0.05;
+        pMagicDmg += 0.05;
+        pRangedDmg += 0.05;
     }
 
     // --->   End of Leveling System   <---
@@ -2183,26 +2342,28 @@ public class Nordverden {
 
     // All Possible "Rooms" (not used just wanted a list of them)
     static void popRoomList() {
-        locList.add("nordCapital");
-        locList.add("norCave");
-        locList.add("nekoCity");
-        locList.add("desVill");
-        locList.add("desTown");
-        locList.add("plaVill");
-        locList.add("barCamp");
-        locList.add("souCave");
-        locList.add("empColony");
-        locList.add("rivVill");
-        locList.add("lake");
-        locList.add("orcCamp");
-        locList.add("easCave");
-        locList.add("coastVill");
-        locList.add("hiddenForrest");
-        locList.add("plaTown");
-        locList.add("cryCave");
-        locList.add("colSor");
-        locList.add("gulag");
-
+        /*
+        ("nordCapital")
+        ("norCave")
+        ("nekoCity")
+        ("desVill")
+        ("desTown")
+        ("plaVill")
+        ("barCamp")
+        ("souCave")
+        ("empColony")
+        ("rivVill")
+        ("lake")
+        ("orcCamp")
+        ("easCave")
+        ("coastVill")
+        ("hiddenForrest")
+        ("plaTown")
+        ("cryCave")
+        ("colSor")
+        ("gulag")
+        ("deViSewers")
+        */
     }
 
     // Funtion that lets player choose where to go (Probably not the best way to do it)
@@ -2886,12 +3047,30 @@ public class Nordverden {
         pMover(pLocation);
     }
 
+    // Method that ensures character has a passport
+    static void nekoCheckpoint() {
+        if (pNekoPassport) {
+            System.out.println("    " + pName + " passed the checkpoint and was allowed to stay.\n");
+            pLocation = "Nekomura";
+        } else {
+            System.out.println("    " + pName + " did not pass the checkpoint and was deported.\n");
+            pLocation = "Coast";
+        }
+    }
+
     // Funtion that sends cahr to the correct room
     static void charIsIn(String room) {
         if (room.equals("gulag")) {
             theGulag();
         }
     }
+
+    // --->   End of Missile Logic <---
+
+
+
+
+    // --->   Rooms (secondary locations)   <---
 
     // Room for player's death
     static void theGulag() {
@@ -2914,18 +3093,7 @@ public class Nordverden {
         startingLocation();
     }
 
-    // Method that ensures character has a passport
-    static void nekoCheckpoint() {
-        if (pNekoPassport) {
-            System.out.println("    " + pName + " passed the checkpoint and was allowed to stay.\n");
-            pLocation = "Nekomura";
-        } else {
-            System.out.println("    " + pName + " did not pass the checkpoint and was deported.\n");
-            pLocation = "Coast";
-        }
-    }
-
-    // --->   End of Missile Logic <---
+    // --->   End of Rooms   <---
 
 
 
@@ -2960,7 +3128,7 @@ public class Nordverden {
                 if (pLives == 1) { // Sends char to the gulag if they die
                     System.out.println("\n    "+pName+" has died...");
                     pLives -= 1;
-                    charIsIn("gulag");
+                    theGulag();
                     break;
                 } else if (pLives <= 0) { // ends game if they lose in the gulag
                     System.out.println("\n    "+pName+" has died...");
@@ -3034,7 +3202,7 @@ public class Nordverden {
             } else if (pHitChance == 20) {
                 System.out.println("\n*Critical Hit!*\n");
                 setDamageMultiplier(pWeaponType);
-                pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
+                pDamageCalc = ((pWeaponDmg * pDmgMult) + (pStrenght * 0.25));
                 int damage = (int)(pDamageCalc);
                 damage *= 2;
 
@@ -3042,7 +3210,7 @@ public class Nordverden {
                 System.out.println("    " + pName + " hit " + npcName.get(choice) + " and did " + damage + " damage!");
             } else {
                 setDamageMultiplier(pWeaponType);
-                pDamageCalc = ((pWeaponDmg * cDmgMult) + (pStrenght * 0.25));
+                pDamageCalc = ((pWeaponDmg * pDmgMult) + (pStrenght * 0.25));
                 int damage = (int)(pDamageCalc);
 
                 npcHealth.set(choice, npcHealth.get(choice) - damage);
@@ -3081,7 +3249,7 @@ public class Nordverden {
                 } else { // if enemy attack hits it hurts the player depending on the enemy damage and char's dmg res
                     eDmgType = npcDamageType.get(i);
                     setDamageResistance(eDmgType);
-                    eDmgToP = (int)(eDmgToP / (cDmgRes + 0.5));
+                    eDmgToP = (int)(eDmgToP / (pDmgRes + 0.5));
                     eDmgToP = Math.max(eDmgToP, 0); // Makes sure the enemies damage cant be lower than 0 or it would heal the player lol
                     pHealth -= eDmgToP;
                     System.out.println("    "+npcName.get(i)+" hit "+pName+" and did "+eDmgToP+" damage!");
@@ -3093,38 +3261,38 @@ public class Nordverden {
     // Method that sets damage multiplier based on weapon type
     static void setDamageMultiplier(String pWeaponType) {
         if (pWeaponType.equals("Unarmed")) {
-            cDmgMult = pUnarmedDmg;
+            pDmgMult = pUnarmedDmg;
         } else if (pWeaponType.equals("Bladed")) {
-            cDmgMult = pBladeDmg;
+            pDmgMult = pBladeDmg;
         } else if (pWeaponType.equals("Blunt")) {
-            cDmgMult = pBluntDmg;
+            pDmgMult = pBluntDmg;
         } else if (pWeaponType.equals("Heavy")) {
-            cDmgMult = pHeavyDmg;
+            pDmgMult = pHeavyDmg;
         } else if (pWeaponType.equals("Magic")) {
-            cDmgMult = pMagicDmg;
+            pDmgMult = pMagicDmg;
         } else if (pWeaponType.equals("Ranged")) {
-            cDmgMult = pRangedDmg;
+            pDmgMult = pRangedDmg;
         } else {
-            cDmgMult = 0;
+            pDmgMult = 0;
         }
     }
 
     // Method that sets damage resistances based on the enemy's damage type
     static void setDamageResistance(String eDmgType) {
         if (eDmgType.equals("Bladed")) {
-            cDmgRes = pBladeRes;
+            pDmgRes = pBladeRes;
         } else if (eDmgType.equals("Blunt")) {
-            cDmgRes = pBluntRes;
+            pDmgRes = pBluntRes;
         } else if (eDmgType.equals("Magic")) {
-            cDmgRes = pMagicRes;
+            pDmgRes = pMagicRes;
         } else if (eDmgType.equals("Poison")) {
-            cDmgRes = pPoisonRes;
+            pDmgRes = pPoisonRes;
         } else if (eDmgType.equals("Fire")) {
-            cDmgRes = pFireRes;
+            pDmgRes = pFireRes;
         } else if (eDmgType.equals("Frost")) {
-            cDmgRes = pFrostRes;
+            pDmgRes = pFrostRes;
         } else {
-            cDmgRes = 0;
+            pDmgRes = 0;
         }
     }
 

@@ -159,3 +159,7 @@ Update 19 --- Oct. 15th, 2024
    * lvl 3 orc + warrior + leather armour = 70 strength, 25 damage, and 2.09 blade res.
    * With a companion player might be able to kill a dragon by level 5 (power scaling is out of wack rn)
 * Might be bugged because of equiping weapon after starting equipment
+
+Update 20 --- Oct. 16th, 2024
+* Added a turn in combat for the companion
+* Started work on more combat actions

@@ -53,7 +53,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.019.101524"
+        + "\n                                       Version 0.020.101624"
         + "\n" 
     );
 
@@ -171,7 +171,7 @@ public class Nordverden {
     static boolean aRiot = false; // +2.0 blunt res +0.5 bladed res
     static boolean aBikini = false; // +1.0 bladed res +1.0 blunt res
     // Other Armours
-    static boolean aMage = false; // +1.0 magic res
+    static boolean aMage = false; // +1.0 magic res2
     static boolean aNecro = false; // +1.5 magic res
     static boolean aElven = false; // +2.0 magic res
     static boolean aHoodie = false; // +1.5 frost res
@@ -221,6 +221,8 @@ public class Nordverden {
     static ArrayList<String> t3Weapons = new ArrayList<>();
     static ArrayList<String> t4Weapons = new ArrayList<>();
     static ArrayList<String> t5Weapons = new ArrayList<>();
+    static ArrayList<String> spells = new ArrayList<>();
+
 
     // Location Array
     static ArrayList<String> locList = new ArrayList<>();
@@ -1947,7 +1949,7 @@ public class Nordverden {
                 } else if (pClass.equals("Warrior")) {
                     pStrenght -= 15;
                     pInvSpace += 1;
-                    invItems.remove("Rusty Sword");
+                    setWeaponStats("");
                 } else if (pClass.equals("Tank")) {
                     pBladeRes -= 1;
                     pBluntRes -= 1;
@@ -2264,6 +2266,10 @@ public class Nordverden {
 
         System.out.println(cName + " has joined " + pName + "'s party.");
     }
+    
+    // --->   End of Comp Sys   <---
+
+
 
 
 
@@ -2301,6 +2307,8 @@ public class Nordverden {
             default: System.out.println("Nuh uh");
         }
 
+        pMaxHealth += 10;
+        pHealth = pMaxHealth;
         pBladeRes += 0.05;
         pBluntRes += 0.05;
         pMagicRes += 0.05;
@@ -3122,6 +3130,9 @@ public class Nordverden {
                 break;
             }
 
+            cTurn();
+            combatMenu();
+
             eTurn(); // if char has not won next enemy will attack
 
             if (isCharDead()) {
@@ -3191,7 +3202,7 @@ public class Nordverden {
             choice = input.nextInt() - 1;
 
             if (choice < 0 || choice >= npcName.size()) { // input validation to make sure player selects valid enemy
-                System.out.println("nuh uh");
+                System.out.println("    "+pName+" fought the air.");
                 return;
             }
 
@@ -3255,6 +3266,52 @@ public class Nordverden {
                     System.out.println("    "+npcName.get(i)+" hit "+pName+" and did "+eDmgToP+" damage!");
                 }
             }
+        }
+    }
+    
+    static void cTurn() {
+        if (cHealth > 0) { // if the enemy attacking is alive
+            int cHitChance = rand.nextInt(20) + 1;
+            int cChoice = rand.nextInt(npcName.size());
+
+            if (cHitChance < 10) {
+                System.out.println("    "+cName+" missed!");
+            } else { // if enemy attack hits it hurts the player depending on the enemy damage and char's dmg res
+                npcHealth.set(cChoice, npcHealth.get(cChoice) - cDamage);
+                System.out.println("    " + cName + " hit " + npcName.get(cChoice) + " and did " + cDamage + " damage!");
+            }
+        }
+    }
+
+    // Method for the combat menu
+    static void combatMenu() {
+        System.out.println("\n____________________________________________________________________________________________________\n");
+        System.out.println("    The enemy is about to attack!\n"
+            + "    What will "+pName+" do?\n\n"
+            + "1. Keep fighting\n2. Use an item\n3. Try to run away\n"
+        );
+
+        playerSelection();
+        switch (pSel) {
+            case "1": break;
+            case "2": useItem(); break;
+            case "3": escapeCombat(); break;
+            default: System.out.println("try again"); combatMenu();
+        }
+    }
+
+    // Method for fleeing combat
+    static void escapeCombat() {
+        System.out.println("    "+pName+" tried to escape...");
+
+        int escapeChance = (rand.nextInt((pSneak/10)) + 1) + pLuck;
+
+        if (escapeChance > 6) { // chance to escape increases with sneak
+            System.out.println("    "+pName+" got away succesfully.");
+            clearNPCs();
+        } else {
+            System.out.println("    But "+proObj+" didn't get away with it.");
+            return;
         }
     }
 

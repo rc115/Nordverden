@@ -26,26 +26,7 @@ import java.util.ArrayList;
 public class Nordverden {
     static Scanner input = new Scanner(System.in);
     static Random rand = new Random();
-//
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --->   VarHell Starts here  <---
-// (Variables are static to be used globally)
-
-    // String Variables
     static String welcomeMsg = ( "\n"
         + "\n    Welcome to"
         + "\n          __              _                   _            "
@@ -53,189 +34,9 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.020.101624"
+        + "\n                                       Version 0.021.101724"
         + "\n" 
     );
-
-    static String pSel = "";
-    static String pStatsDisplay = "";
-    static String pStatsInfo = "";
-    static String pName = "";
-    static String proSub = "";
-    static String proObj = "";
-    static String proPos = "";
-    static String pRace = "";
-    static String pClass = "";
-    static String pLocation = "";
-
-
-    static int pLives = 1; // ammount of lives the character has
-    static int pLevel = 1; //character's level. +10 skill pointsMax lvl 46 (lvl 5 = 1000 total xp needed)
-    static int pCurXp = 0; // current expirience points
-    static int pNextLvl = (10*(pLevel*pLevel) + 90); // ammount of xp needed to level up
-    static int pHealth = 100; // character's health
-    static int pMaxHealth = 100;
-
-    // char's reputation
-    static int pKarma = 0; // (-10< [Bounty Hunters], <10[Mercenaries])
-    // -10[kill on sight] < -5[locks quests] < 0[neutral] < 5[Allied] < 10[Special access]
-    static int verdRep = 0;
-    static int empiRep = 0;
-    static int nekoRep = 0;
-    static int wElfRep = 0;
-    static int dElfRep = 0;
-
-    static boolean tutComplete = false;
-    static boolean pRaceSet = false; // var for if the player set their character's race
-    static boolean pClassSet = false; // var for if the player set their character's class
-    static boolean karmaSet = false; // var for if the player set their character's karma
-    static boolean pStartEquip = false; // var for if the player choose their starting equipment
-    static boolean pStartLocation = false;
-
-    // boolean variables for each race
-    static boolean pVerdian = false;
-    static boolean pEmpirian = false;
-    static boolean pOrc = false;
-    static boolean pDarkElf = false;
-    static boolean pWoodElf = false;
-    static boolean pNekohito = false;
-    static boolean pDragonborn = false;
-    static boolean pNekoPassport = false;
-    static boolean pForrestKey = false;
-
-    static int pGold = 5; // Nordverden currency
-    static int pCoins = 0; // Empirian currency
-    static int pSchmeeps = 0; // Nekohito currency
-    static int goldToConvert = 0; // ammount of gold to convert
-    static int coinsToConvert = 0; // ammount of coins to convert
-    static int schmeepsToConvert = 0; // ammount of schmeeps to convert
-    static int goldToCoin = (goldToConvert*10); // calculation for gold to coin conversion
-    static int cointToGold = (coinsToConvert/8); // calculation for coin to gold conversion
-    static int goldToSchmeep = (goldToConvert*100); // calculation for gold to schmeep conversion
-    static int schmeepToGold = (schmeepsToConvert/100); // calculation for schmeep to gold conversion
-
-    static int pLuck = 0; // luck variable (adds to all rolls)
-    static boolean conFinalStats = false; // confirms all stats
-
-    static int skillPts = 50; // total unspent skill points
-    static int assSkiPts = 0; // skill points player wants to assign
-    static boolean conSkills = false; // confirms player's skill choices
-    static double resistPts = 3.0; // total unspent resistance points
-    static double assResPts = 0.0; // resistance points the player wants to assign
-    static boolean conResists = false; // confirms the player's resistances 
-    static double damagePts = 2.0; // tatal unspent damage points
-    static double assDmgPts = 0.0; // damage points the player wants to assign
-    static boolean conDamage = false; // confirms the player's damage
-
-    // player character's skills
-    static int pStrenght = 0;
-    static int pSpeech = 0;
-    static int pStamina = 0;
-    static int pSorcery = 0;
-    static int pSneak = 0;
-    // player character's damage resistance
-    static double pBladeRes = 0.0;
-    static double pBluntRes = 0.0;
-    static double pMagicRes = 0.0;
-    static double pPoisonRes = 0.0;
-    static double pFireRes = 0.0;
-    static double pFrostRes = 0.0;
-    // player character's damage multipliers
-    static double pUnarmedDmg = 0.0;
-    static double pBladeDmg = 0.0;
-    static double pBluntDmg = 0.0;
-    static double pHeavyDmg = 0.0;
-    static double pMagicDmg = 0.0;
-    static double pRangedDmg = 0.0;
-
-    // Variables for IMS
-    static int pInvSpace = 5; // player inventory space
-    static ArrayList<String> invItems = new ArrayList<>(); // items in inventory (array list needed)
-
-    // Bakpacks
-    static boolean backpackEquiped = false;
-    static boolean bSmallBag = false; // +2 inventory
-    static boolean bRugsack = false; // +4 inventory
-    static boolean bJanksportBackpack = false; // +5 inventory
-    static boolean bLargeBackpack = false; // +10 inventory
-    static boolean bQuatumBag = false; // +95 inventory
-    static boolean bBlackHole = false; // 0 inventory
-
-    // Damage resistance Armour
-    static boolean armourEquipped = false;
-    static boolean aLeather = false; // +0.5 bladed res
-    static boolean aBarbarian = false; // +0.5 bladed res +0.5 blunt res
-    static boolean aChainmail = false; // +1.0 bladed res
-    static boolean aPlate = false; // +1.5 bladed res
-    static boolean aKnight = false; // +2.0 bladed res +0.5 blunt res
-    static boolean aRiot = false; // +2.0 blunt res +0.5 bladed res
-    static boolean aBikini = false; // +1.0 bladed res +1.0 blunt res
-    // Other Armours
-    static boolean aMage = false; // +1.0 magic res2
-    static boolean aNecro = false; // +1.5 magic res
-    static boolean aElven = false; // +2.0 magic res
-    static boolean aHoodie = false; // +1.5 frost res
-    static boolean aJorts = false; // +2.0 frost res
-    static boolean aHazmat = false; // +5.0 poison res
-
-    //Combat Variables
-    static boolean inCombat = false;
-    static boolean weaponEquipped = false;
-    static String pWeapon = "";
-    static String pArmour = "";
-    static int combatStamina = pStamina;
-    static int pHitChance = 0; // Character's hit chance (1-20) [<10 hits]
-    static int eHitChance = 0; // enemy hit chance
-    static int pDisToTar = 0; // Character's distance to targeted enemy (>=2 is Melee <2 isRanged)
-    static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
-    static String pWeaponType = "none"; // type of weapon character is using
-    static double pDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
-    static double pDmgRes = 0.0; // Character's damage resistance (depens on damage type)
-    static int eDmgToP = 0; // damage done to player if enemy hits
-    static String eDmgType; // type of damage enemy does
-
-    static double pDamageCalc = ((pWeaponDmg*pDmgMult) + (pStrenght*0.25)); // Equation to calculate character's damage
-
-    // Companion variables
-    static boolean hasCompanion = false; // var for if the player has a companion
-    static String cName = "";
-    static int cHealth = 0;
-    static int cDamage = 0;
-    static double cDmgRes = 0;
-    static boolean astridDied = false;
-    static boolean leonDied = false;
-
-    //static ArrayList<NPC> enemies = new ArrayList<>(); // Array list that uses NPC class to determine the enemies stats, name, etc
-    // Individual array lists used for each enemy stat
-    static ArrayList<String> npcName = new ArrayList<>(); // NPC names
-    static ArrayList<Integer> npcHealth = new ArrayList<>(); // NPC health
-    static ArrayList<Integer> npcDamage = new ArrayList<>(); // NPC damage
-    static ArrayList<String> npcDamageType = new ArrayList<>(); // NPC damage type
-    static ArrayList<Integer> npcExp = new ArrayList<>(); // NPC experience
-    static ArrayList<Boolean> npcHostile = new ArrayList<>(); // Whether NPC is hostile
-
-    // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
-    static ArrayList<String> allWeapons = new ArrayList<>(); 
-    static ArrayList<String> t1Weapons = new ArrayList<>();
-    static ArrayList<String> t2Weapons = new ArrayList<>();
-    static ArrayList<String> t3Weapons = new ArrayList<>();
-    static ArrayList<String> t4Weapons = new ArrayList<>();
-    static ArrayList<String> t5Weapons = new ArrayList<>();
-    static ArrayList<String> spells = new ArrayList<>();
-
-
-    // Location Array
-    static ArrayList<String> locList = new ArrayList<>();
-
-    // preset booleans
-    static boolean preVerdian = false;
-    static boolean preEmpirian = false;
-    static boolean preOrc = false;
-    static boolean preDElf = false;
-    static boolean preWElf = false;
-    static boolean preNekohito = false;
-
-// -->   End of VarHell   <---
 //
 
 
@@ -247,15 +48,11 @@ public class Nordverden {
 
 
 
+// ----->   Function Junction   <-----
 
 
 
-
-
-// --->   Function Junction   <---
-// 
-
-    // --->   Misc. Methods   <---
+// --->   Misc. Methods   <---
 
     // Method that displays character's info
     static void pDisplayCharacter() {
@@ -299,6 +96,7 @@ public class Nordverden {
     }
 
     // Method that takes the players's input
+    static String pSel = "";
     static void playerSelection(){
         pSel = "";
         pSel = input.next();
@@ -318,6 +116,7 @@ public class Nordverden {
 
     // Methods that display character stats
     static void playerStatsDisplay() {
+        String pStatsDisplay = "";
         pStatsDisplay = ("\n\n    Level ("+ pLevel +") ["+ pCurXp +"/"+ pNextLvl +" xp]"
             + "\n    Health ("+ pHealth +"/" + pMaxHealth + ")"
             + "\n    Inventory Space ("+ pInvSpace +")"
@@ -349,7 +148,9 @@ public class Nordverden {
 
         System.out.println(pStatsDisplay);
     }
+
     static void playerStatsInfo() {
+        String pStatsInfo = "";
         pStatsInfo = (
             "\n\n   Level                   [Level determines the ammount of points you have to distribute]\n"
             + "\n   Health                  [Health is self explanitory. If it drops to 0 your character dies.]\n"
@@ -387,13 +188,39 @@ public class Nordverden {
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
-    // --->   End of Misc Methods   <---
+    // --->   Funtion that allows player to use the menu   <---
+    static void openMenu() {
+        System.out.println("\n    What would you like to do?\n"
+            + "\n1. Open Inventory\n2. Use Item\n3. Sneak\n4. Combat\n5. Move\n"
+        );
+
+        playerSelection();
+        switch (pSel) {
+            case "1": showInventory(); break;
+            case "2": useItem(); break;
+            case "3": break;
+            case "4": gotMad(); inCombat = true; combat(); break;
+            case "5": pMover(pLocation); break;
+            default: System.out.println("Thats not an option."); break;
+        }
+    }
+
+// --->   End of Misc Methods   <---
 
 
 
 
 
-    // --->   Inventory Management System   <---
+
+
+
+
+
+// --->   Inventory Management System   <---
+
+    // Variables for IMS
+    static int pInvSpace = 5; // player inventory space
+    static ArrayList<String> invItems = new ArrayList<>(); // items in inventory (array list needed)
 
     // Method that places items in the character's inventory
     static void placeInInv(String item) {
@@ -449,6 +276,15 @@ public class Nordverden {
         System.out.println("\n    Items: " + invItems);
         System.out.println("    Inventory Space: " + pInvSpace + "\n");
     }
+
+    // Bakpacks
+    static boolean backpackEquiped = false;
+    static boolean bSmallBag = false; // +2 inventory
+    static boolean bRugsack = false; // +4 inventory
+    static boolean bJanksportBackpack = false; // +5 inventory
+    static boolean bLargeBackpack = false; // +10 inventory
+    static boolean bQuatumBag = false; // +95 inventory
+    static boolean bBlackHole = false; // 0 inventory
 
     //Method that equips a backpack
     static void equipBackpack() {
@@ -518,6 +354,23 @@ public class Nordverden {
             System.out.println("Smt happened");
         }
     }
+
+    // Damage resistance Armour
+    static boolean armourEquipped = false;
+    static boolean aLeather = false; // +0.5 bladed res
+    static boolean aBarbarian = false; // +0.5 bladed res +0.5 blunt res
+    static boolean aChainmail = false; // +1.0 bladed res
+    static boolean aPlate = false; // +1.5 bladed res
+    static boolean aKnight = false; // +2.0 bladed res +0.5 blunt res
+    static boolean aRiot = false; // +2.0 blunt res +0.5 bladed res
+    static boolean aBikini = false; // +1.0 bladed res +1.0 blunt res
+    // Other Armours
+    static boolean aMage = false; // +1.0 magic res
+    static boolean aNecro = false; // +1.5 magic res
+    static boolean aElven = false; // +2.0 magic res
+    static boolean aHoodie = false; // +1.5 frost res
+    static boolean aJorts = false; // +2.0 frost res
+    static boolean aHazmat = false; // +5.0 poison res
 
     // Method that equips Armour
     static void equipArmour() {
@@ -627,13 +480,86 @@ public class Nordverden {
             System.out.println("Smt happened");
         }
     }
-    // ---> End of IMS   <---
+
+// --->   End of IMS   <---
 
 
 
 
 
-    // --->   Character Creator   <---
+
+
+
+
+
+// --->   Character Creator   <---
+
+    static String pName = "";
+    static String proSub = "";
+    static String proObj = "";
+    static String proPos = "";
+    static String pRace = "";
+    static String pClass = "";
+    static String pLocation = "";
+
+
+    static int pLives = 1; // ammount of lives the character has
+    static int pLevel = 1; //character's level. +10 skill pointsMax lvl 46 (lvl 5 = 1000 total xp needed)
+    static int pCurXp = 0; // current expirience points
+    static int pNextLvl = (10*(pLevel*pLevel) + 90); // ammount of xp needed to level up
+    static int pHealth = 100; // character's health
+    static int pMaxHealth = 100;
+
+    // char's reputation
+    static int pKarma = 0; // (-10< [Bounty Hunters], <10[Mercenaries])
+    // -10[kill on sight] < -5[locks quests] < 0[neutral] < 5[Allied] < 10[Special access]
+    static int verdRep = 0;
+    static int empiRep = 0;
+    static int nekoRep = 0;
+    static int wElfRep = 0;
+    static int dElfRep = 0;
+
+    static boolean tutComplete = false;
+    static boolean pRaceSet = false; // var for if the player set their character's race
+    static boolean pClassSet = false; // var for if the player set their character's class
+    static boolean karmaSet = false; // var for if the player set their character's karma
+    static boolean pStartEquip = false; // var for if the player choose their starting equipment
+    static boolean pStartLocation = false;
+
+    // boolean variables for each race
+    static boolean pVerdian = false;
+    static boolean pEmpirian = false;
+    static boolean pOrc = false;
+    static boolean pDarkElf = false;
+    static boolean pWoodElf = false;
+    static boolean pNekohito = false;
+    static boolean pDragonborn = false;
+    static boolean pNekoPassport = false;
+    static boolean pForrestKey = false;
+
+    static int pGold = 5; // Nordverden currency
+    static int pCoins = 0; // Empirian currency
+    static int pSchmeeps = 0; // Nekohito currency
+    static int goldToConvert = 0; // ammount of gold to convert
+    static int coinsToConvert = 0; // ammount of coins to convert
+    static int schmeepsToConvert = 0; // ammount of schmeeps to convert
+    static int goldToCoin = 0; // (goldToConvert*10) calculation for gold to coin conversion
+    static int cointToGold = 0; // (coinsToConvert/8) calculation for coin to gold conversion
+    static int goldToSchmeep = 0; // (goldToConvert*100) calculation for gold to schmeep conversion
+    static int schmeepToGold = 0; // (schmeepsToConvert/100) calculation for schmeep to gold conversion
+
+    static int pLuck = 0; // luck variable (adds to all rolls)
+    static boolean conFinalStats = false; // confirms all stats
+
+    static int skillPts = 50; // total unspent skill points
+    static int assSkiPts = 0; // skill points player wants to assign
+    static boolean conSkills = false; // confirms player's skill choices
+    static double resistPts = 3.0; // total unspent resistance points
+    static double assResPts = 0.0; // resistance points the player wants to assign
+    static boolean conResists = false; // confirms the player's resistances 
+    static double damagePts = 2.0; // tatal unspent damage points
+    static double assDmgPts = 0.0; // damage points the player wants to assign
+    static boolean conDamage = false; // confirms the player's damage
 
     // Method that initializes the character creator
     static void characterSelection() {
@@ -999,6 +925,13 @@ public class Nordverden {
         }
     }
 
+    // player character's skills
+    static int pStrenght = 0;
+    static int pSpeech = 0;
+    static int pStamina = 0;
+    static int pSorcery = 0;
+    static int pSneak = 0;
+
     // Methods for assigning points to skills
     static void assignStrPts() {
         assSkiPts = 0;
@@ -1175,6 +1108,14 @@ public class Nordverden {
 
         customizeStats();
     }
+
+    // player character's damage resistance
+    static double pBladeRes = 0.0;
+    static double pBluntRes = 0.0;
+    static double pMagicRes = 0.0;
+    static double pPoisonRes = 0.0;
+    static double pFireRes = 0.0;
+    static double pFrostRes = 0.0;
 
     // Methods for assigning points to resistances
     static void assBladedResPts() {
@@ -1387,6 +1328,14 @@ public class Nordverden {
 
         customizeStats();
     }
+
+    // player character's damage multipliers
+    static double pUnarmedDmg = 0.0;
+    static double pBladeDmg = 0.0;
+    static double pBluntDmg = 0.0;
+    static double pHeavyDmg = 0.0;
+    static double pMagicDmg = 0.0;
+    static double pRangedDmg = 0.0;
 
     // Methods for assigning points to damage mults.
     static void assUnarmedDmgPts() {
@@ -2188,10 +2137,11 @@ public class Nordverden {
                         + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
                         + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
                     );
-                    playerLocator("Desert");
                     if (astridChance < 6) {
                         astridDied = true;
                     }
+                    tutComplete = true;
+                    playerLocator("Desert");
                     break;
                 default: System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n"); setWeaponStats("Fists"); fightWithAstrid = true;
             }
@@ -2200,7 +2150,7 @@ public class Nordverden {
             if (pOrc || pWoodElf) {
                 System.out.println("Astrid: I didn't mean it like... nevermind.");
             }
-            System.out.println("\n1. Fight with Astrid\n2. Run Away\n");
+            System.out.println("\n\n1. Fight with Astrid\n2. Run Away\n");
 
             playerSelection();
             switch (pSel) {
@@ -2211,12 +2161,15 @@ public class Nordverden {
                         + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
                         + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
                     );
-                    playerLocator("Desert");
                     if (astridChance < 6) {
                         astridDied = true;
                     }
+                    tutComplete = true;
+                    playerLocator("Desert");
                     break;
-                default: System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n"); fightWithAstrid = true;
+                default:
+                    System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n");
+                    fightWithAstrid = true;
             }
         }
 
@@ -2230,6 +2183,23 @@ public class Nordverden {
             addNPC("Wounded Soldier", 70, 20, "Bladed", 50, true);
             
             gotMad();
+
+            if (pHealth > 50) {
+                System.out.println("Astrid: Not bad. You might do well in the Kings Finest.");
+            } else {
+                System.out.println("Astrid: See. I told you not to stay behind!");
+            }
+
+            dismissComp();
+            System.out.println("Astrid: Let's keep moving we might still be able to catch up.\n\n"
+                + "    They exit the sewers near a river in the desert.\n\n"
+                + "Astrid: We're heading up the river towards {tempRiverVillage} but if you\n"
+                + "want {tempDesertTown} is to the east. If you want to travel together again I\n"
+                + "will be in the capital for the next couple months."
+            );
+
+            tutComplete = true;
+            playerLocator("Desert");
         }
 
     }
@@ -2241,13 +2211,27 @@ public class Nordverden {
 
     }
 
-    // --->   End of Character Creator   <---
+// --->   End of Character Creator   <---
 
 
 
 
 
-    // --->   Companion System   <---
+
+
+
+
+
+// --->   Companion System   <---
+
+    // Companion variables
+    static boolean hasCompanion = false; // var for if the player has a companion
+    static String cName = "";
+    static int cHealth = 0;
+    static int cDamage = 0;
+    static double cDmgRes = 0;
+    static boolean astridDied = false;
+    static boolean leonDied = false;
 
     // Method that sets companion stats
     static void recruitComp(String name) {
@@ -2264,16 +2248,49 @@ public class Nordverden {
             cHealth = 100;
         }
 
-        System.out.println(cName + " has joined " + pName + "'s party.");
+        System.out.println("    " + cName + " has joined " + pName + "'s party.");
+    }
+
+    // method that dismisses companion
+    static void dismissComp() {
+        System.out.println("    "+cName+" has left "+pName+"'s party.");
+
+        cName = "";
+        cDamage = 0;
+        cDmgRes = 0;
+        cHealth = 0;
+        hasCompanion = false;
     }
     
-    // --->   End of Comp Sys   <---
+    // method that checks if the companion died
+    static boolean isCompDead(String name) {
+        if (cHealth <= 0) {
+            System.out.println("    "+cName+" died!");
+
+            if (name.equals("Astrid")) {
+                astridDied = true;
+            } else if (name.equals("Leon")) {
+                leonDied = true;
+            }
+
+            dismissComp();
+            return true;
+        } else {
+            return false;
+        }
+    }
+// --->   End of Comp Sys   <---
 
 
 
 
 
-    // --->   Leveling System   <---
+
+
+
+
+
+// --->   Leveling System   <---
 
     // Function that handles the xp curve (gets progressively harder to level up)
     static int levelCurve() {
@@ -2323,15 +2340,21 @@ public class Nordverden {
         pRangedDmg += 0.05;
     }
 
-    // --->   End of Leveling System   <---
+// --->   End of Leveling System   <---
 
 
 
 
 
-    // --->   Missile Logic (it knows where it is because it knows where it isnt)   <---
+
+
+
+
+
+// --->   Missile Logic (it knows where it is because it knows where it isnt)   <---
 
     // All Possible Locations (func needed to populate locations because its an array list)
+    static ArrayList<String> locList = new ArrayList<>();
     static void popLocList() {
         locList.add("Capital");
         locList.add("Nekomura");
@@ -3073,12 +3096,51 @@ public class Nordverden {
         }
     }
 
-    // --->   End of Missile Logic <---
+// --->   End of Missile Logic <---
 
 
 
 
-    // --->   Rooms (secondary locations)   <---
+
+
+
+
+
+
+//   --->   Quest Variables   <---
+
+    // Array list with all current quests
+    static ArrayList<String> quests = new ArrayList<>();
+
+    // -> Tavern Quests <-
+
+    // Capital Quests
+    static boolean caravanGuard = false;
+    static boolean thiefCapture = false;
+    static boolean spyCapture = false;
+
+    // River quests
+    static boolean wolfExterminator = false;
+    static boolean npcHelper = false;
+    static boolean hasWoodAxe = false;
+
+    // 
+
+    // -> End of Tavern Quests <-
+
+
+//   --->   End of Quest Vars   <---
+
+
+
+
+
+
+
+
+
+
+// --->   Rooms (secondary locations)   <---
 
     // Room for player's death
     static void theGulag() {
@@ -3101,13 +3163,214 @@ public class Nordverden {
         startingLocation();
     }
 
-    // --->   End of Rooms   <---
+    // The tavern is the main location for side quests
+    static void tavern(String Location) {
+        addNPC("Barkeep", 100, 10, "Blunt", 25, false);
+        addNPC("Patron", 100, 5, "Blunt", 25, false);
+        addNPC("Drunk", 80, 0, "Blunt", 25, false);
+        addNPC("Patron", 100, 5, "Blunt", 25, false);
+        addNPC("Barguard", 100, 30, "Blade", 50, false);
+
+        System.out.println("    "+pName+" walks into the tavern to look for work.\n");
+        System.out.println("Quest Board: ");
+
+        if (Location.equals("Capital")) {
+            System.out.println("1. Caravan Guard(5g)\n2. Capture Thief(10g)\n3. Capture Spy(5-10g)");
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    if (!caravanGuard) {
+                        System.out.println("Barkeep: We've had some trouble getting our supplies over\n"
+                            + "to {tempRiverVillage} and back because of Wolves. Make sure they get there safely.\n"
+                            + "They should be waiting outside the capital wall."
+                        );
+                        quests.add("Caravan Guard");
+
+                        qCarGuard();
+                    }
+                    break;
+                case "2":
+                    if (!thiefCapture) {
+
+                    }
+                    break;
+                case "3":
+                    if (!spyCapture) {
+
+                    }
+                    break;
+                default: System.out.println("    Thats not available"); tavern("Capital");
+            }
+        } else if (Location.equals("Colony")) {
+            System.out.println("1. Kill the wolves nearby(5g)\n2. Help out \"{tempVillagerName}\"(3g)\n3. Chop Wood(1g/log)");
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    if (!wolfExterminator) {
+                        System.out.println("Barkeep: Those wolves have been eating our lumberjacks!\n"
+                            + "Lord {tempRiverLord} sent out 3 guards and only 1 and a half came back.\n"
+                            + "The wolf den is about half a kilometer in the forrest. Kill them all."
+                        );
+                        quests.add("Wolf Exterminator");
+
+                        qWolfExt();
+                    }
+                    break;
+                case "2":
+                    if (!npcHelper) {
+
+                    }
+                    break;
+                case "3":
+                    if (hasWoodAxe) {
+
+                    } else {
+                        System.out.println("    "+pName+" cannot punch down a tree"
+                            + "    Wood Axes are available in the shop."
+                        );
+                        tavern("River");
+                    }
+                    break;
+                default: System.out.println("    Thats not available"); tavern("River");
+            }
+        } else if (Location.equals("River")) {
+
+        } else if (Location.equals("Desert")) {
+
+        } else if (Location.equals("Coast")) {
+
+        }
+    }
+
+// --->   End of Rooms   <---
 
 
 
 
 
-    // --->   Combat Methods   <---
+
+
+
+
+
+// --->   Quest Rooms    <---
+
+
+    // caravan guard quest
+    static void qCarGuard() {
+        System.out.println("    "+pName+" meets up with the rest of the caravan outside of the capital\n\n"
+            + "Traveling Merchant: Finally they send someone to help us! We've been waiting here for hours.\n\n"
+            + "    "+pName+" gets on a horse and starts following the caravan...\n"
+            + "    A few kilometers down the river, the caravan hears howls...\n\n"
+            + "Traveling Merchant: Hurry! This is what we pay you for."
+        );
+
+        clearNPCs();
+        addNPC("Wolf", 50, 10, "Blade", 25, true);
+        addNPC("Rabid Wolf", 50, 10, "Poison", 30, true);
+        addNPC("Albino Wolf", 50, 20, "Frost", 50, true);
+
+        System.out.println("    The caravan Stays back while "+pName+" goes towards the howls.\n");
+
+        gotMad();
+
+        if (pHealth > 50) {
+            int bonus = rand.nextInt(2) + 1;
+            pGold += bonus;
+            System.out.println("Traveling Merchant: Many thanks guard. I was not expecting this to go smoothly.\n"
+                + "Here is a token of our appreciation.\n\n"
+                + "    The merchant gives "+pName+" a "+bonus+"g bonus!\n"
+            );
+        } else {
+            System.out.println("Traveling Merchant: Pfft. As expected. I'm surprised were still alive.");
+        }
+
+        System.out.println("    The caravan made it to {tempRiverVillage} safely!");
+        pGold += 5;
+        caravanGuard = true;
+        quests.remove("Caravan Guard");
+        playerLocator("River");
+    }
+
+    // Wolf Exterminator quest
+    static void qWolfExt() {
+        System.out.println("    "+pName+" walks in the forrest until "+proObj+" hears the snarls of Wolves nearby.");
+        
+        clearNPCs();
+        addNPC("Wolf", 50, 10, "Blade", 25, true);
+        addNPC("Wolf", 50, 10, "Blade", 25, true);
+        addNPC("Alpha Wolf", 100, 20, "Blade", 50, true);
+        addNPC("Wolf", 50, 10, "Blade", 25, true);
+        addNPC("Wolf", 50, 10, "Blade", 25, true);
+
+        System.out.println("    The howls of hungry dogs are nearby...");
+        gotMad();
+
+        if (pHealth > 50) {
+            System.out.println("    "+pName+" brushes off a couple scratches.");
+        } else {
+            System.out.println("    "+pName+" groans in pain and limps back to {tempRiverVillage}");
+        }
+
+        System.out.println("    "+pName+" turns in the Alpha Wolf's head to a nearby guard.\n\n"
+            + "Guard: Ohh... you didn't have to bring it back.\n\n"
+            + "    The guard pays "+pName+" 5g!"
+        );
+
+        pGold += 5;
+        wolfExterminator = true;
+        quests.remove("Wolf Exterminator");
+        playerLocator("River");
+        
+    }
+
+// --->   End of quests   <---
+
+
+
+
+
+
+
+
+
+
+// --->   Combat Methods   <---
+
+    //Combat Variables
+    static boolean inCombat = false;
+    static boolean weaponEquipped = false;
+    static String pWeapon = "";
+    static String pArmour = "";
+    static int pHitChance = 0; // Character's hit chance (1-20) [<10 hits]
+    static int eHitChance = 0; // enemy hit chance
+    static int pDisToTar = 0; // Character's distance to targeted enemy (>=2 is Melee <2 isRanged)
+    static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
+    static String pWeaponType = "none"; // type of weapon character is using
+    static double pDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
+    static double pDmgRes = 0.0; // Character's damage resistance (depens on damage type)
+    static int eDmgToP = 0; // damage done to player if enemy hits
+    static String eDmgType; // type of damage enemy does
+    static double pDamageCalc; // ((pWeaponDmg*pDmgMult) + (pStrenght*0.25))  Equation to calculate character's damage
+
+    // Individual array lists used for each enemy stat
+    static ArrayList<String> npcName = new ArrayList<>(); // NPC names
+    static ArrayList<Integer> npcHealth = new ArrayList<>(); // NPC health
+    static ArrayList<Integer> npcDamage = new ArrayList<>(); // NPC damage
+    static ArrayList<String> npcDamageType = new ArrayList<>(); // NPC damage type
+    static ArrayList<Integer> npcExp = new ArrayList<>(); // NPC experience
+    static ArrayList<Boolean> npcHostile = new ArrayList<>(); // Whether NPC is hostile
+
+    // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
+    static ArrayList<String> allWeapons = new ArrayList<>(); 
+    static ArrayList<String> t1Weapons = new ArrayList<>();
+    static ArrayList<String> t2Weapons = new ArrayList<>();
+    static ArrayList<String> t3Weapons = new ArrayList<>();
+    static ArrayList<String> t4Weapons = new ArrayList<>();
+    static ArrayList<String> t5Weapons = new ArrayList<>();
+    static ArrayList<String> spells = new ArrayList<>();
 
     // Method that initializes combat
     static void combat() {
@@ -3172,14 +3435,23 @@ public class Nordverden {
         }
     }
 
-    // Method that starts combat if NPC is hostile
+    // Method that starts combat if NPC is hostile or if the player want to
     static void gotMad() {
         if (isBadArea()) {
-            System.out.println("    Someone got mad!\n");
             inCombat = true;
             combat();
         } else {
-            System.out.println("    Everyone is chill.\n");
+            System.out.println("    Everyone is chill.\n    But does that matter...");
+            System.out.println("1. Start Combat\n2. Maintain the peace\n");
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    inCombat = true;
+                    combat();
+                    break;
+                default: break;
+            }
         }
 
     }
@@ -3270,13 +3542,15 @@ public class Nordverden {
     }
     
     static void cTurn() {
-        if (cHealth > 0) { // if the enemy attacking is alive
-            int cHitChance = rand.nextInt(20) + 1;
-            int cChoice = rand.nextInt(npcName.size());
+        if (!isCompDead(cName)) { // if companion is alive they attack a random enemy
+            int cHitChance;
+            cHitChance = rand.nextInt(20) + 1;
+            int cChoice;
+            cChoice = rand.nextInt(npcName.size());
 
             if (cHitChance < 10) {
                 System.out.println("    "+cName+" missed!");
-            } else { // if enemy attack hits it hurts the player depending on the enemy damage and char's dmg res
+            } else {
                 npcHealth.set(cChoice, npcHealth.get(cChoice) - cDamage);
                 System.out.println("    " + cName + " hit " + npcName.get(cChoice) + " and did " + cDamage + " damage!");
             }
@@ -3529,45 +3803,11 @@ public class Nordverden {
         }
     }
 
-    // --->   End of Combat Methods   <---
-
-
-
-
-
-    // --->   Options Menu   <---
-
-    // --->   Funtion that allows player to use the menu   <---
-    // (lets character use items, equip weapons/armour, and start combat)
-    static void openMenu() {
-        System.out.println("\n    What would you like to do?\n"
-            + "\n1. Open Inventory\n2. Use Item\n3. Sneak\n4. Combat\n5. Move\n"
-        );
-
-        playerSelection();
-        switch (pSel) {
-            case "1": showInventory(); break;
-            case "2": useItem(); break;
-            case "3": break;
-            case "4": gotMad(); inCombat = true; combat(); break;
-            case "5": pMover(pLocation); break;
-            default: System.out.println("Thats not an option."); break;
-        }
-    }
-
-    // --->   End of Options Menu   <---
-
-
+// --->   End of Combat Methods   <---
 
 
 
 // --->   Leaving Function Junction   <---
-//
-
-
-
-
-
 
 
 
@@ -3579,7 +3819,6 @@ public class Nordverden {
 
 
 // This should run everything
-//
     public static void main(String args[]){
 
         popWeaponArrays();
@@ -3589,7 +3828,7 @@ public class Nordverden {
 
         characterSelection();
 
-        System.out.println("\n\nThis is a statement to indicate the game has started\n\n");
+        System.out.println("\n\nThis is a statement (game loop ended)\n\n");
 
         addNPC("Silly Fella", 100, 10, "Blade", 100, true);
         addNPC("Goober", 100, 10, "Blunt", 100, true);
@@ -3603,6 +3842,5 @@ public class Nordverden {
 
     }
 }
-// End of the program
 
 

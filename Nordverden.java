@@ -34,7 +34,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.021.101724"
+        + "\n                                       Version 0.022.101824"
         + "\n" 
     );
 //
@@ -290,19 +290,19 @@ public class Nordverden {
     static void equipBackpack() {
         if (!backpackEquiped) {
             if (bSmallBag) {
-                System.out.println("    " + pName + " has equiped a Small Bag\n");
+                System.out.println("    " + pName + " has equipped a Small Bag\n");
                 pInvSpace += 2;
             } else if (bRugsack) {
-                System.out.println("   " + pName + " has equiped a Rugsack\n");
+                System.out.println("   " + pName + " has equipped a Rugsack\n");
                 pInvSpace += 4;
             } else if (bJanksportBackpack) {
-                System.out.println("   " + pName + " has equiped a Janksport\n");
+                System.out.println("   " + pName + " has equipped a Janksport\n");
                 pInvSpace += 5;
             } else if (bLargeBackpack) {
-                System.out.println("   " + pName + " has equiped a Camping Bag\n");
+                System.out.println("   " + pName + " has equipped a Camping Bag\n");
                 pInvSpace += 10;
             } else if (bQuatumBag) {
-                System.out.println("   " + pName + " has equiped a QIIS MK1 Backpack\n");
+                System.out.println("   " + pName + " has equipped a QIIS MK1 Backpack\n");
                 pInvSpace += 95;
             } else if (bBlackHole) {
                 System.out.println("   " + pName + " has unfortunately equiped a Black Hole\n");
@@ -376,43 +376,43 @@ public class Nordverden {
     static void equipArmour() {
         if (!armourEquipped) {
             if (aLeather) {
-                System.out.println("    " + pName + " has equiped Leather Armour\n");
+                System.out.println("    " + pName + " has equipped Leather Armour\n");
                 pBladeRes += 0.5;
             } else if (aBarbarian) {
-                System.out.println("   " + pName + " has equiped Barbarian Armour\n");
+                System.out.println("   " + pName + " has equipped Barbarian Armour\n");
 
             } else if (aChainmail) {
-                System.out.println("   " + pName + " has equiped Chainmail Armour\n");
+                System.out.println("   " + pName + " has equipped Chainmail Armour\n");
 
             } else if (aPlate) {
-                System.out.println("   " + pName + " has equiped Plate Armour\n");
+                System.out.println("   " + pName + " has equipped Plate Armour\n");
 
             } else if (aKnight) {
-                System.out.println("   " + pName + " has equiped a set of Knight Armour\n");
+                System.out.println("   " + pName + " has equipped a set of Knight Armour\n");
 
             } else if (aRiot) {
-                System.out.println("   " + pName + " has equiped Riot Armour\n");
+                System.out.println("   " + pName + " has equipped Riot Armour\n");
 
             } else if (aBikini) {
-                System.out.println("   " + pName + " has equiped a Bikini?\n");
+                System.out.println("   " + pName + " has equipped a Bikini?\n");
 
             } else if (aMage) {
-                System.out.println("   " + pName + " has equiped Mage Robes\n");
+                System.out.println("   " + pName + " has equipped Mage Robes\n");
 
             } else if (aNecro) {
-                System.out.println("   " + pName + " has equiped Necromancer Robes\n");
+                System.out.println("   " + pName + " has equipped Necromancer Robes\n");
 
             } else if (aElven) {
-                System.out.println("   " + pName + " has equiped Elven Armour\n");
+                System.out.println("   " + pName + " has equipped Elven Armour\n");
 
             } else if (aHoodie) {
-                System.out.println("   " + pName + " has equiped a Hoodie\n");
+                System.out.println("   " + pName + " has equipped a Hoodie\n");
 
             } else if (aJorts) {
-                System.out.println("   " + pName + " has equiped a T-Shirt and Jorts\n");
+                System.out.println("   " + pName + " has equipped a T-Shirt and Jorts\n");
 
             } else if (aHazmat) {
-                System.out.println("   " + pName + " has equiped a Hazmat Suit\n");
+                System.out.println("   " + pName + " has equipped a Hazmat Suit\n");
 
             }
             armourEquipped = true;
@@ -2195,13 +2195,14 @@ public class Nordverden {
                 + "    They exit the sewers near a river in the desert.\n\n"
                 + "Astrid: We're heading up the river towards {tempRiverVillage} but if you\n"
                 + "want {tempDesertTown} is to the east. If you want to travel together again I\n"
-                + "will be in the capital for the next couple months."
+                + "will be in the capital for the next couple months.\n"
             );
 
             tutComplete = true;
             playerLocator("Desert");
         }
 
+        System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
     // method for if char tries to save Leon
@@ -2225,60 +2226,133 @@ public class Nordverden {
 // --->   Companion System   <---
 
     // Companion variables
-    static boolean hasCompanion = false; // var for if the player has a companion
-    static String cName = "";
-    static int cHealth = 0;
-    static int cDamage = 0;
-    static double cDmgRes = 0;
+    static boolean warriorInParty = false; // var for if the player has a warrior in their party
+    static String wName = "";
+    static int wHealth = 0;
+    static int wDamage = 0;
+    static double wDmgRes = 0;
+
+    static boolean mageInParty = false;
+    static String mName = "";
+    static int mHealth = 0;
+    static int mDamage = 0;
+    static double mDmgRes = 0;
+
+    static boolean tankInParty = false;
+    static String tName = "";
+    static int tHealth = 0;
+    static int tDamage = 0;
+    static double tDmgRes = 0;
+
+    static boolean rangeInParty = false;
+    static String rName = "";
+    static int rHealth = 0;
+    static int rDamage = 0;
+    static double rDmgRes = 0;
+
     static boolean astridDied = false;
     static boolean leonDied = false;
+    static boolean steinDied = false;
+    static boolean evinDied = false;
+    static boolean dorcyDied = false;
+    static boolean inurukiDied = false;
 
     // Method that sets companion stats
     static void recruitComp(String name) {
-        if (name.equals("Astrid") && !astridDied) {
-            cName = "Astrid";
-            cDamage = 20;
-            cDmgRes = 1.5;
-            cHealth = 150;
+        if (name.equals("Astrid") && !astridDied && !warriorInParty) {
+            wName = "Astrid";
+            wDamage = 20;
+            wDmgRes = 1.5;
+            wHealth = 150;
+            warriorInParty = true;
 
-        } else if (name.equals("Leon") && !leonDied) {
-            cName = "Leon";
-            cDamage = 30;
-            cDmgRes = 1.5;
-            cHealth = 100;
+        } else if (name.equals("Leon") && !leonDied && !warriorInParty) {
+            wName = "Leon";
+            wDamage = 30;
+            wDmgRes = 1.5;
+            wHealth = 100;
+            warriorInParty = true;
         }
 
-        System.out.println("    " + cName + " has joined " + pName + "'s party.");
+        System.out.println("    " + wName + " has joined " + pName + "'s party.");
     }
 
     // method that dismisses companion
     static void dismissComp() {
-        System.out.println("    "+cName+" has left "+pName+"'s party.");
+        System.out.println("    "+wName+" has left "+pName+"'s party.");
 
-        cName = "";
-        cDamage = 0;
-        cDmgRes = 0;
-        cHealth = 0;
-        hasCompanion = false;
+        wName = "";
+        wDamage = 0;
+        wDmgRes = 0;
+        wHealth = 0;
     }
-    
+
     // method that checks if the companion died
     static boolean isCompDead(String name) {
-        if (cHealth <= 0) {
-            System.out.println("    "+cName+" died!");
+        if (charIsAlone()) {
+            if (wHealth <= 0 && warriorInParty) {
+                System.out.println("    "+wName+" died!");
 
-            if (name.equals("Astrid")) {
-                astridDied = true;
-            } else if (name.equals("Leon")) {
-                leonDied = true;
+                if (name.equals("Astrid")) {
+                    astridDied = true;
+                    warriorInParty = false;
+                } else if (name.equals("Leon")) {
+                    leonDied = true;
+                    warriorInParty = false;
+                }
+
+                return true;
             }
+            if (mHealth <= 0 && mageInParty) {
+                System.out.println("    "+mName+" died!");
 
-            dismissComp();
-            return true;
+                if (name.equals("Evindal")) {
+                    evinDied = true;
+                    mageInParty = false;
+                } else if (name.equals("Dorcyne")) {
+                    dorcyDied = true;
+                    mageInParty = false;
+                }
+
+                return true;
+            }
+            if (tHealth <= 0 && tankInParty) {
+                System.out.println("    "+tName+" died!");
+
+                if (name.equals("Steineter")) {
+                    steinDied = true;
+                    tankInParty = false;
+                }
+
+                return true;
+            }
+            if (rHealth <= 0 && rangeInParty) {
+                System.out.println("    "+rName+" died!");
+
+                if (name.equals("Inuruki")) {
+                    inurukiDied = true;
+                    rangeInParty = false;
+                }
+
+                return true;
+            } else {
+                return false;
+            } 
         } else {
             return false;
         }
+
     }
+
+    // method that check if char is alone
+    static boolean charIsAlone() {
+        if (warriorInParty || mageInParty || tankInParty || rangeInParty) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 // --->   End of Comp Sys   <---
 
 
@@ -3351,7 +3425,7 @@ public class Nordverden {
     static String pWeaponType = "none"; // type of weapon character is using
     static double pDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
     static double pDmgRes = 0.0; // Character's damage resistance (depens on damage type)
-    static int eDmgToP = 0; // damage done to player if enemy hits
+    static int eDamage = 0; // damage done to player if enemy hits
     static String eDmgType; // type of damage enemy does
     static double pDamageCalc; // ((pWeaponDmg*pDmgMult) + (pStrenght*0.25))  Equation to calculate character's damage
 
@@ -3393,7 +3467,10 @@ public class Nordverden {
                 break;
             }
 
-            cTurn();
+            if (!charIsAlone()) {
+                cTurn();
+            }
+
             combatMenu();
 
             eTurn(); // if char has not won next enemy will attack
@@ -3450,7 +3527,7 @@ public class Nordverden {
                     inCombat = true;
                     combat();
                     break;
-                default: break;
+                default: System.out.println("    No one is a threat.\n");
             }
         }
 
@@ -3524,35 +3601,115 @@ public class Nordverden {
     static void eTurn() {
         for (int i = 0; i < npcName.size(); i++) { // looks like jargon but lets every enemy attack
             if (npcHealth.get(i) > 0) { // if the enemy attacking is alive
+
+                // Create a list of available targets
+                ArrayList<String> targets = new ArrayList<>();
+                targets.add(pName); // Player character
+                if (warriorInParty) {
+                    targets.add(wName);
+                } else if (isCompDead(wName)) {
+                    targets.remove(wName);
+                }
+                if (mageInParty) {
+                    targets.add(mName);
+                } else if (isCompDead(mName)) {
+                    targets.remove(mName);
+                }
+                if (tankInParty) {
+                    targets.add(tName);
+                } else if (isCompDead(tName)) {
+                    targets.remove(tName);
+                }
+                if (rangeInParty) {
+                    targets.add(rName);
+                } else if (isCompDead(rName)) {
+                    targets.remove(rName);
+                }
+
                 eHitChance = rand.nextInt(20) + 1;
-                eDmgToP = npcDamage.get(i);
+                int numTargets = rand.nextInt(targets.size());
+                String eTargetChoice = targets.get(numTargets);
+                eDamage = npcDamage.get(i);
 
                 if (eHitChance < 10) {
                     System.out.println("    "+npcName.get(i)+" missed!");
-                } else { // if enemy attack hits it hurts the player depending on the enemy damage and char's dmg res
+                } else if (eTargetChoice.equals(pName)) {
                     eDmgType = npcDamageType.get(i);
                     setDamageResistance(eDmgType);
-                    eDmgToP = (int)(eDmgToP / (pDmgRes + 0.5));
-                    eDmgToP = Math.max(eDmgToP, 0); // Makes sure the enemies damage cant be lower than 0 or it would heal the player lol
-                    pHealth -= eDmgToP;
-                    System.out.println("    "+npcName.get(i)+" hit "+pName+" and did "+eDmgToP+" damage!");
+                    eDamage = (int)(eDamage / (pDmgRes + 0.5));
+                    eDamage = Math.max(eDamage, 0); // Makes sure the enemies damage cant be lower than 0 or it would heal (would be funny tho)
+                    pHealth -= eDamage;
+                    System.out.println("    "+npcName.get(i)+" hit "+pName+" and did "+eDamage+" damage!");
+                } else if (eTargetChoice.equals(wName)) {
+                    eDamage = (int)(eDamage / (wDmgRes + 0.5));
+                    eDamage = Math.max(eDamage, 0);
+                    wHealth -= eDamage;
+                    System.out.println("    "+npcName.get(i)+" hit "+wName+" and did "+eDamage+" damage!");
+                } else if (eTargetChoice.equals(mName)) {
+                    eDamage = (int)(eDamage / (mDmgRes + 0.5));
+                    eDamage = Math.max(eDamage, 0);
+                    mHealth -= eDamage;
+                    System.out.println("    "+npcName.get(i)+" hit "+mName+" and did "+eDamage+" damage!");
+                }  else if (eTargetChoice.equals(tName)) {
+                    eDamage = (int)(eDamage / (tDmgRes + 0.5));
+                    eDamage = Math.max(eDamage, 0);
+                    tHealth -= eDamage;
+                    System.out.println("    "+npcName.get(i)+" hit "+tName+" and did "+eDamage+" damage!");
+                } else if (eTargetChoice.equals(rName)) {
+                    eDamage = (int)(eDamage / (rDmgRes + 0.5));
+                    eDamage = Math.max(eDamage, 0);
+                    rHealth -= eDamage;
+                    System.out.println("    "+npcName.get(i)+" hit "+rName+" and did "+eDamage+" damage!");
                 }
             }
         }
     }
-    
-    static void cTurn() {
-        if (!isCompDead(cName)) { // if companion is alive they attack a random enemy
-            int cHitChance;
-            cHitChance = rand.nextInt(20) + 1;
-            int cChoice;
-            cChoice = rand.nextInt(npcName.size());
 
-            if (cHitChance < 10) {
-                System.out.println("    "+cName+" missed!");
+    static void cTurn() {
+        int cHitChance;
+        int cChoice;
+
+        if (!isCompDead(wName) && warriorInParty) { // if warrior is alive they attack a random enemy
+            cChoice = rand.nextInt(npcName.size());
+            cHitChance = rand.nextInt(20) + 1;
+            if (cHitChance < 7) {
+                System.out.println("    "+wName+" missed!");
             } else {
-                npcHealth.set(cChoice, npcHealth.get(cChoice) - cDamage);
-                System.out.println("    " + cName + " hit " + npcName.get(cChoice) + " and did " + cDamage + " damage!");
+                npcHealth.set(cChoice, npcHealth.get(cChoice) - wDamage);
+                System.out.println("    " + wName + " hit " + npcName.get(cChoice) + " and did " + wDamage + " damage!");
+            }
+        }
+        if (!isCompDead(mName) && mageInParty) { // if mage is alive they attack a random enemy (heals player with a nat 20)
+            cChoice = rand.nextInt(npcName.size());
+            cHitChance = rand.nextInt(20) + 1;
+            if (cHitChance < 11) {
+                System.out.println("    "+mName+" missed!");
+            } else if (cHitChance == 20) {
+                pHealth = pMaxHealth;
+                System.out.println("    "+mName+" fully healed "+pName+"!");
+            } else {
+                npcHealth.set(cChoice, npcHealth.get(cChoice) - mDamage);
+                System.out.println("    " + mName + " hit " + npcName.get(cChoice) + " and did " + mDamage + " damage!");
+            }
+        }
+        if (!isCompDead(tName) && tankInParty) { // if tank is alive they attack a random enemy
+            cChoice = rand.nextInt(npcName.size());
+            cHitChance = rand.nextInt(20) + 1;
+            if (cHitChance <= 11) {
+                System.out.println("    "+tName+" missed!");
+            } else {
+                npcHealth.set(cChoice, npcHealth.get(cChoice) - tDamage);
+                System.out.println("    " + tName + " hit " + npcName.get(cChoice) + " and did " + tDamage + " damage!");
+            }
+        }
+        if (!isCompDead(rName) && rangeInParty) { // if ranged is alive they attack a random enemy (Should get expanded later to actually do ranged dmg)
+            cChoice = rand.nextInt(npcName.size());
+            cHitChance = rand.nextInt(20) + 1;
+            if (cHitChance < 6) {
+                System.out.println("    "+rName+" missed!");
+            } else {
+                npcHealth.set(cChoice, npcHealth.get(cChoice) - rDamage);
+                System.out.println("    " + rName + " hit " + npcName.get(cChoice) + " and did " + rDamage + " damage!");
             }
         }
     }
@@ -3567,25 +3724,25 @@ public class Nordverden {
 
         playerSelection();
         switch (pSel) {
-            case "1": break;
             case "2": useItem(); break;
             case "3": escapeCombat(); break;
-            default: System.out.println("try again"); combatMenu();
+            case "1":
+            default: System.out.println("    The Enemy Attacks!\n");
         }
     }
 
+    static int escapeChance;
     // Method for fleeing combat
     static void escapeCombat() {
         System.out.println("    "+pName+" tried to escape...");
 
-        int escapeChance = (rand.nextInt((pSneak/10)) + 1) + pLuck;
+        escapeChance = ((rand.nextInt(2)) + pSneak/10) + pLuck;
 
-        if (escapeChance > 6) { // chance to escape increases with sneak
+        if (escapeChance > 5) { // chance to escape increases with sneak
             System.out.println("    "+pName+" got away succesfully.");
             clearNPCs();
         } else {
             System.out.println("    But "+proObj+" didn't get away with it.");
-            return;
         }
     }
 

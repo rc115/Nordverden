@@ -163,3 +163,15 @@ Update 19 --- Oct. 15th, 2024
 Update 20 --- Oct. 16th, 2024
 * Added a turn in combat for the companion
 * Started work on more combat actions
+
+Update 21 --- Oct. 17th, 2024
+* Relocated Variables and removed VarHell
+* Finished Astrid Path of the tutorial
+* Added more methods to the companion system
+   * Companion can now be dismissed
+   * Companion could die
+   * Want to expand companion system to allow multiple party members (Mages & A tank)
+* Added foundation for quests!
+   * Side quests available in taverns
+   * Capital Caravan guard quest (escort a caravan to the river village)
+   * Wolf Exterminator quest (kill a group wolves in the river village forrest)

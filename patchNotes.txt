@@ -175,3 +175,10 @@ Update 21 --- Oct. 17th, 2024
    * Side quests available in taverns
    * Capital Caravan guard quest (escort a caravan to the river village)
    * Wolf Exterminator quest (kill a group wolves in the river village forrest)
+
+Update 22 --- Oct. 18th, 2024
+* Expanded player party system
+   * Set foundation for multiple companions (warrior, tank, mage, and ranged)
+   * Mage is the only one with special ability rn (heal player with a 20)
+* Fixed escape combat bug
+* Its 4:44 rn :( 

@@ -34,14 +34,10 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.022.101824"
+        + "\n                                       Version 0.023.102124"
         + "\n" 
     );
 //
-
-
-
-
 
 
 
@@ -94,6 +90,14 @@ public class Nordverden {
 
         showInventory();
     }
+
+    // Method that tries to clear the player's screen (didn't work ill just ooga booga it)
+    static void clearConsole() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println("\n\n");
+        }
+    }
+
 
     // Method that takes the players's input
     static String pSel = "";
@@ -2009,8 +2013,39 @@ public class Nordverden {
     // Method for the empirian prisoner start
     static void empirianPrisoner() {
         if (!tutComplete) {
+            clearConsole();
             pStartLocation = true;
             tutComplete = true;
+            System.out.println("\n____________________________________________________________________________________________________\n");
+
+            String[] loadingMsg = { // Loading message to catch player's attention
+                "   __                 _ _             \n" +
+                "  / /  ___   __ _  __| (_)_ __   __ _ \n" +
+                " / /  / _ \\ / _` |/ _` | | '_ \\ / _` |\n" +
+                "/ /__| (_) | (_| | (_| | | | | | (_| |\n" +
+                "\\____/\\___/ \\__,_|\\__,_|_|_| |_|\\__, |\n" +
+                "                                |___/ ",
+
+                "   o   ",
+                "o   ",
+                "o   ",
+                "o   ",
+                "o"
+
+            };
+
+            for (String loading : loadingMsg) { 
+                System.out.print(loading);
+                try { // credits to Gray on stack overflow for sleep method
+                    Thread.sleep(1000); // half a sec wait time (feels too fast and too slow at the same time)
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            clearConsole();
+            System.out.println("\n____________________________________________________________________________________________________\n");
+
             String[] statements = { // string array with the text blob
                 "    " + pName + " opens " + proPos + " eyes.",
                 "    There's three carts being transported by Empirian Soldiers on horsedrawn carts.",
@@ -2058,7 +2093,7 @@ public class Nordverden {
             for (String statement : statements) { 
                 System.out.println(statement);
                 try { // credits to Gray on stack overflow for sleep method
-                    Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
+                    Thread.sleep(250); // quarter second wait time (feels too fast and too slow at the same time)
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -3105,35 +3140,112 @@ public class Nordverden {
 
     // Method that determines the player's location
     static void playerLocator(String Location) {
+        clearConsole();
         if (locList.contains(Location)) {
             if (Location.equals("Capital")) {
-                System.out.println("    " + pName + " is in the Capital\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in the:\n");
+                System.out.println("   ___            _ _        _ \n" +
+                                        "  / __\\__ _ _ __ (_) |_ __ _| |\n" +
+                                        " / /  / _` | '_ \\| | __/ _` | |\n" +
+                                        "/ /__| (_| | |_) | | || (_| | |\n" +
+                                        "\\____/\\__,_| .__/|_|\\__\\__,_|_|\n" +
+                                        "           |_|                 "
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Nekomura")) {
                 nekoCheckpoint();
             } else if (Location.equals("Desert")) {
-                System.out.println("    " + pName + " is in the Desert\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in the:\n");
+                System.out.println(".#####...######...####...######..#####...######.\n" +
+                                        ".##..##..##......##......##......##..##....##...\n" +
+                                        ".##..##..####.....####...####....#####.....##...\n" +
+                                        ".##..##..##..........##..##......##..##....##...\n" +
+                                        ".#####...######...####...######..##..##....##...\n" +
+                                        "................................................"
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Barbarians")) {
-                System.out.println("    " + pName + " is in Barbarian territory\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in:\n");
+                System.out.println("___  ___  ____ ___  ___  ____ ____ ___  __   \n" +
+                                        "| .\\ |  \\ | . \\| .\\ |  \\ | . \\|___\\|  \\ | \\|\\\n" +
+                                        "| .<_| . \\|  <_| .<_| . \\|  <_| /  | . \\|  \\|\n" +
+                                        "|___/|/\\_/|/\\_/|___/|/\\_/|/\\_/|/   |/\\_/|/\\_/\n" +
+                                        "____ ____ ____ ____ ____ ____ ____ ____ _    \n" +
+                                        "|_ _\\| __\\| . \\| . \\|___\\|_ _\\|   || . \\||_/\\\n" +
+                                        "  || |  ]_|  <_|  <_| /    || | . ||  <_| __/\n" +
+                                        "  |/ |___/|/\\_/|/\\_/|/     |/ |___/|/\\_/|/   "
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Colony")) {
-                System.out.println("    " + pName + " is in the Empirian Colony\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in the:\n");
+                System.out.println(" _______             _       _                 ______      _                   \n" +
+                                        "(_______)           (_)     (_)               / _____)    | |                  \n" +
+                                        " _____   ____  ____  _  ____ _  ____ ____    | /      ___ | | ___  ____  _   _ \n" +
+                                        "|  ___) |    \\|  _ \\| |/ ___) |/ _  |  _ \\   | |     / _ \\| |/ _ \\|  _ \\| | | |\n" +
+                                        "| |_____| | | | | | | | |   | ( ( | | | | |  | \\____| |_| | | |_| | | | | |_| |\n" +
+                                        "|_______)_|_|_| ||_/|_|_|   |_|\\_||_|_| |_|   \\______)___/|_|\\___/|_| |_|\\__  |\n" +
+                                        "              |_|                                                       (____/ "
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("River")) {
-                System.out.println("    " + pName + " is near the River\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is near the:\n");
+                System.out.println("   _  _  _  _        _                                                  \n" +
+                                        "  (_)(_)(_)(_) _    (_)                                                 \n" +
+                                        "  (_)         (_) _  _  _               _  _  _  _  _   _       _  _    \n" +
+                                        "  (_) _  _  _ (_)(_)(_)(_)_           _(_)(_)(_)(_)(_)_(_)_  _ (_)(_)   \n" +
+                                        "  (_)(_)(_)(_)      (_)  (_)_       _(_) (_) _  _  _ (_) (_)(_)         \n" +
+                                        "  (_)   (_) _       (_)    (_)_   _(_)   (_)(_)(_)(_)(_) (_)            \n" +
+                                        "  (_)      (_) _  _ (_) _    (_)_(_)     (_)_  _  _  _   (_)            \n" +
+                                        "  (_)         (_)(_)(_)(_)     (_)         (_)(_)(_)(_)  (_)            "
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Orcs")) {
-                System.out.println("    " + pName + " is in Orc territory\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in:\n");
+                System.out.println(" _____  _____  ____    _____ _____ _____ _____ __ _____  _____  _____ _  _ \n" +
+                                        "((   )) ||_// ((        ||   ||==  ||_// ||_// ||  ||   ((   )) ||_// \\\\// \n" +
+                                        " \\\\_//  || \\\\  \\\\__     ||   ||___ || \\\\ || \\\\ ||  ||    \\\\_//  || \\\\  //  ");
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Coast")) {
-                System.out.println("    " + pName + " is near the coast\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is near the:\n");
+                System.out.println("   ,___              \n" +
+                                        "  /   /           _/_\n" +
+                                        " /    __ __,  (   /  \n" +
+                                        "(___/(_)(_/(_/_)_(__ "
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Plains")) {
-                System.out.println("    " + pName + " is in the Plains\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in the:\n");
+                System.out.println(" ____  __     __   __  __ _  ____ \n" +
+                                        "(  _ \\(  )   / _\\ (  )(  ( \\/ ___)\n" +
+                                        " ) __// (_/\\/    \\ )( /    /\\___ \\\n" +
+                                        "(__)  \\____/\\_/\\_/(__)\\_)__)(____/"
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Forrest")) {
-                System.out.println("    " + pName + " is in the Forrest\n");
+                System.out.println("\n____________________________________________________________________________________________________\n");
+                System.out.println("    " + pName + " is in the:\n");
+                System.out.println(" __, _, ,_  ,_   _, _, ___, \n" +
+                                        "'|_,/ \\,|_) |_) /_,(_,' |   \n" +
+                                        " | '\\_/'| \\'| \\'\\_  _)  |   \n" +
+                                        " '  '   '  `'  `  `'    '   "
+                );
+                System.out.println("\n____________________________________________________________________________________________________\n");
                 pLocation = Location;
             } else if (Location.equals("Mountains")) {
                 System.out.println("    " + pName + " is at the Great Mountains\n");
@@ -3155,10 +3267,16 @@ public class Nordverden {
     // Method that ensures character has a passport
     static void nekoCheckpoint() {
         if (pNekoPassport) {
-            System.out.println("    " + pName + " passed the checkpoint and was allowed to stay.\n");
+            System.out.println("    " + pName + " passed the checkpoint and was allowed to stay in:\n");
+            System.out.println("_____   __    ______                                        \n" +
+                                "___  | / /_______  /______________ _______  ______________ _\n" +
+                                "__   |/ /_  _ \\_  //_/  __ \\_  __ `__ \\  / / /_  ___/  __ `/\n" +
+                                "_  /|  / /  __/  ,<  / /_/ /  / / / / / /_/ /_  /   / /_/ / \n" +
+                                "/_/ |_/  \\___//_/|_| \\____//_/ /_/ /_/\\__,_/ /_/    \\__,_/  "
+            );
             pLocation = "Nekomura";
         } else {
-            System.out.println("    " + pName + " did not pass the checkpoint and was deported.\n");
+            System.out.println("    " + pName + " did not pass the checkpoint and was deported...\n");
             pLocation = "Coast";
         }
     }

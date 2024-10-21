@@ -6,7 +6,7 @@ in Java using the materials we learned in class.
 
 About Nordverden:
 * This game was inspired by open-world rpgs by Interplay and Bethesda
-* Nordverden is set in a Neomedieval fantasy world with modern technology available in certain areas (magic and guns type shi)
+* Nordverden is set in a Neomedieval fantasy world with 80s technology available in certain areas
 * "Nordverden" roughly translates to "North-world" in norwegian
 * Several names and locations can be translated as well (EX: Nekomura ≈ Cat-Village)
 * Several factions in the game are loosely based on different ciltures around the world
@@ -28,3 +28,19 @@ About Nordverden:
     * They are neutral in the Empiri-Verdi war despite their close proximity
     * They are also the most advanced civilization in Nordverden
     * Despite their isolation Nekohito trade routes with Nordverden have brought riches and technology to the mainland
+* Orcs are the only uncivilized playable characters
+   * They are based on a combination of Super Mutants from the Fallout franchise and Orks from Warhammer 40k
+   * Orcs are extremely loyal to eachother, but are hostile to most non-orcs
+   * Despite being considered unintelligent by many in Nordverden some have learned to communicate with non-orcs
+   * They're most used resource are rocks found near their mountainous home
+   * Orcs were exterminted on the Western Empire motherland, but are usually not considered a threat in Nordverden
+* Dark Elves and Wood Elves were at war for thousands of years before the events of the game
+   * Dark Elves were driven to hide in caves by the Wood Elfs with the help of the Verdians
+   * Wood Elves hid their homeworld within a large forrest to the east of Nordverden
+   * Dark Elfs are generally better magic casters than Wood Elfs
+   * Both types are weaker than the other races in Nordverden
+* Dragonborn have the ability to aquire the power dragons they defeat
+   * Dragonborn would hunt dragons for sport and honor
+   * Dragonborn, like Verdians and Empirians, are a human race that had their own culture and ancient civilizations
+   * This race was nearly wiped out by dragons for their atrocities agains them
+   * Despite dragons being indipendant Drakung the dragon king used his power to unite the dragons

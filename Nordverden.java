@@ -34,7 +34,7 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.023.102124"
+        + "\n                                       Version 0.024.102124"
         + "\n" 
     );
 //
@@ -2243,8 +2243,72 @@ public class Nordverden {
     // method for if char tries to save Leon
     static void saveLeon() {
         verdRep -= 2;
-        System.out.println("    "+pName+" went over to help Leon.");
 
+        String[] statements = { // string array with the text blob
+            "    "+pName+" went over to help Leon.",
+            "",
+            "    Leon is under several rocks.",
+            "    " + pName + " uses a pirce of rebar to lift the rock on top of his foot.",
+            "    A guard rushes over to sound of Leon's screams...",
+            "",
+            "Wounded Soldier: Back off criminal!.",
+            "",
+            "    The guard raises his sword and readies an attack...",
+            "",
+            "Leon: DISCEDITE MILES!",
+            "This person was trying to help me and you're here to strike them down?",
+            "Help " + proSub + " out or you'll be stationed on the deepest parts of the mine!",
+            "",
+            "Wounded Soldier: Paenitet Leutnant Leon...",
+            "",
+            "    With the help of the soldier, "+pName+" is able to free Leon.",
+            "",
+            "Leon: Ack! Danke... I'f you'd be kind enough to escort me and this baffon to the Colony,",
+            "I'll be forever in your debt.",
+            "",
+            "1. Escort Leon to the Colony",
+            "2. Leave {tempDesertVillage} alone"
+        };
+
+        // Neded to slow text chunk to let player read it better
+        for (String statement : statements) { 
+            System.out.println(statement);
+            try {
+                Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        boolean escortLeon = false;
+        playerSelection();
+        switch (pSel) {
+            case "1":
+                escortLeon = true;
+                empiRep += 3;
+                break;
+            default:
+                empiRep += 1;
+                System.out.println("    "+pName+" thinks " + proObj + " has done enough.");
+        }
+
+        System.out.println("\n____________________________________________________________________________________________________\n");
+        if (escortLeon) {
+            System.out.println("    "+pName+" helps Leon get up but notices his ankle is too damaged to walk.");
+
+
+        } else {
+            System.out.println("Leon: That is understandable. You're actions will not be forgetten by the Empire.");
+
+            int leonChance = 0;
+            leonChance = rand.nextInt(20) + 1;
+
+            if (leonChance > 9) {
+                leonDied = false;
+            } else {
+                leonDied = true;
+            }
+        }
     }
 
 // --->   End of Character Creator   <---

@@ -189,3 +189,6 @@ Update 23 --- Oct. 21st, 2024
    * Added a loading screen to the tutorial
 * Added a method that "clears" the console (just hides previous outputs)
 * Found bug  when compiling [version error]   (might be a me thing)
+
+Update 24 --- Oct. 21st, 2024
+* Started work on the leon route of the tutorial

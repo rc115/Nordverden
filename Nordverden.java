@@ -34,10 +34,14 @@ public class Nordverden {
         + "\n      /  \\/ / _ \\| '__/ _` \\ \\ / / _ \\ '__/ _` |/ _ \\ '_ \\ "
         + "\n     / /\\  / (_) | | | (_| |\\ V /  __/ | | (_| |  __/ | | |"
         + "\n     \\_\\ \\/ \\___/|_|  \\__,_| \\_/ \\___|_|  \\__,_|\\___|_| |_|"
-        + "\n                                       Version 0.024.102124"
+        + "\n                                       Version 0.025.102224"
         + "\n" 
     );
 //
+
+
+
+
 
 
 
@@ -375,12 +379,14 @@ public class Nordverden {
     static boolean aHoodie = false; // +1.5 frost res
     static boolean aJorts = false; // +2.0 frost res
     static boolean aHazmat = false; // +5.0 poison res
+    static String pArmour = "";
 
     // Method that equips Armour
     static void equipArmour() {
         if (!armourEquipped) {
             if (aLeather) {
                 System.out.println("    " + pName + " has equipped Leather Armour\n");
+                pArmour = "Leather Armour";
                 pBladeRes += 0.5;
             } else if (aBarbarian) {
                 System.out.println("   " + pName + " has equipped Barbarian Armour\n");
@@ -548,7 +554,7 @@ public class Nordverden {
     static int coinsToConvert = 0; // ammount of coins to convert
     static int schmeepsToConvert = 0; // ammount of schmeeps to convert
     static int goldToCoin = 0; // (goldToConvert*10) calculation for gold to coin conversion
-    static int cointToGold = 0; // (coinsToConvert/8) calculation for coin to gold conversion
+    static int cointToGold = 0; // (coinsToConvert/10) calculation for coin to gold conversion
     static int goldToSchmeep = 0; // (goldToConvert*100) calculation for gold to schmeep conversion
     static int schmeepToGold = 0; // (schmeepsToConvert/100) calculation for schmeep to gold conversion
 
@@ -873,7 +879,7 @@ public class Nordverden {
 
             playerSelection();
             switch (pSel) {
-                case "1": empirianPrisoner(); break;
+                case "1": tutorial(); break;
                 case "2": break;
                 default: System.out.println("stop"); customizeStats();
             }
@@ -1869,7 +1875,8 @@ public class Nordverden {
             System.out.println("\n    Your character is now a Vilager.\n");
         } else if (pClass.equals("Warrior")) {
             pStrenght += 15;
-            setWeaponStats("Rusty Sword");
+            equipWeapon("Rusty Sword");
+            placeInInv("Rusty Sword");
             System.out.println("\n    Your character is now a Warrior.\n");
         } else if (pClass.equals("Tank")) {
             pBladeRes += 1;
@@ -1877,11 +1884,13 @@ public class Nordverden {
             System.out.println("\n    Your character is now a Tank.\n");
         } else if (pClass.equals("Mage")) {
             pSorcery += 15;
-            setWeaponStats("Stick Wand");
+            equipWeapon("Stick Wand");
+            placeInInv("Stick Wand");
             System.out.println("\n    Your character is now a Mage.\n");
         } else if (pClass.equals("Archer")) {
             pSneak += 15;
-            setWeaponStats("Handmade Bow");
+            equipWeapon("Handmade Bow");
+            placeInInv("Handmade Bow");
             System.out.println("\n    Your character is now a Archer.\n");
         } else if (pClass.equals("Gambler")) {
             pLuck += 1;
@@ -1902,7 +1911,8 @@ public class Nordverden {
                 } else if (pClass.equals("Warrior")) {
                     pStrenght -= 15;
                     pInvSpace += 1;
-                    setWeaponStats("");
+                    equipWeapon("");
+                    invItems.remove("Rusty Sword");
                 } else if (pClass.equals("Tank")) {
                     pBladeRes -= 1;
                     pBluntRes -= 1;
@@ -1955,10 +1965,22 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "1": setWeaponStats("Rusty Sword"); break;
-            case "2": setWeaponStats("Wooden Hammer"); break;
-            case "3": setWeaponStats("Handmade Bow"); break;
-            case "4": setWeaponStats("Stick Wand"); break;
+            case "1":
+                equipWeapon("Rusty Sword");
+                placeInInv("Rusty Sword");
+                break;
+            case "2":
+                equipWeapon("Wooden Hammer");
+                placeInInv("Wooden Hammer");
+                break;
+            case "3":
+                equipWeapon("Handmade Bow");
+                placeInInv("Handmade Bow");
+                break;
+            case "4":
+                equipWeapon("Stick Wand");
+                placeInInv("Stick Wand");
+                break;
             case "5": aLeather = true; equipArmour(); break;
             case "6": placeInInv("Stamina Potion");break;
             case "7": placeInInv("Health Potion");break;
@@ -2010,449 +2032,7 @@ public class Nordverden {
         customizeStats();
     }
 
-    // Method for the empirian prisoner start
-    static void empirianPrisoner() {
-        if (!tutComplete) {
-            clearConsole();
-            pStartLocation = true;
-            tutComplete = true;
-            System.out.println("\n____________________________________________________________________________________________________\n");
-
-            String[] loadingMsg = { // Loading message to catch player's attention
-                "   __                 _ _             \n" +
-                "  / /  ___   __ _  __| (_)_ __   __ _ \n" +
-                " / /  / _ \\ / _` |/ _` | | '_ \\ / _` |\n" +
-                "/ /__| (_) | (_| | (_| | | | | | (_| |\n" +
-                "\\____/\\___/ \\__,_|\\__,_|_|_| |_|\\__, |\n" +
-                "                                |___/ ",
-
-                "   o   ",
-                "o   ",
-                "o   ",
-                "o   ",
-                "o"
-
-            };
-
-            for (String loading : loadingMsg) { 
-                System.out.print(loading);
-                try { // credits to Gray on stack overflow for sleep method
-                    Thread.sleep(1000); // half a sec wait time (feels too fast and too slow at the same time)
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-
-            clearConsole();
-            System.out.println("\n____________________________________________________________________________________________________\n");
-
-            String[] statements = { // string array with the text blob
-                "    " + pName + " opens " + proPos + " eyes.",
-                "    There's three carts being transported by Empirian Soldiers on horsedrawn carts.",
-                "    "+pName+" is on the last one with three prisoners sitting with " + proObj + ",",
-                "    " + proSub + " looks down to see " + proPos + " hands are tied aswell.",
-                "    The convoy seems to be going towards a small desert village a few kilometers away.",
-                "    One of the prisoner's starts talking to " + proObj + ".",
-                "",
-                "Astrid: Hey you! You finally woke up.",
-                "I was starting to think the grunts hit you a bit too hard.",
-                "You were trying to leave Nordverden on the west coast I'm guessing.",
-                "Us? We were sent by the king to sabotage one of their ships.",
-                "A classic case of wrong place wrong time I suppose.",
-                "They might take it easy on you if you manage to convince them you're not with us.",
-                "Good luck though. Empirians don't spare prisoners of wa...",
-                "",
-                "Empirian Guard: Be quiet! You're lucky I have orders to follow.",
-                "If not you wouldn't even make it to the guillotine.",
-                "Your stunt cost the Empire thousands of coins.",
-                "You will all pay for your crimes regardless of what you say.",
-                "",
-                "    The cart stops inside {tempDesertVillage}.",
-                "",
-                "Empirian Guard: Get off already! What are you waiting for?",
-                "",
-                "    One by one each prisoner steps out of the cart until it's just " + pName + ".",
-                "    The guard shoves " + proObj + " and " + proSub + " is forced to line up with the rest.",
-                "    An officer begins to list off the names of the prisoner's and their crimes.",
-                "",
-                "Empirian Officer: These prisoner's have all committed unforgivable crimes against",
-                "the Great Empire of the Wise Emperor Brutus the Fourth.",
-                "For these crimes they will be tried for terrorism and sentenced to death by guillotine.",
-                "Leon bring up the first prisoner.",
-                "",
-                "    The guard standing next to the officer goes out into the line of prisoners",
-                "    and takes the person on the far side of where "+pName+" is.",
-                "    This repeats until the prisoners on the first cart were gone",
-                "    Just as the soldiers were ready to take next set of prisoners forward,",
-                "    a large bomb was set off behind the guillotine sending rubble flying everywhere.",
-                "    In the chaos the remaining prisoners take the opportunity to flee",
-                "    while the soldiers are distracted."
-            };
-
-            // Neded to slow text chunk to let player read it better
-            for (String statement : statements) { 
-                System.out.println(statement);
-                try { // credits to Gray on stack overflow for sleep method
-                    Thread.sleep(250); // quarter second wait time (feels too fast and too slow at the same time)
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-
-            System.out.println("\nAstrid: Hey! Come with us we know a way out through the sewers.\n\n"
-            + "    At the same time she says that "+pName+" sees Leon lying on the floor under some rubble.\n"
-            + "\n1. Go with Astrid\n2. Save Leon\n3. Run towards the desert\n"
-            );
-
-            playerSelection();
-            switch (pSel) {
-                case "1":
-                    goWithAstrid();
-                    break;
-                case "2":
-                    saveLeon();
-                    break;
-                case "3":
-                    System.out.println("    "+pName+" takes the opportunity and escapes {tempDesertVillage}.");
-                    playerLocator("Desert");
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            System.out.println("\n    "+pName+" already did this before...\n");
-            pStartLocation = false;
-            startingLocation();
-        }
-
-    }
-
-    // method for if char goes with Astrid
-    static void goWithAstrid() {
-        empiRep -= 2;
-
-        String[] statements = { // string array with the text blob
-            "    "+pName+" followed Astrid.",
-            "",
-            "Astrid: Over here! Herry before the guards come after us!",
-            "",
-            "    " + pName + " and Astrid climb down the sewers with a small group of survivors",
-            "    A few feet into the tunnel the group hears voices behind them",
-            "",
-            "Astrid: Dritt! De jager oss! Keep going I'll stay back to hold them off.",
-            "",
-            "    " + pName + " decides its better if they both fight back...",
-            "",
-            "Astrid: What are you doing? "
-        };
-
-        // Neded to slow text chunk to let player read it better
-        for (String statement : statements) { 
-            System.out.println(statement);
-            try {
-                Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        boolean fightWithAstrid = false;
-        int astridChance = rand.nextInt(20);
-        if (!weaponEquipped) {
-            System.out.print("Are you daft? You don't even have a weapon! Get out while you can.\n\n"
-                + "1. Run Away\n2. Stay and Fight\n"
-            );
-
-            playerSelection();
-            switch (pSel) {
-                case "1":
-                    System.out.println("\n    " + pName + " ran away with the rest of the group...\n"
-                        + "    They continue traveling until one of the survivors tells the group they can exit from a hatch nearby.\n"
-                        + "    The group exits the tunnel and are left near a river in the desert.\n\n"
-                        + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
-                        + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
-                    );
-                    if (astridChance < 6) {
-                        astridDied = true;
-                    }
-                    tutComplete = true;
-                    playerLocator("Desert");
-                    break;
-                default: System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n"); setWeaponStats("Fists"); fightWithAstrid = true;
-            }
-        } else {
-            System.out.println("Astrid: What? Are you sure? You look a little green.");
-            if (pOrc || pWoodElf) {
-                System.out.println("Astrid: I didn't mean it like... nevermind.");
-            }
-            System.out.println("\n\n1. Fight with Astrid\n2. Run Away\n");
-
-            playerSelection();
-            switch (pSel) {
-                case "2":
-                    System.out.println("\n    " + pName + " ran away with the rest of the group...\n"
-                        + "    They continue traveling until one of the survivors tells the group they can exit from a hatch nearby.\n"
-                        + "    The group exits the tunnel and are left near a river in the desert.\n\n"
-                        + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
-                        + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
-                    );
-                    if (astridChance < 6) {
-                        astridDied = true;
-                    }
-                    tutComplete = true;
-                    playerLocator("Desert");
-                    break;
-                default:
-                    System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n");
-                    fightWithAstrid = true;
-            }
-        }
-
-        if (fightWithAstrid) {
-            System.out.println("\nAstrid: Fine let's do this together.\n\n");
-
-            recruitComp("Astrid");
-
-            addNPC("Wounded Soldier", 60, 20, "Bladed", 50, true);
-            addNPC("Wounded Soldier", 55, 20, "Bladed", 50, true);
-            addNPC("Wounded Soldier", 70, 20, "Bladed", 50, true);
-            
-            gotMad();
-
-            if (pHealth > 50) {
-                System.out.println("Astrid: Not bad. You might do well in the Kings Finest.");
-            } else {
-                System.out.println("Astrid: See. I told you not to stay behind!");
-            }
-
-            dismissComp();
-            System.out.println("Astrid: Let's keep moving we might still be able to catch up.\n\n"
-                + "    They exit the sewers near a river in the desert.\n\n"
-                + "Astrid: We're heading up the river towards {tempRiverVillage} but if you\n"
-                + "want {tempDesertTown} is to the east. If you want to travel together again I\n"
-                + "will be in the capital for the next couple months.\n"
-            );
-
-            tutComplete = true;
-            playerLocator("Desert");
-        }
-
-        System.out.println("\n____________________________________________________________________________________________________\n");
-    }
-
-    // method for if char tries to save Leon
-    static void saveLeon() {
-        verdRep -= 2;
-
-        String[] statements = { // string array with the text blob
-            "    "+pName+" went over to help Leon.",
-            "",
-            "    Leon is under several rocks.",
-            "    " + pName + " uses a pirce of rebar to lift the rock on top of his foot.",
-            "    A guard rushes over to sound of Leon's screams...",
-            "",
-            "Wounded Soldier: Back off criminal!.",
-            "",
-            "    The guard raises his sword and readies an attack...",
-            "",
-            "Leon: DISCEDITE MILES!",
-            "This person was trying to help me and you're here to strike them down?",
-            "Help " + proSub + " out or you'll be stationed on the deepest parts of the mine!",
-            "",
-            "Wounded Soldier: Paenitet Leutnant Leon...",
-            "",
-            "    With the help of the soldier, "+pName+" is able to free Leon.",
-            "",
-            "Leon: Ack! Danke... I'f you'd be kind enough to escort me and this baffon to the Colony,",
-            "I'll be forever in your debt.",
-            "",
-            "1. Escort Leon to the Colony",
-            "2. Leave {tempDesertVillage} alone"
-        };
-
-        // Neded to slow text chunk to let player read it better
-        for (String statement : statements) { 
-            System.out.println(statement);
-            try {
-                Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        boolean escortLeon = false;
-        playerSelection();
-        switch (pSel) {
-            case "1":
-                escortLeon = true;
-                empiRep += 3;
-                break;
-            default:
-                empiRep += 1;
-                System.out.println("    "+pName+" thinks " + proObj + " has done enough.");
-        }
-
-        System.out.println("\n____________________________________________________________________________________________________\n");
-        if (escortLeon) {
-            System.out.println("    "+pName+" helps Leon get up but notices his ankle is too damaged to walk.");
-
-
-        } else {
-            System.out.println("Leon: That is understandable. You're actions will not be forgetten by the Empire.");
-
-            int leonChance = 0;
-            leonChance = rand.nextInt(20) + 1;
-
-            if (leonChance > 9) {
-                leonDied = false;
-            } else {
-                leonDied = true;
-            }
-        }
-    }
-
 // --->   End of Character Creator   <---
-
-
-
-
-
-
-
-
-
-
-// --->   Companion System   <---
-
-    // Companion variables
-    static boolean warriorInParty = false; // var for if the player has a warrior in their party
-    static String wName = "";
-    static int wHealth = 0;
-    static int wDamage = 0;
-    static double wDmgRes = 0;
-
-    static boolean mageInParty = false;
-    static String mName = "";
-    static int mHealth = 0;
-    static int mDamage = 0;
-    static double mDmgRes = 0;
-
-    static boolean tankInParty = false;
-    static String tName = "";
-    static int tHealth = 0;
-    static int tDamage = 0;
-    static double tDmgRes = 0;
-
-    static boolean rangeInParty = false;
-    static String rName = "";
-    static int rHealth = 0;
-    static int rDamage = 0;
-    static double rDmgRes = 0;
-
-    static boolean astridDied = false;
-    static boolean leonDied = false;
-    static boolean steinDied = false;
-    static boolean evinDied = false;
-    static boolean dorcyDied = false;
-    static boolean inurukiDied = false;
-
-    // Method that sets companion stats
-    static void recruitComp(String name) {
-        if (name.equals("Astrid") && !astridDied && !warriorInParty) {
-            wName = "Astrid";
-            wDamage = 20;
-            wDmgRes = 1.5;
-            wHealth = 150;
-            warriorInParty = true;
-
-        } else if (name.equals("Leon") && !leonDied && !warriorInParty) {
-            wName = "Leon";
-            wDamage = 30;
-            wDmgRes = 1.5;
-            wHealth = 100;
-            warriorInParty = true;
-        }
-
-        System.out.println("    " + wName + " has joined " + pName + "'s party.");
-    }
-
-    // method that dismisses companion
-    static void dismissComp() {
-        System.out.println("    "+wName+" has left "+pName+"'s party.");
-
-        wName = "";
-        wDamage = 0;
-        wDmgRes = 0;
-        wHealth = 0;
-    }
-
-    // method that checks if the companion died
-    static boolean isCompDead(String name) {
-        if (charIsAlone()) {
-            if (wHealth <= 0 && warriorInParty) {
-                System.out.println("    "+wName+" died!");
-
-                if (name.equals("Astrid")) {
-                    astridDied = true;
-                    warriorInParty = false;
-                } else if (name.equals("Leon")) {
-                    leonDied = true;
-                    warriorInParty = false;
-                }
-
-                return true;
-            }
-            if (mHealth <= 0 && mageInParty) {
-                System.out.println("    "+mName+" died!");
-
-                if (name.equals("Evindal")) {
-                    evinDied = true;
-                    mageInParty = false;
-                } else if (name.equals("Dorcyne")) {
-                    dorcyDied = true;
-                    mageInParty = false;
-                }
-
-                return true;
-            }
-            if (tHealth <= 0 && tankInParty) {
-                System.out.println("    "+tName+" died!");
-
-                if (name.equals("Steineter")) {
-                    steinDied = true;
-                    tankInParty = false;
-                }
-
-                return true;
-            }
-            if (rHealth <= 0 && rangeInParty) {
-                System.out.println("    "+rName+" died!");
-
-                if (name.equals("Inuruki")) {
-                    inurukiDied = true;
-                    rangeInParty = false;
-                }
-
-                return true;
-            } else {
-                return false;
-            } 
-        } else {
-            return false;
-        }
-
-    }
-
-    // method that check if char is alone
-    static boolean charIsAlone() {
-        if (warriorInParty || mageInParty || tankInParty || rangeInParty) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-// --->   End of Comp Sys   <---
 
 
 
@@ -2485,7 +2065,7 @@ public class Nordverden {
 
     static void lvlUpStats() {
         System.out.println("    What skill do you want to improve?\n");
-        System.out.println("1. Strenght\n2. Speech\n3. Stamina\n4. Sorcery\n5. Sneak");
+        System.out.println("1. Strenght\n2. Speech\n3. Stamina\n4. Sorcery\n5. Sneak\n");
 
         playerSelection();
         switch(pSel) {
@@ -3365,6 +2945,370 @@ public class Nordverden {
 
 //   --->   Quest Variables   <---
 
+
+    // Method for the empirian prisoner start
+    static void tutorial() {
+        if (!tutComplete) {
+            clearConsole();
+            pStartLocation = true;
+            tutComplete = true;
+            System.out.println("\n____________________________________________________________________________________________________\n");
+
+            String[] loadingMsg = { // Loading message to catch player's attention
+                "   __                 _ _             \n" +
+                "  / /  ___   __ _  __| (_)_ __   __ _ \n" +
+                " / /  / _ \\ / _` |/ _` | | '_ \\ / _` |\n" +
+                "/ /__| (_) | (_| | (_| | | | | | (_| |\n" +
+                "\\____/\\___/ \\__,_|\\__,_|_|_| |_|\\__, |\n" +
+                "                                |___/ ",
+
+                "   o   ",
+                "o   ",
+                "o   ",
+                "o   ",
+                "o"
+
+            };
+
+            for (String loading : loadingMsg) { 
+                System.out.print(loading);
+                try { // credits to Gray on stack overflow for sleep method
+                    Thread.sleep(1000); // half a sec wait time (feels too fast and too slow at the same time)
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            clearConsole();
+            System.out.println("\n____________________________________________________________________________________________________\n");
+
+            String[] statements = { // string array with the text blob
+                "    " + pName + " opens " + proPos + " eyes.",
+                "    There's three carts being transported by Empirian Soldiers on horsedrawn carts.",
+                "    "+pName+" is on the last one with three prisoners sitting with " + proObj + ",",
+                "    " + proSub + " looks down to see " + proPos + " hands are tied aswell.",
+                "    The convoy seems to be going towards a small desert village a few kilometers away.",
+                "    One of the prisoner's starts talking to " + proObj + ".",
+                "",
+                "Astrid: Hey you! You finally woke up.",
+                "I was starting to think the grunts hit you a bit too hard.",
+                "You were trying to leave Nordverden on the west coast I'm guessing.",
+                "Us? We were sent by the king to sabotage one of their ships.",
+                "A classic case of wrong place wrong time I suppose.",
+                "They might take it easy on you if you manage to convince them you're not with us.",
+                "Good luck though. Empirians don't spare prisoners of wa...",
+                "",
+                "Empirian Guard: Be quiet! You're lucky I have orders to follow.",
+                "If not you wouldn't even make it to the guillotine.",
+                "Your stunt cost the Empire thousands of coins.",
+                "You will all pay for your crimes regardless of what you say.",
+                "",
+                "    The cart stops inside {tempDesertVillage}.",
+                "",
+                "Empirian Guard: Get off already! What are you waiting for?",
+                "",
+                "    One by one each prisoner steps out of the cart until it's just " + pName + ".",
+                "    The guard shoves " + proObj + " and " + proSub + " is forced to line up with the rest.",
+                "    An officer begins to list off the names of the prisoner's and their crimes.",
+                "",
+                "Empirian Officer: These prisoner's have all committed unforgivable crimes against",
+                "the Great Empire of the Wise Emperor Brutus the Fourth.",
+                "For these crimes they will be tried for terrorism and sentenced to death by guillotine.",
+                "Leon bring up the first prisoner.",
+                "",
+                "    The guard standing next to the officer goes out into the line of prisoners",
+                "    and takes the person on the far side of where "+pName+" is.",
+                "    This repeats until the prisoners on the first cart were gone",
+                "    Just as the soldiers were ready to take next set of prisoners forward,",
+                "    a large bomb was set off behind the guillotine sending rubble flying everywhere.",
+                "    In the chaos the remaining prisoners take the opportunity to flee",
+                "    while the soldiers are distracted."
+            };
+
+            // Neded to slow text chunk to let player read it better
+            for (String statement : statements) { 
+                System.out.println(statement);
+                try { // credits to Gray on stack overflow for sleep method
+                    Thread.sleep(250); // quarter second wait time (feels too fast and too slow at the same time)
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            System.out.println("\nAstrid: Hey! Come with us we know a way out through the sewers.\n\n"
+            + "    At the same time she says that "+pName+" sees Leon lying on the floor under some rubble.\n"
+            + "\n1. Go with Astrid\n2. Save Leon\n3. Run towards the desert\n"
+            );
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    goWithAstrid();
+                    break;
+                case "2":
+                    saveLeon();
+                    break;
+                case "3":
+                    System.out.println("    "+pName+" takes the opportunity and escapes {tempDesertVillage}.");
+                    playerLocator("Desert");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            System.out.println("\n    "+pName+" already did this before...\n");
+            pStartLocation = false;
+            startingLocation();
+        }
+
+    }
+
+    // method for if char goes with Astrid
+    static void goWithAstrid() {
+        empiRep -= 2;
+
+        String[] statements = { // string array with the text blob
+            "    "+pName+" followed Astrid.",
+            "",
+            "Astrid: Over here! Herry before the guards come after us!",
+            "",
+            "    " + pName + " and Astrid climb down the sewers with a small group of survivors",
+            "    A few feet into the tunnel the group hears voices behind them",
+            "",
+            "Astrid: Dritt! De jager oss! Keep going I'll stay back to hold them off.",
+            "",
+            "    " + pName + " decides its better if they both fight back...",
+            "",
+            "Astrid: What are you doing? "
+        };
+
+        // Neded to slow text chunk to let player read it better
+        for (String statement : statements) { 
+            System.out.println(statement);
+            try {
+                Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        boolean fightWithAstrid = false;
+        int astridChance = rand.nextInt(20);
+        if (!weaponEquipped) {
+            System.out.print("Are you daft? You don't even have a weapon! Get out while you can.\n\n"
+                + "1. Run Away\n2. Stay and Fight\n"
+            );
+
+            playerSelection();
+            switch (pSel) {
+                case "1":
+                    System.out.println("\n    " + pName + " ran away with the rest of the group...\n"
+                        + "    They continue traveling until one of the survivors tells the group they can exit from a hatch nearby.\n"
+                        + "    The group exits the tunnel and are left near a river in the desert.\n\n"
+                        + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
+                        + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
+                    );
+                    if (astridChance < 6) {
+                        astridDied = true;
+                    }
+                    tutComplete = true;
+                    playerLocator("Desert");
+                    break;
+                default: System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n"); equipWeapon("Fists"); fightWithAstrid = true;
+            }
+        } else {
+            System.out.println("Astrid: What? Are you sure? You look a little green.");
+            if (pOrc || pWoodElf) {
+                System.out.println("Astrid: I didn't mean it like... nevermind.");
+            }
+            System.out.println("\n\n1. Fight with Astrid\n2. Run Away\n");
+
+            playerSelection();
+            switch (pSel) {
+                case "2":
+                    System.out.println("\n    " + pName + " ran away with the rest of the group...\n"
+                        + "    They continue traveling until one of the survivors tells the group they can exit from a hatch nearby.\n"
+                        + "    The group exits the tunnel and are left near a river in the desert.\n\n"
+                        + "Survivor: You! We're heading to {tempRiverVillage} you can come if you want.\n"
+                        + "Its just up the river here for a few kilometers, or you can head east towards {tempDesertTown}.\n"
+                    );
+                    if (astridChance < 6) {
+                        astridDied = true;
+                    }
+                    tutComplete = true;
+                    playerLocator("Desert");
+                    break;
+                default:
+                    System.out.println("    Something inside of "+pName+" stopped "+proObj+" from leaving.\n");
+                    fightWithAstrid = true;
+            }
+        }
+
+        if (fightWithAstrid) {
+            System.out.println("\nAstrid: Fine let's do this together.\n\n");
+
+            recruitComp("Astrid");
+
+            addNPC("Wounded Soldier", 60, 20, "Bladed", 50, true);
+            addNPC("Wounded Soldier", 55, 20, "Bladed", 50, true);
+            addNPC("Wounded Soldier", 70, 20, "Bladed", 50, true);
+            
+            gotMad();
+
+            if (pHealth > 50) {
+                System.out.println("Astrid: Not bad. You might do well in the Kings Finest.");
+            } else {
+                System.out.println("Astrid: See. I told you not to stay behind!");
+            }
+
+            dismissComp();
+            System.out.println("Astrid: Let's keep moving we might still be able to catch up.\n\n"
+                + "    They exit the sewers near a river in the desert.\n\n"
+                + "Astrid: We're heading up the river towards {tempRiverVillage} but if you\n"
+                + "want {tempDesertTown} is to the east. If you want to travel together again I\n"
+                + "will be in the capital for the next couple months.\n\n"
+                + "1. Go with the group\n2. Stay in the desert\n"
+            );
+
+            tutComplete = true;
+            playerSelection();
+
+            switch (pSel) {
+                case "1": playerLocator("River"); break;
+                default: playerLocator("Desert");
+            }
+        }
+
+        System.out.println("\n____________________________________________________________________________________________________\n");
+    }
+
+    // method for if char tries to save Leon
+    static boolean benignusBellator = false;
+    static void saveLeon() {
+        verdRep -= 2;
+
+        String[] statements = { // string array with the text blob
+            "    "+pName+" went over to help Leon.",
+            "",
+            "    Leon is under several rocks.",
+            "    " + pName + " uses a pirce of rebar to lift the rock on top of his foot.",
+            "    A guard rushes over to sound of Leon's screams...",
+            "",
+            "Wounded Soldier: Back off criminal!.",
+            "",
+            "    The guard raises his sword and readies an attack...",
+            "",
+            "Leon: DISCEDITE MILES!",
+            "This person was trying to help me and you're here to strike them down?",
+            "Help " + proSub + " out or you'll be stationed on the deepest parts of the mine!",
+            "",
+            "Wounded Soldier: Paenitet Leutnant Leon...",
+            "",
+            "    With the help of the soldier, "+pName+" is able to free Leon.",
+            "",
+            "Leon: Ack! Danke... I hate to ask but will you escort me and this one to the Colony,",
+            "I'll be sure you are compensated and pardoned of any crimes.",
+            "",
+            "1. Escort Leon to the Colony",
+            "2. Leave {tempDesertVillage} alone\n"
+        };
+
+        // Neded to slow text chunk to let player read it better
+        for (String statement : statements) { 
+            System.out.println(statement);
+            try {
+                Thread.sleep(500); // half a sec wait time (feels too fast and too slow at the same time)
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        boolean escortLeon = false;
+        playerSelection();
+        switch (pSel) {
+            case "1":
+                escortLeon = true;
+                empiRep += 3;
+                break;
+            default:
+                empiRep += 1;
+                System.out.println("    "+pName+" thinks " + proSub + " has done enough.");
+        }
+
+        System.out.println("\n____________________________________________________________________________________________________\n");
+        if (escortLeon) {
+            System.out.println("    "+pName+" helps Leon get up but notices his ankle is too damaged to walk.\n"
+                + "    Some Empirian soldiers notice the two struggling to help Leon and come over to help out as well.\n"
+                + "    With the help of the others "+pName+" is able to escape {tempDesertVillage} with Leon.\n"
+                + "    A few kilometers away from the Colony gateway they are spotted by Verdian Soldiers...\n\n"
+
+                + "Leon: Ready your swords Fortes Milites! We stand our ground here before diese hunde get closer to our land!\n"
+                + "You the Benignus Odin. You have done so much for me but now I ask of you my final request...\n"
+                + "Take my sword and defend me with my men."
+            );
+
+            equipWeapon("War Sword");
+            placeInInv("War Sword");
+
+            addNPC("Verdian Soldier", 100, 20, "Bladed", 50, true);
+            addNPC("Verdian Soldier", 100, 20, "Bladed", 50, true);
+            addNPC("Verdian Soldier", 100, 20, "Bladed", 50, true);
+
+            addAlly("Empirian Soldier", 100, 20);
+            addAlly("Empirian Soldier", 100, 20);
+            addAlly("Wounded Soldier", 60, 20);
+
+            gotMad();
+
+            if (pHealth > 50) {
+                System.out.println("Leon: Vincimus! Benignus Odin... you proved yourself in battle today,\n"
+                    + "and I will make sure the Empire hears about it. Tell me your name...\n\n"
+                    + pName +": My name is " + pName + " the " + pRace + ".\n\n"
+                    + "Leon: I will ensure the Empire knows you as " + pName + " the Benignus Bellator.\n"
+                    + "For your kindness and strenght in battle.\n"
+                    + "The Empire could use your strength, you can enlist in the barracks inside the colony.\n\n"
+                    + "Leon: Milites let us continue towards the capital!\n" 
+                );
+                empiRep += 1;
+                benignusBellator = true;
+            } else {
+                System.out.println("Leon: Vincimus. Good work men let's move before more come.");
+            }
+
+            pCoins += 50;
+            System.out.println("    "+pName+" gets paid 50c for his troubles.\n");
+            System.out.println("1. Stay in the Colony\n2. Go back to the desert\n");
+
+            playerSelection();
+            switch (pSel) {
+                case "2": playerLocator("Desert"); break;
+                default: playerLocator("Colony");
+            }
+
+        } else {
+            System.out.println("Leon: That is understandable. You're actions are appreciated by me and the Empire.");
+
+            int leonChance = 0;
+            leonChance = rand.nextInt(20) + 1;
+
+            if (leonChance > 6) {
+                leonDied = false;
+            } else {
+                leonDied = true;
+            }
+
+            System.out.println("1. Stay in the Desert\n2. Go towards the Colony\n3. Go towards the River");
+            playerSelection();
+
+            switch(pSel) {
+                case "3": playerLocator("River"); break;
+                case "2": playerLocator("Colony"); break;
+                default: playerLocator("Desert");
+            }
+
+        }
+    }
+
     // Array list with all current quests
     static ArrayList<String> quests = new ArrayList<>();
 
@@ -3416,7 +3360,6 @@ public class Nordverden {
         inCombat = false;
         pLives += 2;
         System.out.println("    "+pName+" has lived to fight another day...");
-        startingLocation();
     }
 
     // The tavern is the main location for side quests
@@ -3593,39 +3536,153 @@ public class Nordverden {
 
 
 
+// --->   Companion System   <---
+
+    // Companion variables
+    static boolean warriorInParty = false; // var for if the player has a warrior in their party
+    static String wName = "";
+    static int wHealth = 0;
+    static int wDamage = 0;
+    static double wDmgRes = 0;
+    static int wMaxHealth = 0;
+
+    static boolean mageInParty = false;
+    static String mName = "";
+    static int mHealth = 0;
+    static int mDamage = 0;
+    static double mDmgRes = 0;
+    static int mMaxHealth = 0;
+
+    static boolean tankInParty = false;
+    static String tName = "";
+    static int tHealth = 0;
+    static int tDamage = 0;
+    static double tDmgRes = 0;
+    static int tMaxHealth = 0;
+
+    static boolean rangeInParty = false;
+    static String rName = "";
+    static int rHealth = 0;
+    static int rDamage = 0;
+    static double rDmgRes = 0;
+    static int rMaxHealth = 0;
+
+    static boolean astridDied = false;
+    static boolean leonDied = false;
+    static boolean steinDied = false;
+    static boolean evinDied = false;
+    static boolean dorcyDied = false;
+    static boolean inurukiDied = false;
+
+    // Method that sets companion stats
+    static void recruitComp(String name) {
+        if (name.equals("Astrid") && !astridDied && !warriorInParty) {
+            wName = "Astrid";
+            wDamage = 20;
+            wDmgRes = 1.5;
+            wHealth = 150;
+            wMaxHealth = 150;
+            warriorInParty = true;
+
+        } else if (name.equals("Leon") && !leonDied && !warriorInParty) {
+            wName = "Leon";
+            wDamage = 30;
+            wDmgRes = 1.5;
+            wHealth = 100;
+            wMaxHealth = 100;
+            warriorInParty = true;
+        }
+
+        System.out.println("    " + wName + " has joined " + pName + "'s party.");
+    }
+
+    // method that dismisses companion
+    static void dismissComp() {
+        System.out.println("    Who will "+pName+" dismiss?");
+
+
+        System.out.println("    "+wName+" has left "+pName+"'s party.");
+        wName = "";
+        wDamage = 0;
+        wDmgRes = 0;
+        wHealth = 0;
+        wMaxHealth = 0;
+    }
+
+    // method that checks if the companion died
+    static boolean isCompDead(String name) {
+        if (!charIsAlone()) {
+            if (name.equals(wName) && wHealth <= 0 && warriorInParty) {
+                System.out.println("    "+wName+" died!");
+                if (name.equals("Astrid")) {
+                    astridDied = true;
+                    warriorInParty = false;
+                } else if (name.equals("Leon")) {
+                    leonDied = true;
+                    warriorInParty = false;
+                }
+
+                return true;
+            }
+
+            if (name.equals(mName) && mHealth <= 0 && mageInParty) {
+                System.out.println("    "+mName+" died!");
+                if (name.equals("Evindal")) {
+                    evinDied = true;
+                    mageInParty = false;
+                } else if (name.equals("Dorcyne")) {
+                    dorcyDied = true;
+                    mageInParty = false;
+                }
+
+                return true;
+            }
+
+            if (name.equals(tName) && tHealth <= 0 && tankInParty) {
+                System.out.println("    "+tName+" died!");
+                if (name.equals("Steineter")) {
+                    steinDied = true;
+                    tankInParty = false;
+                }
+
+                return true;
+            }
+
+            if (name.equals(rName) && rHealth <= 0 && rangeInParty) {
+                System.out.println("    "+rName+" died!");
+                if (name.equals("Inuruki")) {
+                    inurukiDied = true;
+                    rangeInParty = false;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // method that check if char is alone
+    static boolean charIsAlone() {
+        return !(warriorInParty || mageInParty || tankInParty || rangeInParty);
+    }
+
+// --->   End of Comp Sys   <---
+
+
+
+
+
+
+
+
+
+
 // --->   Combat Methods   <---
 
     //Combat Variables
     static boolean inCombat = false;
-    static boolean weaponEquipped = false;
-    static String pWeapon = "";
-    static String pArmour = "";
-    static int pHitChance = 0; // Character's hit chance (1-20) [<10 hits]
-    static int eHitChance = 0; // enemy hit chance
     static int pDisToTar = 0; // Character's distance to targeted enemy (>=2 is Melee <2 isRanged)
-    static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
-    static String pWeaponType = "none"; // type of weapon character is using
-    static double pDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
-    static double pDmgRes = 0.0; // Character's damage resistance (depens on damage type)
-    static int eDamage = 0; // damage done to player if enemy hits
-    static String eDmgType; // type of damage enemy does
-    static double pDamageCalc; // ((pWeaponDmg*pDmgMult) + (pStrenght*0.25))  Equation to calculate character's damage
-
-    // Individual array lists used for each enemy stat
-    static ArrayList<String> npcName = new ArrayList<>(); // NPC names
-    static ArrayList<Integer> npcHealth = new ArrayList<>(); // NPC health
-    static ArrayList<Integer> npcDamage = new ArrayList<>(); // NPC damage
-    static ArrayList<String> npcDamageType = new ArrayList<>(); // NPC damage type
-    static ArrayList<Integer> npcExp = new ArrayList<>(); // NPC experience
-    static ArrayList<Boolean> npcHostile = new ArrayList<>(); // Whether NPC is hostile
-
-    // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
-    static ArrayList<String> allWeapons = new ArrayList<>(); 
-    static ArrayList<String> t1Weapons = new ArrayList<>();
-    static ArrayList<String> t2Weapons = new ArrayList<>();
-    static ArrayList<String> t3Weapons = new ArrayList<>();
-    static ArrayList<String> t4Weapons = new ArrayList<>();
-    static ArrayList<String> t5Weapons = new ArrayList<>();
     static ArrayList<String> spells = new ArrayList<>();
 
     // Method that initializes combat
@@ -3633,11 +3690,24 @@ public class Nordverden {
         while (inCombat) { // Starts bombat
 
             System.out.println("\n    Enemies in view:");
-            for (int i = 0; i < npcName.size(); i++) { // for loop to display enemies (same as inv)
+            for (int i = 0; i < npcName.size(); i++) { // for loop to display enemies
                 System.out.println((i + 1) + ". " + npcName.get(i) + " (Health: " + npcHealth.get(i) + ")");
             }
 
             System.out.println("\n    "+pName+"'s Health: "+pHealth+"/"+pMaxHealth+"\n");
+            if (warriorInParty) {
+                System.out.println("    "+wName+"'s Health: "+wHealth+"/"+wMaxHealth+"\n");
+            }
+            if (mageInParty) {
+                System.out.println("    "+mName+"'s Health: "+mHealth+"/"+mMaxHealth+"\n");
+            }
+            if (tankInParty) {
+                System.out.println("    "+tName+"'s Health: "+tHealth+"/"+tMaxHealth+"\n");
+            }
+            if (rangeInParty) {
+                System.out.println("    "+rName+"'s Health: "+rHealth+"/"+rMaxHealth+"\n");
+            }
+
             pTurn(); // Player goes first
 
             if (theyAreDead()) {
@@ -3653,9 +3723,16 @@ public class Nordverden {
                 cTurn();
             }
 
+            if (allyName.size() > 0) {
+                aTurn();
+            }
+
             combatMenu();
 
             eTurn(); // if char has not won next enemy will attack
+
+            combatMenu();
+            clearConsole();
 
             if (isCharDead()) {
                 if (pLives == 1) { // Sends char to the gulag if they die
@@ -3683,6 +3760,9 @@ public class Nordverden {
         inCombat = false;
         System.out.println("    The battlefield is quiet.");
         clearNPCs();
+        if (allyName.size() > 0) {
+            clearAllies();
+        }
         System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
@@ -3724,6 +3804,9 @@ public class Nordverden {
         }
         return false;
     }
+    
+    static double pDmgRes = 0.0; // Character's damage resistance (depens on damage type)
+    static double pDmgMult = 0.0; // Characte's damage multiplier (depends on weapon type)
 
     // Method for the players turn
     static void pTurn() {
@@ -3737,7 +3820,8 @@ public class Nordverden {
                 return;
             }
 
-            pHitChance = rand.nextInt(20) + 1 + pLuck;
+            int pHitChance = rand.nextInt(20) + 1 + pLuck;
+            double pDamageCalc; // ((pWeaponDmg*pDmgMult) + (pStrenght*0.25))  Equation to calculate character's damage
 
             if (pHitChance < 10) {
                 System.out.println("    "+pName+" missed!");
@@ -3779,6 +3863,8 @@ public class Nordverden {
         return pHealth <= 0; // checks if char's health dropped to 0
     }
 
+    static String eDmgType = "";
+    static int eDamage = 0;
     // Method for the enemies turn (i sHoUlD aDd A sYsTeM fOr MuLtIpLe EnEmIeS - Naive Rigo)
     static void eTurn() {
         for (int i = 0; i < npcName.size(); i++) { // looks like jargon but lets every enemy attack
@@ -3807,46 +3893,60 @@ public class Nordverden {
                 } else if (isCompDead(rName)) {
                     targets.remove(rName);
                 }
+                if (allyName.size() > 0) {
+                    String aName = "";
+                    for (int j = 0; j < allyName.size(); j++) {
+                        aName = allyName.get(j);
+                        targets.add(aName);
+                    }
+                }
 
-                eHitChance = rand.nextInt(20) + 1;
-                int numTargets = rand.nextInt(targets.size());
-                String eTargetChoice = targets.get(numTargets);
+                int eHitChance = rand.nextInt(20) + 1;
+                int numTargets = targets.size();
                 eDamage = npcDamage.get(i);
+                int eTargetChoice = rand.nextInt(numTargets);
+                String target = targets.get(eTargetChoice);
+                int targetAlly = rand.nextInt(allyName.size());
 
                 if (eHitChance < 10) {
                     System.out.println("    "+npcName.get(i)+" missed!");
-                } else if (eTargetChoice.equals(pName)) {
+                } else if (eTargetChoice == 0 || target.equals(pName)) {
                     eDmgType = npcDamageType.get(i);
-                    setDamageResistance(eDmgType);
+                    pDmgRes = setDamageResistance(eDmgType);
                     eDamage = (int)(eDamage / (pDmgRes + 0.5));
                     eDamage = Math.max(eDamage, 0); // Makes sure the enemies damage cant be lower than 0 or it would heal (would be funny tho)
                     pHealth -= eDamage;
                     System.out.println("    "+npcName.get(i)+" hit "+pName+" and did "+eDamage+" damage!");
-                } else if (eTargetChoice.equals(wName)) {
+                } else if (target.equals(wName)) {
                     eDamage = (int)(eDamage / (wDmgRes + 0.5));
                     eDamage = Math.max(eDamage, 0);
                     wHealth -= eDamage;
                     System.out.println("    "+npcName.get(i)+" hit "+wName+" and did "+eDamage+" damage!");
-                } else if (eTargetChoice.equals(mName)) {
+                } else if (target.equals(mName)) {
                     eDamage = (int)(eDamage / (mDmgRes + 0.5));
                     eDamage = Math.max(eDamage, 0);
                     mHealth -= eDamage;
                     System.out.println("    "+npcName.get(i)+" hit "+mName+" and did "+eDamage+" damage!");
-                }  else if (eTargetChoice.equals(tName)) {
+                }  else if (target.equals(tName)) {
                     eDamage = (int)(eDamage / (tDmgRes + 0.5));
                     eDamage = Math.max(eDamage, 0);
                     tHealth -= eDamage;
                     System.out.println("    "+npcName.get(i)+" hit "+tName+" and did "+eDamage+" damage!");
-                } else if (eTargetChoice.equals(rName)) {
+                } else if (target.equals(rName)) {
                     eDamage = (int)(eDamage / (rDmgRes + 0.5));
                     eDamage = Math.max(eDamage, 0);
                     rHealth -= eDamage;
                     System.out.println("    "+npcName.get(i)+" hit "+rName+" and did "+eDamage+" damage!");
+                } else if (allyName.size() > 0 && allyHealth.get(targetAlly) > 0) {
+                    allyHealth.set(targetAlly, allyHealth.get(eTargetChoice) - eDamage);
+                } else {
+                    System.out.println("    " + npcName.get(i) + " missed!");
                 }
             }
         }
     }
 
+    // Method that lets the party members attack
     static void cTurn() {
         int cHitChance;
         int cChoice;
@@ -3896,10 +3996,31 @@ public class Nordverden {
         }
     }
 
+    // Method for the allies turn
+    static void aTurn() {
+        for (int i = 0; i < allyName.size(); i++) { // lets every ally attack
+            if (allyHealth.get(i) > 0) { // if the enemy attacking is alive
+
+                int aHitChance = rand.nextInt(20) + 1;
+                int numTargets = npcName.size();
+                int aChoice = rand.nextInt(numTargets);
+                int aDamage = allyDamage.get(i);
+
+                System.out.println(allyName.get(i) + " (Health: " + allyHealth.get(i) +") attacked...");
+                if (aHitChance < 10) {
+                    System.out.println("    "+allyName.get(i)+" missed!");
+                } else {
+                    npcHealth.set(aChoice, npcHealth.get(aChoice) - aDamage);
+                    System.out.println("    "+allyName.get(i)+" hit "+npcName.get(aChoice)+" and did "+aDamage+" damage!");
+                }
+            }
+        }
+    }
+
     // Method for the combat menu
     static void combatMenu() {
         System.out.println("\n____________________________________________________________________________________________________\n");
-        System.out.println("    The enemy is about to attack!\n"
+        System.out.println("    Prepare for your next move!\n"
             + "    What will "+pName+" do?\n\n"
             + "1. Keep fighting\n2. Use an item\n3. Try to run away\n"
         );
@@ -3918,7 +4039,7 @@ public class Nordverden {
     static void escapeCombat() {
         System.out.println("    "+pName+" tried to escape...");
 
-        escapeChance = ((rand.nextInt(2)) + pSneak/10) + pLuck;
+        escapeChance = ((rand.nextInt(4)) + (pSneak + 1)/10) + pLuck;
 
         if (escapeChance > 5) { // chance to escape increases with sneak
             System.out.println("    "+pName+" got away succesfully.");
@@ -3948,23 +4069,31 @@ public class Nordverden {
     }
 
     // Method that sets damage resistances based on the enemy's damage type
-    static void setDamageResistance(String eDmgType) {
+    static double setDamageResistance(String eDmgType) {
         if (eDmgType.equals("Bladed")) {
-            pDmgRes = pBladeRes;
+            return pBladeRes;
         } else if (eDmgType.equals("Blunt")) {
-            pDmgRes = pBluntRes;
+            return pBluntRes;
         } else if (eDmgType.equals("Magic")) {
-            pDmgRes = pMagicRes;
+            return pMagicRes;
         } else if (eDmgType.equals("Poison")) {
-            pDmgRes = pPoisonRes;
+            return pPoisonRes;
         } else if (eDmgType.equals("Fire")) {
-            pDmgRes = pFireRes;
+            return pFireRes;
         } else if (eDmgType.equals("Frost")) {
-            pDmgRes = pFrostRes;
+            return pFrostRes;
         } else {
-            pDmgRes = 0;
+            return 0;
         }
     }
+
+    // Individual array lists used for each enemy stat
+    static ArrayList<String> npcName = new ArrayList<>(); // NPC names
+    static ArrayList<Integer> npcHealth = new ArrayList<>(); // NPC health
+    static ArrayList<Integer> npcDamage = new ArrayList<>(); // NPC damage
+    static ArrayList<String> npcDamageType = new ArrayList<>(); // NPC damage type
+    static ArrayList<Integer> npcExp = new ArrayList<>(); // NPC experience
+    static ArrayList<Boolean> npcHostile = new ArrayList<>(); // Whether NPC is hostile
 
     // Add NPC to the lists
     static void addNPC(String name, int health, int damage, String dType, int exp, boolean hostile) {
@@ -3976,6 +4105,18 @@ public class Nordverden {
         npcHostile.add(hostile);
     }
 
+    // Arrays for allies
+    static ArrayList<String> allyName = new ArrayList<>(); // Ally names
+    static ArrayList<Integer> allyHealth = new ArrayList<>(); // Ally health
+    static ArrayList<Integer> allyDamage = new ArrayList<>(); // Ally damage
+
+    // Add Allies to the lists
+    static void addAlly(String name, int health, int damage) {
+        allyName.add(name);
+        allyHealth.add(health);
+        allyDamage.add(damage);
+    }
+
     // Clear NPCs from area
     static void clearNPCs() {
         npcName.clear();
@@ -3984,6 +4125,25 @@ public class Nordverden {
         npcExp.clear();
         npcHostile.clear();
     }
+
+    // clear Allies from area
+    static void clearAllies() {
+        allyName.clear();
+        allyHealth.clear();
+        allyDamage.clear();
+    }
+    
+    // Long Ahh List of Weapons (array lists not needed but makes finding weapon simpler)
+    static ArrayList<String> allWeapons = new ArrayList<>(); 
+    static ArrayList<String> t1Weapons = new ArrayList<>();
+    static ArrayList<String> t2Weapons = new ArrayList<>();
+    static ArrayList<String> t3Weapons = new ArrayList<>();
+    static ArrayList<String> t4Weapons = new ArrayList<>();
+    static ArrayList<String> t5Weapons = new ArrayList<>();
+    static boolean weaponEquipped = false;
+    static String pWeapon = "";
+    static String pWeaponType = "none"; // type of weapon character is using
+    static int pWeaponDmg = 0; // Character's current weapon damage (T1 = 10, T2 = 20, ... T5 = 50[Max])
 
     // Method that populates the weapon arrays
     static void popWeaponArrays() {
@@ -4068,14 +4228,14 @@ public class Nordverden {
 
         playerSelection();
         switch(pSel) {
-            case "1": setWeaponStats(item); break;
+            case "1": equipWeapon(item); break;
             case "2": System.out.println("    " + item + " was sent back to "+proPos+" inventory"); break;
             default: System.out.println("not possible"); isWeapon(item);
         }
     }
 
     // Method that sets the weapon type and damage
-    static void setWeaponStats(String item) {
+    static void equipWeapon(String item) {
         if (!weaponEquipped) {
             if (allWeapons.contains(item)) {
                 // Sets damage based on the tier
@@ -4135,9 +4295,9 @@ public class Nordverden {
                     pWeaponDmg = 0;
                     pWeaponType = "none";
                     pInvSpace += 1;
-                    setWeaponStats(item);
+                    equipWeapon(item);
                     break;
-                default: System.out.println("    Nope"); setWeaponStats(item);
+                default: System.out.println("    Nope"); equipWeapon(item);
             }
         }
     }

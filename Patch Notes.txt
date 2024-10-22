@@ -192,3 +192,14 @@ Update 23 --- Oct. 21st, 2024
 
 Update 24 --- Oct. 21st, 2024
 * Started work on the leon route of the tutorial
+
+Update 25 --- Oct. 22nd, 2024
+* Relocated several methods
+* Finished 90% of the tutorial
+   * Leon route (rewards: t2 swords, +50c, 1-4 epirian Rep)
+   * Astrid route (rewards: companion location)
+* Added functions to the combat system to allow allies other than the party members
+* Might have broken the combat system (idk fs yet I haven't had enough time to stress test it)
+* Softlock bug if player chooses not to do the tutorial for some reason (can spam 2 to exit softlock somehow)
+* Game breaking bug when fighting Silly fella and Goober (cant go more than one turn)
+* Broke more things than I added this time :(

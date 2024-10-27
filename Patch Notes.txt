@@ -203,3 +203,37 @@ Update 25 --- Oct. 22nd, 2024
 * Softlock bug if player chooses not to do the tutorial for some reason (can spam 2 to exit softlock somehow)
 * Game breaking bug when fighting Silly fella and Goober (cant go more than one turn)
 * Broke more things than I added this time :(
+
+Update 26 --- Oct. 27th, 2024
+* Took my time with this update to ensure its less buggy rather than trying to push daily updates
+* Massive update added ~800 lines (almost game changing)
+* Missle Logic Locator acts as a infinite loop now (as intended)
+   * Changed selections from 1-9 to wedcxzaq+1 to be more like a compass
+   * Removed names from selections (might add a map later)
+   * Added random encounters to; Orc Territory, Barb Territory, and the Plains
+* Added all secondary locations/rooms/targets to the MLL (not populated yet)
+* Added admin character for debugging
+* Slowed down the clearConsole method to let player read certain messages (might still be too fast)
+* Added default character name [Chara] to differentiate from player
+* Added more options to the default character preset to modify specific stats instead of only changing all
+* Figured out how to use unicode for accents and special characters (still need to follow the limitations of Git Bash)
+* Renamed several {temp} location names (most cities and villages have names now)
+* Wood elves and Dark elves were renamed to Trealv and Grottalv (loosely translates to Wood/Cave elf in Norwegian)
+* Expanded the combat system
+   * Magic is now different from regular combat (casting spells rather than hitting them with a stick)
+   * Ranged weapons give a distance advantage
+   * Allies are no longer broken! (I think)
+   * Fleeing combat works now (based on sneak skill)
+   * Both guns do more damage now
+   * Equipping weapons work (a little bit) better now
+* Spells are tiered and based of the magic weapon (Currently WIP... like everything else :\ )
+   * T1 = stick wand --> Fireball & Minor heal
+   * T2 = CoS Wand --> Ward & Weaken
+   * T3 = Crystal Staff --> Shard Blast & Armour
+   * T4 = Elfwood Wand --> Heal, Familiar, & Blessing
+   * T5 = Archmage Staff --> Banish & Full Heal
+* Added framework for status effects, both positive and negative effects (currently only works on player, and might stay that way :\ )
+* Added a dragon to the debug area you just cant get there anymore tho...
+* Worst part is, this is still basically just the framework of the game, there is still no story implimentation other than the tutorial
+* Theres also a bunch of "Chekov's guns" everywhere which need to be added in some way (EX: Literally all weapons and spells)
+* Bugs are also in every crack they can get into but more play testing is needed to get an idea of how to fix them (Also too lazy to fix the easy ones like in the Character creator)

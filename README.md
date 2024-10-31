@@ -1,4 +1,4 @@
-Project: Nekomura Slums
+Project: Nekomura Slums/ Nordverden: SoN
 
 This project was started as a concept for a CS2011 final
 the assignment was to make a text-based adventure game
@@ -17,4 +17,4 @@ About Nekomura Slums:
    * Missle Logic was removed
    * NPCs are simplified
    * Allies were removed
-* I flew to close ig - Rigo
+* Storyline idea is to learn about what happened to the old world

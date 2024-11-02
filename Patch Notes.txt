@@ -15,3 +15,28 @@ Update 1 --- Oct. 31st, 2024:
    * Backgrounds changed to former occupation and will have more of an impact
    * Occupations should also detemine the starting equipment
 * Bug testing area currently only displays the user's stats
+
+Update 2 --- Nov. 2nd, 2024:
+* Finished Character Creator and made it work without global variables
+  * Player can set their character's name
+  * set their character's skills
+  * can set damage resistances
+  * can choose background which sets starting equipment and bonus skills
+  * added custom character for debugging
+* Added a new turn based combat system (had to do a lot of troubleshooting to make it work well)
+  * can only fight one enemy at a time
+  * player only has 9 lives, if they lose them all the game ends
+* Added basic leveling system
+  * Level increases one skill by +5
+  * increases damage one damage resistance by +0.25
+  * manually increase health
+* Added basic trading system
+  * Merchant holds 5 items and their prices
+  * Character can barter if their speech is high
+  * Merchant "takes" money and "gives" item
+* Debug area
+  * displays character's stats
+  * combat test with one enemy
+  * shop test with barter
+  * combat test with two enemies
+* More info on comments (too tired to type everything out here. its 5:42am...)

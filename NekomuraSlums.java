@@ -573,7 +573,6 @@ static int[] increaseSkills(String kName, int[] skills) {
             System.out.println("That's not an option.");
     }
 
-    clearConsole();
     return skills;
 }
 
@@ -639,6 +638,7 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
 
 
 // --->   End Of Function Junction   <---
+
     public static void main(String args[]){
 
         System.out.println(
@@ -653,14 +653,14 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
           + "\n                                        / __/ /_ ____ _  ___      "
           + "\n                                       _\\ \\/ / // /  ' \\(_-<      "
           + "\n                                      /___/_/\\_,_/_/_/_/___/      "
-          + "\n                                       Version 0.002.110224"
+          + "\n                                       Version 0.003.110324"
           + "\n" 
         );
 
 
+    // -->  varHell = true  <---
 
-    // Character Variables:
-
+        // Character Variables:
         String kName = "Kara"; 
         // NOTE: Kara is just a shorhand for character because I got tire of writing "Character" every time
         // It also helps differentiate the character from the player
@@ -675,12 +675,27 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
         int luck = 0;
         int schmeeps = 0; // currency or money
 
+        // Combat Variables
         String kWeapon = "Fists";
         String kDmgType = "Blunt";
         int kDamage = 5;
-
         String kArmour = "Clothes";
         double kDmgRes = 0.5;
+
+        // Merchant variables
+        String[] itemsForSale = new String[5];
+        int[] itemCost = new int[5];
+
+        // Reputation variables (a group/gang will attack Kara if their reputation is too low)
+        // These should also be able to fit in a list I just wanted to visualize it better
+        int govRep = 0;
+        // Gangs (names can change)
+        int stabbasRep = 0;
+        int shoottasRep = 0;
+
+    // -->  varHell = false  <--
+
+
 
     // Character Creator:
 
@@ -718,9 +733,6 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
 
 
 
-        // Merchant variables
-        String[] itemsForSale = new String[5];
-        int[] itemCost = new int[5];
 
 
 
@@ -753,17 +765,22 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
             System.out.println("DEBUG{SOMETHING BROKE}");
         }
 
-        // Kara ends up in the slums after loosing their job
+        /*
+        * Examples of what could happen :
+        *
+        * Kara ends up in the slums after loosing or quitting their job
+        * {Story stuff goes here}
+        *
+        * Kara finds a book that starts thier journey
+        * {Moves on to act 2}
+        */
 
-        // Kara finds a book that starts thier journey
 
 
 
 
 
-
-
-    // Debugging area:
+    // Debugging/Testing Area: (This is all temporary and should get removed later)
 
         System.out.println("\n\nEntering debug area...\n\n");
 
@@ -806,12 +823,12 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
 
 
         // Shop test (Might need a method for all of this but everything I tried needed global variables)
-        // Populates the list of items for sale
         System.out.println(kName + ": Theres a shop ahead. I hope I have enough money...\n");
         System.out.print("~");
         if (playerSelection().equals("motherlode"))
             schmeeps += 100000;
 
+        // List of items available for purchase
         itemsForSale[0] = "Air Guitar";
         itemsForSale[1] = "Mass Produced Sword";
         itemsForSale[2] = "Baseball Bat";
@@ -852,6 +869,7 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
             System.out.println("Mu'Guffin: No.");
         }
 
+        System.out.println(kName + "'s Schmeeps: " + schmeeps + "\n");
         // Displays the list of items
         for (int i = 0; i < 5; i++) {
             System.out.println((i + 1) + ". " + itemsForSale[i] + " (" + itemCost[i] + ")");
@@ -903,14 +921,15 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
         }
         clearConsole();
 
-        // Double enemy attack test
+
+        // Two enemy attack test
         System.out.println("Goofy Fella: Im gonna stab ya!");
         System.out.println("Silly Fella: And Im gonna wait patiently here. Surely nothing bad happens to my friend.");
         System.out.println(kName + ": What?");
 
         lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Goofy Fella", 50, 5);
 
-        System.out.println("Silly Fella: You killed my buddy! Now Im going to hit you... with a gun!");
+        System.out.println("Silly Fella: You killed my buddy! Now Im going to stab you... with a gun!");
 
         lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Silly Fella", 150, 20);
         level = levelUp(kName, level);
@@ -918,7 +937,82 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
         kHealth = kMaxHealth;
         skills = increaseSkills(kName, skills);
         damageMultipliers = increaseDamage(kName, damageMultipliers);
+        stabbasRep -= 2;
 
+        // Reputation test
+        System.out.println(kName + " has made some enemies...\nShould " + kName + " join a gang for safety?");
+        System.out.println("1. Join the shoottas\n2. Call the cops\n");
+
+        switch (playerSelection()) {
+            case "1":
+                if (oldJob == "Dealer") {
+                    System.out.println("Big Shootta: Haha! Look who came back boys.");
+                    System.out.println("Dont worry " + kName + " you're still like family to us.");
+                    shoottasRep += 5;
+                } else {
+                    System.out.println("Big Shootta: Dont worry kid well keep you safe...");
+                    System.out.println("But we gotta make sure you're not a cop...");
+
+                    lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Cop", 10, 0);
+                    System.out.println("Big Shootta: Sloppy work pal... but you're in.");
+                    shoottasRep += 3;
+                    stabbasRep -= 1;
+                    govRep -= 1;
+                }
+
+                break;
+            case "2":
+                System.out.println("Operator: So you killed a gang member in the slums and you want us to help?");
+                System.out.println(kName + ": Yup!");
+                System.out.println("Operator: Sorry. We cant help you right now.");
+                shoottasRep -= 3;
+                stabbasRep -= 3;
+                break;
+            default: System.out.println(kName + " didn't do anything about it.");
+        }
+
+        System.out.println("DEBUG{REPUTATION GOV:" + govRep + ", STAB:" + stabbasRep + ", SHOOT:" + shoottasRep + "}");
+        clearConsole();
+
+        // Reputation check
+        if (shoottasRep < 0 && stabbasRep < 0) {
+            System.out.println(kName + " got jumpped in an allyway by multiple people!");
+
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+
+            level = levelUp(kName, level);
+            kMaxHealth += 10;
+            kHealth = kMaxHealth;
+            skills = increaseSkills(kName, skills);
+            damageMultipliers = increaseDamage(kName, damageMultipliers);
+
+            System.out.println("Unfortunately... " + kName + " pissed off more than one gang!");
+
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Shootta", 100, 20);
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Shootta", 100, 20);
+        } else if (shoottasRep > 0 && stabbasRep < 0) {
+            System.out.println(kName + " got jumped in an allyway by multiple people!");
+
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+
+            System.out.println("A few Shoottas heard the commotion, and picked off the rest.");
+        } else if (stabbasRep < 0) {
+            System.out.println("Stabba: Shanka sends his regards!\n");
+            System.out.println(kName + " got stabbed walking down the street!");
+            kHealth -= 10;
+            System.out.println("Health: " + kHealth + "\n");
+            System.out.println(kName + ": Ouch. Somebody help me!");
+            System.out.println("Bystander: Nah you're good.");
+        } else {
+            System.out.println(kName + " carried on with their day.");
+        }
+
+        if (kName.equals("D. Bugger")) {
+            System.out.println("Ad Min: Why dont you pick on someone your own size!");
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Ad Min", 10000, 100);
+        }
 
         System.out.println("\n\nThats it for now. Thanks for playing :)\n\n");
     }

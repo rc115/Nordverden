@@ -40,3 +40,14 @@ Update 2 --- Nov. 2nd, 2024:
   * shop test with barter
   * combat test with two enemies
 * More info on comments (too tired to type everything out here. its 5:42am...)
+
+Update 3 --- Nov. 3rd, 2024:
+* (Small update) Added basic reputation system
+* Three factions in the game rn, Government and two gangs
+* Need to manually edit reputation
+* Added example of how reputation could work in debug area
+  * Can join a gang to help out with an attack later
+  * If player tries to ask government both gangs will attack
+  * If player joins the rival gang the fight will be easier
+  * If player chooses not to join a gang character loses health but is not attacked
+* Mostly just if-else statements and more combat examples

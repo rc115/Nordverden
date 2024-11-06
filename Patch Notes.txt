@@ -51,3 +51,10 @@ Update 3 --- Nov. 3rd, 2024:
   * If player joins the rival gang the fight will be easier
   * If player chooses not to join a gang character loses health but is not attacked
 * Mostly just if-else statements and more combat examples
+
+Update 4 --- Nov. 6th, 2024:
+* Small update
+* Removed methods in character creator for name and old job and set them inside main class
+* Added color to certain text (might need to change if Prof. W. shows us a diff way)
+* Fixed Unemployed bug removing weapon
+* Added +10 to skill points for better balancing

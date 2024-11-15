@@ -37,12 +37,593 @@ public class NekomuraSlums {
     static Scanner input = new Scanner(System.in);
     static Random rand = new Random();
 
+    public static void main(String args[]){
+
+        System.out.println(
+            "\n"
+          + "\n    Welcome to"
+          + colour(
+            "\n    _____   __    ______                                          "
+          + "\n    ___  | / /_______  /______________ _______  ______________ _  "
+          + "\n    __   |/ /_  _ \\_  //_/  __ \\_  __ `__ \\  / / /_  ___/  __ `/  "
+          + "\n    _  /|  / /  __/  ,<  / /_/ /  / / / / / /_/ /_  /   / /_/ /   "
+          + "\n    /_/ |_/  \\___//_/|_| \\____//_/ /_/ /_/\\__,_/ /_/    \\__,_/    "
+          + "\n                                         ______                   "
+          + "\n                                        / __/ /_ ____ _  ___      "
+          + "\n                                       _\\ \\/ / // /  ' \\(_-<      "
+          + "\n                                      /___/_/\\_,_/_/_/_/___/      "
+          , "CYAN")
+          + "\n                                       Version 0.005.111524"
+          + "\n" 
+        );
+
+
+    // -->  varHell = true  <---
+
+        // Character Variables:
+        String kName = "Kara"; 
+        // NOTE: Kara is just a shorhand for character because I got tire of writing "Character" every time
+        // It also helps differentiate the character from the player
+        boolean nameSet = false;
+
+        int kHealth = 100;
+        int kMaxHealth = 100;
+        int level = 1;
+        int lives = 9;
+        int[] skills = new int[4];
+        double[] damageMultipliers = new double[4];
+        String background = "Unemployed";
+        int luck = 0;
+        int money = 0;
+
+        // Combat Variables
+        String kWeapon = "Fists";
+        String kDmgType = "Blunt";
+        int kDamage = 5;
+        String kArmour = "Clothes";
+        double kDmgRes = 0.5;
+
+        // Merchant variables
+        String[] itemsForSale = new String[5];
+        int[] itemCost = new int[5];
+
+        // Reputation variables (a group/gang will attack Kara if their reputation is too low)
+        // These should also be able to fit in a list I just wanted to visualize it better
+        int govRep = 0;
+        // Gangs (names can change)
+        int stabbasRep = 0;
+        int shoottasRep = 0;
+        boolean isRat = false;
+
+        // Variables for changing the color of text 
+        // got them from stack overflow: https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+        // Might need to change this depending on how Prof. Weronika shows us how to do this
+
+
+    // -->  varHell = false  <--
+
+
+
+    // Character Creator:
+
+        // While loop runs until player chooses Kara's name
+        while (!nameSet) {
+            System.out.println("\n____________________________________________________________________________________________________\n");
+            System.out.print("What is your character's name: ");
+    
+            String newName = input.nextLine(); // Takes player's input for Kara's name
+            kName = newName;
+    
+            System.out.println("\n" + colour(kName, "GREEN") + " will be your character's name throuout the game.\n"
+                + "\n1. Confirm name\n2. Change name\n"
+            );
+    
+            switch (playerSelection()) {
+                case "2":
+                    System.out.print("Clearing name...");
+                    input.nextLine(); // Clears input to make room for new name
+                    break;
+                default: nameSet = true;
+            }
+        }
+
+        skills = setSkills(skills);
+        damageMultipliers = setDamageMultipliers(damageMultipliers);
+
+        System.out.println("\n____________________________________________________________________________________________________\n");
+        System.out.print("What was your character's occupation:\n");
+        System.out.println("\n1. Sushi Chef\n2. Steel Worker\n3. Farmer\n4. Catnip Dealer\n5. CEO\n");
+    
+        switch (playerSelection()) {
+            case "1":
+                background = "Sushi";
+                break;
+            case "2":
+                background = "Steel";
+                break;
+            case "3":
+                background = "Farmer";
+                break;
+            case "4":
+                background = "Dealer";
+                break;
+            case "5":
+                background = "CEO";
+                break;
+            default:
+                background = "Unemployed";
+        }
+
+        if (background.equals("Sushi")) {
+            skills[1] += 10;
+            money = 100;
+            kWeapon = "Cleaver";
+            kDamage = 11;
+            kDmgType = "Sharp";
+        } else if (background.equals("Steel")) {
+            skills[0] += 10;
+            money = 250;
+            kWeapon = "Steel Pipe";
+            kDamage = 10;
+        } else if (background.equals("Farmer")) {
+            skills[2] += 10;
+            money = 50;
+            kWeapon = "Pesticide Sprayer";
+            kDamage = 8;
+            kDmgType = "Elemental";
+        } else if (background.equals("Dealer")) {
+            skills[3] += 10;
+            money = 50;
+            kWeapon = "9mm";
+            kDamage = 9;
+            kDmgType = "Ranged";
+        } else if (background.equals("CEO")) {
+            luck = 1;
+            money = 10000;
+        }
+
+        clearConsole();
+
+        // Debugging character
+        if (kName.equals("D. Bugger")) {
+            skills[0] = 100;
+            skills[1] = 100;
+            skills[2] = 100;
+            skills[3] = 100;
+            damageMultipliers[0] = 3.0;
+            damageMultipliers[1] = 3.0;
+            damageMultipliers[2] = 3.0;
+            damageMultipliers[3] = 3.0;
+            money = 1000000;
+            luck = 10;
+            kWeapon = "Dragonn KLR 20mm Anti-Matiriel Rifle";
+            kDamage = 100;
+            kDmgType = "Ranged";
+            kArmour = "T-Shirt and Jorts";
+            kDmgRes = 3.0;
+            System.out.println(kName + " ready.");
+        }
+
+
+
+
+
+
+
+
+// Act 1
+    /*
+    *
+    * This section just sets the background for why Kara ends up in the slums of Keji
+    * It's still early enough that we can change everything
+    * Story is still wip tho I just wrote something up quickly to have an idea of what to do
+    * 
+    */
+
+        System.out.println(colour("ACT 1:", "CYAN"));
+
+        // Loading message to catch player's attention
+        String[] loadingMsg = { 
+            "   __                 _ _             \n" +
+            "  / /  ___   __ _  __| (_)_ __   __ _ \n" +
+            " / /  / _ \\ / _` |/ _` | | '_ \\ / _` |\n" +
+            "/ /__| (_) | (_| | (_| | | | | | (_| |\n" +
+            "\\____/\\___/ \\__,_|\\__,_|_|_| |_|\\__, |\n" +
+            "                                |___/ ",
+
+            "   o   ",
+            "o   ",
+            "o   ",
+            "o   ",
+            "o"
+
+        };
+
+        for (String loading : loadingMsg) { 
+            System.out.print(colour(loading, "CYAN"));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        clearConsole();
+
+        // Sets a custom start and location based on player's choice of job
+        if (background.equals("Sushi")) {
+            System.out.println(colour("DEBUG{SUSHI CHEF START}", "CYAN"));
+        } else if (background.equals("Steel")) {
+            System.out.println(colour("DEBUG{STEEL WORKER START}", "CYAN"));
+        } else if (background.equals("Farmer")) {
+            System.out.println(colour("DEBUG{FARMER START}", "CYAN"));
+        } else if (background.equals("Dealer")) {
+            System.out.println(colour("DEBUG{CATNIP DEALER START}\n", "CYAN"));
+
+            isSpeaking(colour("Street Cat", "Purple"), "Yo! I heard you're the plug on this block.\n");
+            isSpeaking(colour(kName, "Green"), "Depends on whatchu need brodie.\n");
+            isSpeaking(colour("Street Cat", "Purple"), "Lemme get 5 Gs of some Silvervine Sorbet and a 3.5 of Whizker Waltz.\n");
+            isSpeaking(colour(kName, "Green"), "Fs its 150 for the Silvervine and 50 for the 8th.\n");
+            isSpeaking(colour("Street Cat", "Purple"), "Damn! Whats in the Silvervine?\n");
+
+            if (skills[1] >= 20) {
+                isSpeaking(colour(kName, "Green"), "That gas' 80% nepetalactone man. Waltz is only about 30% NTT.\n    Both will get you bonkered tho. Silvervine will just lasts like 3 hours longer.\n");
+                isSpeaking(colour("Street Cat", "Blue"), "Ohh shi alr. Yeah ill take it.\n\n");
+                System.out.println("The customer paid " + colour(kName, "Green") + " and took their product...");
+                money += 200;
+            } else {
+                isSpeaking(colour(kName, "Green"), "Trust me its worth it.\n");
+                isSpeaking(colour("Tweaker", "Red"), "Whatever dude. Just give me the boof.\n\n");
+                System.out.println("The tweaker pulled out a knife!");
+                System.out.println("But " + colour(kName, "Green") + " has a gun...\n");
+                System.out.println("\n1. Escalate\n2. Diffuse\n");
+
+                switch (playerSelection()) {
+                    case "1":
+                        isSpeaking(colour(kName, "Green"), "Man ion got time for your shit.\n\n");
+                        System.out.println(kName + " popped a cap in his ass!\n");
+                        break;
+                    default:
+                        isSpeaking(colour(kName, "Green"), "The fuck?! Im not tryna ruin my night today. Just take this J and fuck off.\n\n");
+                        System.out.println(kName + " gave the tweaker a laced spliff and then he left.\n");
+                }
+            }
+
+            System.out.println("About 30 minutes pass by... Then a new customer approaches " + colour(kName, "GREEN") + ".");
+            clearConsole();
+
+            isSpeaking(colour("Customer", "Purple"), "Hey man! Im trying to find some of that good good!\n");
+            isSpeaking(colour(kName, "Green"), "And Im supposed to help how exactly?\n");
+            isSpeaking(colour("Customer?", "Purple"), "C'mon man. I know you sell premium catnip.\n");
+            System.out.println("\nThe hairs on " + kName + "'s neck rise.\n");
+            isSpeaking(colour(kName, "Green"), "I dunno who you think I am, but I dont sell that.\n    Im just enjoying my J on the street. Nothing illegal about that.\n");
+            isSpeaking(colour("Customer?", "Purple"), "Hehe. I dont want you to get in trouble.\n    I just want 3 ounces of some Silverwine Sorbet.\n");
+            System.out.println("\n1. Sell her 3 ounces\n2. Refuse to sell\n");
+
+            switch (playerSelection()) {
+                case "1":
+                    isSpeaking(colour(kName, "Green"), "Fine. I dont have enough Silver tho, I can get you 1.5 ounces and 1.5 of Velvet Claw.\n");
+                    isSpeaking(colour("Customer", "Purple"), "Dang. Thats fine how much is it for both?\n");
+                    isSpeaking(colour(kName, "Green"), "1,260 for the Silvervine and 450 for the Velvet. Ill round it down to 1,700.\n");
+                    isSpeaking(colour("Customer", "Red"), "Aww how sweet. Here you go... Thank you!\n");
+                    System.out.println("The customer paid " + colour(kName, "Green") + " and took their product...\n");
+                    govRep -= 2;
+                    money += 1700;
+                    break;
+                default:
+                    isSpeaking(colour(kName, "Green"), "Sorry ma'am I dont sell Silverwine. Theres a dispensary about 15 minutes from here.\n    Maybe they'll sell it to you there.\n");
+                    isSpeaking(colour("Customer", "Red"), "Fine you queen. Just letting you know.\n    They already know. They've been on your tail for three months.\n\n");
+                    govRep -= 1;
+                    System.out.println("The 'customer' hisses at " + colour(kName, "Green") + " and leaves.\n\n");
+            }
+            
+            System.out.println("Not even 5 minutes later, several NBI agents corner " + colour(kName, "Green") + " before they can escape.\n");
+            isSpeaking(colour("Fed", "Red"), "Freeze! You are under arrest for distribution of a controled substance\n    and possesion of a deadly weapon. Turn around slowly and keep your hands in the air.\n\n");
+
+            System.out.println(colour(kName, "Green") + " is facing up to 20 years in federal prison.\n");
+            System.out.println("\n1. Take a plea deal\n2. Rat out the members of the Shoottas gang\n3. Serve the full sentence\n");
+
+            switch (playerSelection()) {
+                case "1":
+                    System.out.println("The judge was paid off by the Shoottas and the sentece was reduced to 2 years!");
+                    System.out.println("...But " + colour(kName, "Green") + " should stay away from feds once they're back on the street...\n");
+                    break;
+                case "2":
+                    isRat = true;
+                    govRep += 3;
+                    shoottasRep -= 10;
+                    stabbasRep -= 10;
+                    System.out.println(kName + " spent four months in prison but lost all respect with the gangs in the slums.\n");
+                    break;
+                default:
+                    System.out.println("Unfortunately... " + kName + " was stabbed inside of prison by a rival gang and bled out on the floor.\n\n");
+                    lives -= 1;
+                    System.out.println("Lives left: " + lives + "\n\n");
+                    System.out.println(colour(kName, "Green") + " was released early because they technically served a life sentence!\n");
+            }
+
+        } else if (background.equals("CEO")) {
+            System.out.println(colour("DEBUG{CEO START}", "CYAN"));
+        } else {
+            System.out.println(colour("DEBUG{UNEMPLOYED START}", "CYAN"));
+        }
+
+        /*
+        * Examples of what could happen :
+        *
+        * Kara ends up in the slums after loosing or quitting their job
+        * {Story stuff goes here}
+        *
+        * Kara finds a archive that starts thier journey
+        * {Moves on to act 2}
+        */
+
+
+
+
+
+
+// Debugging/Testing Area: (This is all temporary and should get removed later)
+        clearConsole();
+
+        System.out.println("\n\nEntering debug area...\n\n");
+
+        System.out.println(colour(
+            "KARA STATS:\n\n"
+            + "NAME: " + kName + "\n"
+            + "HEALTH: " + kHealth + "/" + kMaxHealth + "\n"
+            + "LEVEL: " + level + "\n"
+            + "LIVES: " + lives + "\n"
+            + "LUCK: " + luck + "\n"
+            + "money: " + money + "\n\n"
+            + "SKILLS:\n"
+            + "Strength (" + skills[0] + ")\n"
+            + "Speech (" + skills[1] + ")\n"
+            + "Stamina (" + skills[2] + ")\n"
+            + "Sneak (" + skills[3] + ")\n\n"
+            + "DMG MULT:\n"
+            + "Sharp (" + damageMultipliers[0] + ")\n"
+            + "Blunt (" + damageMultipliers[1] + ")\n"
+            + "Elemental (" + damageMultipliers[2] + ")\n"
+            + "Ranged (" + damageMultipliers[3] + ")\n\n"
+            + "WEAPON: " + kWeapon + "\n"
+            + "DAMAGE: "+ kDamage +"\n"
+            + "DAMAGE TYPE: " + kDmgType + "\n\n"
+            + "ARMOUR: " + kArmour + "\n"
+            + "DAMAGE RESISTANCE: " + kDmgRes + "\n\n"
+            , "CYAN"));
+
+        clearConsole();
+
+        // Combat test (all of these will be needed every time there is a fight unless that fight doesnt "level up" Kara)
+        // Coloured text test might change depending on how were taught in class
+        System.out.println(colour("Goober: Oi! Were gonna fight now!", "RED"));
+        System.out.println(colour(kName + ": Ok.", "GREEN"));
+        // I lost 2 lives with a "balanced" character...
+        lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Goober", 100, 10);
+        level = levelUp(kName, level);
+        kMaxHealth += 10;
+        kHealth = kMaxHealth;
+        skills = increaseSkills(kName, skills);
+        damageMultipliers = increaseDamage(kName, damageMultipliers);
+
+
+        // Shop test (Might need a method for all of this but everything I tried needed global variables)
+        System.out.println(colour(kName + ": Theres a shop ahead. I hope I have enough money...\n", "GREEN"));
+        System.out.print("~");
+        if (playerSelection().equals("motherlode"))
+            money += 100000;
+
+        // List of items available for purchase
+        itemsForSale[0] = "Air Guitar";
+        itemsForSale[1] = "Mass Produced Sword";
+        itemsForSale[2] = "Baseball Bat";
+        itemsForSale[3] = "Thermobaric Anti-Personel Rocket Launcher";
+        itemsForSale[4] = "Plate Armour";
+
+        // Prices for each item
+        itemCost[0] = 10;
+        itemCost[1] = 50;
+        itemCost[2] = 40;
+        itemCost[3] = 1000000;
+        itemCost[4] = 10000;
+
+        System.out.println(kName + " enters a small shop.");
+        System.out.println(colour("\nMu'Guffin: Buy something. Or dont.", "YELLOW"));
+
+        // Skill check to lower the prices
+        if (skills[1] >= 40) {
+            System.out.println(colour(kName + ": Im not paying that much!", "GREEN"));
+            System.out.println(colour("Mu'Guffin: Oh no!", "YELLOW"));
+            itemCost[0] = 1;
+            itemCost[1] = 5;
+            itemCost[2] = 4;
+            itemCost[3] = 100000;
+            itemCost[4] = 1000;
+        } else if (skills[1] >= 10) {
+            System.out.println(colour(kName + ": Why dont we negotiate?", "GREEN"));
+            System.out.println(colour("Mu'Guffin: Hmmm. Ok.", "YELLOW"));
+            itemCost[0] = 1;
+            itemCost[1] = 30;
+            itemCost[2] = 15;
+            itemCost[3] = 250000;
+            itemCost[4] = 5000;
+        } else {
+            System.out.println(colour(kName + ": Can you lower the prices?", "GREEN"));
+            System.out.println(colour("Mu'Guffin: No.", "YELLOW"));
+        }
+
+        System.out.println("\n" + kName + "'s money: " + money + "\n");
+        System.out.println(colour("\nMu'Guffin: This is what I sell...\n", "YELLOW"));
+
+        // Displays the list of items
+        for (int i = 0; i < 5; i++) {
+            System.out.println((i + 1) + ". " + itemsForSale[i] + " (" + itemCost[i] + ")");
+        }
+        System.out.println("");
+
+        // Gives Kara their purchased item and "pays" the shop owner
+        switch (playerSelection()) {
+            case "1": money = (money >= itemCost[0])? money -= 10: money; break;
+            case "2":
+                if (money >= itemCost[1]) {
+                    money -= itemCost[1];
+                    kWeapon = "Sword";
+                    kDamage = 13;
+                    kDmgType = "Sharp";
+                    System.out.println(colour("Mu'Guffin: Thats a #1 seller.", "YELLOW"));
+                } else {
+                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                }
+                break;
+            case "3":
+                if (money >= itemCost[2]) {
+                    money -= itemCost[2];
+                    kWeapon = "Baseball Bat";
+                    kDamage = 11;
+                    kDmgType = "Blunt";
+                    System.out.println(colour("Mu'Guffin: Good whacker if you need to whack.", "YELLOW"));
+                } else {
+                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                }
+                break;
+            case "4":
+                if (money >= itemCost[3]) {
+                    money -= itemCost[3];
+                    kWeapon = "Thermobaric Anti-Personel Rocket Launcher";
+                    kDamage = 300;
+                    kDmgType = "Elemental";
+                    System.out.println(colour("Mu'Guffin: You dont need allat for street cats.", "YELLOW"));
+                } else {
+                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                }
+                break;
+            case "5":
+                if (money >= itemCost[4]) {
+                    money -= itemCost[4];
+                    kArmour = "Plate Armour";
+                    kDmgRes = 1.8;
+                    System.out.println(colour("Mu'Guffin: That'll stop a train!", "YELLOW"));
+                } else {
+                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                }
+                break;
+            default: System.out.println(colour("Mu'Guffin: Git out if you aint buyin' nun!", "YELLOW"));
+        }
+        clearConsole();
+
+
+        // Two enemy attack test
+        System.out.println(colour("Goofy Fella: Im gonna stab ya!", "RED"));
+        System.out.println(colour("Silly Fella: And Im gonna wait patiently here. Surely nothing bad happens to my friend.", "RED"));
+        System.out.println(colour(kName + ": What?", "GREEN"));
+
+        lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Goofy Fella", 50, 5);
+
+        System.out.println(colour("Silly Fella: You killed my buddy! Now Im going to stab you... with a gun!", "RED"));
+
+        lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Silly Fella", 150, 20);
+        level = levelUp(kName, level);
+        kMaxHealth += 10;
+        kHealth = kMaxHealth;
+        skills = increaseSkills(kName, skills);
+        damageMultipliers = increaseDamage(kName, damageMultipliers);
+        stabbasRep -= 2;
+
+        // Reputation test
+        System.out.println(colour(kName, "GREEN") + " has made some " + colour("enemies", "RED") + "...\nShould " + kName + " join a " + colour("gang", "BLUE") + " for safety?");
+        System.out.println("1. Join the shoottas\n2. Call the cops\n");
+
+        switch (playerSelection()) {
+            case "1":
+                if (background == "Dealer") {
+                    if (isRat) {
+                        System.out.println(colour("Big Shootta: You think you can come crawling back after what you did?\nSnowball! Take this piece of shit to the box.", "RED"));
+                        System.out.println("\n\n" + kName + " was tortured for ratting on the shoottas...");
+                        lives -= 2;
+                        System.out.println("Lives left: " + lives);
+                    } else {
+                        System.out.println(colour("Big Shootta: Haha! Look who came back boys.\nYou're like family " + kName + ", you kept your mouth shut and we owe you.", "BLUE"));
+                        shoottasRep += 5;
+                    }
+                } else {
+                    System.out.println(colour("Big Shootta: Dont worry kid well keep you safe...\nBut we gotta make sure you're not a cop...", "PURPLE"));
+
+                    lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Detective", 10, 0);
+                    System.out.println(colour("Big Shootta: Sloppy work pal... but you're in.", "BLUE"));
+                    shoottasRep += 3;
+                    stabbasRep -= 1;
+                    govRep -= 1;
+                }
+
+                break;
+            case "2":
+                System.out.println(colour(kName + ": HELP! There's a gang after me because I killed one of their members!", "GREEN"));
+                System.out.println(colour("Operator: So you killed a gang member in the slums and you want us to help?", "PURPLE"));
+                System.out.println(colour(kName + ": Yup!", "GREEN"));
+                System.out.println(colour("Operator: Sorry. We cant do anything about it.", "RED"));
+                shoottasRep -= 3;
+                stabbasRep -= 3;
+                break;
+            default: System.out.println(kName + " didn't do anything about it.");
+        }
+
+        System.out.println(colour("\nDEBUG{REPUTATION GOV:" + govRep + ", STAB:" + stabbasRep + ", SHOOT:" + shoottasRep + "}", "CYAN"));
+        clearConsole();
+
+        // Reputation check
+        if (shoottasRep < 0 && stabbasRep < 0) {
+            System.out.println(colour(kName, "GREEN") + " got jumpped in an allyway by multiple people!");
+
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+
+            level = levelUp(kName, level);
+            kMaxHealth += 10;
+            kHealth = kMaxHealth;
+            skills = increaseSkills(kName, skills);
+            damageMultipliers = increaseDamage(kName, damageMultipliers);
+
+            System.out.println(colour("Unfortunately... " + kName + " pissed off more than one gang!", "RED"));
+
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Shootta", 100, 20);
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Shootta", 100, 20);
+        } else if (shoottasRep > 0 && stabbasRep < 0) {
+            System.out.println(colour(kName, "Green") + " got jumpped in an allyway by multiple people!");
+
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
+
+            System.out.println(colour("A few Shoottas heard the commotion, and picked off the rest.", "BLUE"));
+        } else if (stabbasRep < 0) {
+            System.out.println(colour("\nStabba: Shanka sends his regards!\n\n", "RED"));
+            System.out.println(kName + " got stabbed walking down the street!");
+            kHealth -= 10;
+            System.out.println("Health: " + kHealth + "/" + kMaxHealth + "\n");
+            System.out.println(colour(kName + ": Ouch. Somebody help me!", "GREEN"));
+            System.out.println(colour("Bystander: Nah you're good.", "PURPLE"));
+        } else {
+            System.out.println(kName + " carried on with their day.");
+        }
+
+        if (kName.equals("D. Bugger")) {
+            System.out.println("Ad Min: Why dont you pick on someone your own size!");
+            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Ad Min", 10000, 100);
+        }
+
+        System.out.println(colour("\n\nThats it for now. Thanks for playing :)\n\n", "CYAN"));
+    }
+
+
+
+
+
 // --->   Function Junction   <---
 
 
 
 // Method for taking the user's input (also gives user more options like quiting)
-static String playerSelection(){
+public static String playerSelection(){
     String pSel = "";
     pSel = input.next();
 
@@ -58,7 +639,7 @@ static String playerSelection(){
 }
 
 // Method that clears the screen
-static void clearConsole() {
+public static void clearConsole() {
     System.out.println("\n____________________________________________________________________________________________________\n");
     System.out.println("Clearing Screen...");
     try {
@@ -72,14 +653,43 @@ static void clearConsole() {
     }
 }
 
+// Method for colouring the text
+public static String colour(String ogTxt, String colour) {
+    String newTxt = "";
+    if (colour.equalsIgnoreCase("red")) {
+        newTxt = "\u001B[31m" + ogTxt + "\u001B[0m";
+    } else if (colour.equalsIgnoreCase("green")) {
+        newTxt = "\u001B[32m" + ogTxt + "\u001B[0m";
+    } else if (colour.equalsIgnoreCase("yellow")) {
+        newTxt = "\u001B[33m" + ogTxt + "\u001B[0m";
+    } else if (colour.equalsIgnoreCase("blue")) {
+        newTxt = "\u001B[34m" + ogTxt + "\u001B[0m";
+    } else if (colour.equalsIgnoreCase("purple")) {
+        newTxt = "\u001B[35m" + ogTxt + "\u001B[0m";
+    } else if (colour.equalsIgnoreCase("cyan")) {
+        newTxt = "\u001B[36m" + ogTxt + "\u001B[0m";
+    } else {
+        newTxt = ogTxt;
+    }
 
+    return newTxt;
+}
 
+// Method that pauses for a certain ammount (Based off Youssef's method "pause" only changed long to int because we dont need more than a 596 hr pause)
+public static void pause(int ms) {
+    try {
+        Thread.sleep(ms);
+    } catch (InterruptedException e) {}
+}
 
-
-
-
-
-
+// Method that slows down text chunks (Based off Youssef's method "slowText")
+public static void isSpeaking(String name, String text) {
+    System.out.print(name + ": ");
+    for (int i = 0; i < text.length(); i++) {
+        System.out.print(text.charAt(i));
+        pause(68);
+    }
+}
 
 // -->  Character Creator Methods  <--
 
@@ -91,7 +701,7 @@ static void clearConsole() {
 */
 
 // Method that return a list containing Kara's skills [0 = Strength, 1 = Speech, 2 = Stamina, 4 = Sneak]
-static int[] setSkills(int[] skills) {
+public static int[] setSkills(int[] skills) {
     int skillPts = 50;
 
     while (skillPts > 0) {
@@ -155,7 +765,7 @@ static int[] setSkills(int[] skills) {
 }
 
 // Method that return a list with Damage Multipliers [0 = Sharp, 1 = Blunt, 2 = Elemental, 4 = Ranged]
-static double[] setDamageMultipliers(double[] damageMultipliers) {
+public static double[] setDamageMultipliers(double[] damageMultipliers) {
     double dmgPts = 2.0;
 
     while (dmgPts > 0) {
@@ -218,102 +828,7 @@ static double[] setDamageMultipliers(double[] damageMultipliers) {
     return damageMultipliers;
 }
 
-// Method tha gives Kara bonus skills based on previous job
-static int[] jobSkills(String job, int[] skills) {
-    if (job.equals("Sushi")) {
-        skills[1] += 10;
-    } else if (job.equals("Steel")) {
-        skills[0] += 10;
-    } else if (job.equals("Farmer")) {
-        skills[2] += 10;
-    } else if (job.equals("Dealer")) {
-        skills[3] += 10;
-    }
-
-    return skills;
-}
-
-// Method that gives Kara money based on their old job
-static int jobMoney(String job, int money) {
-    if (job.equals("Sushi")) {
-        money = 100;
-    } else if (job.equals("Steel")) {
-        money = 150;
-    } else if (job.equals("Farmer")) {
-        money = 100;
-    } else if (job.equals("Dealer")) {
-        money = 200;
-    } else if (job.equals("CEO")) {
-        money = 10000;
-    }
-
-    return money;
-}
-
-// Method that gives Kara a weapon based on their job
-static String startWeapon(String job) {
-    String weapon = "";
-    if (job.equals("Sushi")) {
-        weapon = "Cleaver";
-    } else if (job.equals("Steel")) {
-        weapon = "Steel Pipe";
-    } else if (job.equals("Farmer")) {
-        weapon = "Pesticide Sprayer";
-    } else if (job.equals("Dealer")) {
-        weapon = "9mm";
-    } else {
-        weapon = "Fists";
-    }
-
-    return weapon;
-}
-
-// Method that sets weapon damage for the start weapon
-static int startDamage(String weapon) {
-    int damage = 0;
-    if (weapon.equals("Cleaver")) {
-        damage = 11;
-    } else if (weapon.equals("Steel Pipe")) {
-        damage = 9;
-    } else if (weapon.equals("Pesticide Sprayer")) {
-        damage = 8;
-    } else if (weapon.equals("9mm")) {
-        damage = 15;
-    } else {
-        damage = 5;
-    }
-
-    return damage;
-}
-
-// Method that gives Kara a weapon based on their job
-static String startDmgType(String job) {
-    String dmgType = "";
-    if (job.equals("Sushi")) {
-        dmgType = "Sharp";
-    } else if (job.equals("Steel")) {
-        dmgType = "Blunt";
-    } else if (job.equals("Farmer")) {
-        dmgType = "Elemental";
-    } else if (job.equals("Dealer")) {
-        dmgType = "Ranged";
-    } else {
-        dmgType = "Blunt";
-    }
-
-    return dmgType;
-}
-
 // --> Character Creator Methods End <--
-
-
-
-
-
-
-
-
-
 
 // -->  Turn Based Combat System  <--
 
@@ -325,7 +840,7 @@ static String startDmgType(String job) {
 */
 
 // Main method that starts and ends combat also sets lives if the player died
-static int combat(String kName, int kHealth, int kMaxHealth, int kDamage, double kDmgRes, String kDmgType, int[] skills, double[] damageMultipliers, int luck, int lives, String eName, int eHealth, int eDamage) {
+public static int combat(String kName, int kHealth, int kMaxHealth, int kDamage, double kDmgRes, String kDmgType, int[] skills, double[] damageMultipliers, int luck, int lives, String eName, int eHealth, int eDamage) {
     clearConsole();
     // Color Variables
     final String RESET = "\u001B[0m"; // Resets color (needed after every change)
@@ -348,7 +863,7 @@ static int combat(String kName, int kHealth, int kMaxHealth, int kDamage, double
     // Sets ammount of turn based on Kara's Stamina
     if (skills[2] == 100) {
         turns = 5;
-    } else if (skills[2] >= 700) {
+    } else if (skills[2] >= 70) {
         turns = 3;
     } else if (skills[2] >= 40) {
         turns = 2;
@@ -474,7 +989,7 @@ static int combat(String kName, int kHealth, int kMaxHealth, int kDamage, double
 }
 
 // Method that increases Kara's level
-static int levelUp(String kName, int level) {
+public static int levelUp(String kName, int level) {
     level++;
     System.out.println(kName + " leveled up!\n");
     System.out.println(kName + " is now level " + level);
@@ -482,7 +997,7 @@ static int levelUp(String kName, int level) {
 }
 
 // Method that lets player increase Kara's skills (skill cap is 100)
-static int[] increaseSkills(String kName, int[] skills) {
+public static int[] increaseSkills(String kName, int[] skills) {
     System.out.println("What skill would you like to assign 5 points to:");
     System.out.println("\n1. Strength\n2. Speech\n3. Stamina\n4. Sneak\n");
 
@@ -531,7 +1046,7 @@ static int[] increaseSkills(String kName, int[] skills) {
 }
 
 // Method that lets player increase Kara's damage multipliers (damage multipliers are capped at 3.0)
-static double[] increaseDamage(String kName, double[] damageMultipliers) {
+public static double[] increaseDamage(String kName, double[] damageMultipliers) {
     System.out.println("What damage multiplier would you like to assign 0.25 points to:");
     System.out.println("\n1. Sharp\n2. Blunt\n3. Elemental\n4. Ranged\n");
 
@@ -584,452 +1099,6 @@ static double[] increaseDamage(String kName, double[] damageMultipliers) {
 
 
 
-
-
-
-
-
-
-
 // --->   End Of Function Junction   <---
 
-    public static void main(String args[]){
-
-        System.out.println(
-            "\n"
-          + "\n    Welcome to"
-          + "\n    _____   __    ______                                          "
-          + "\n    ___  | / /_______  /______________ _______  ______________ _  "
-          + "\n    __   |/ /_  _ \\_  //_/  __ \\_  __ `__ \\  / / /_  ___/  __ `/  "
-          + "\n    _  /|  / /  __/  ,<  / /_/ /  / / / / / /_/ /_  /   / /_/ /   "
-          + "\n    /_/ |_/  \\___//_/|_| \\____//_/ /_/ /_/\\__,_/ /_/    \\__,_/    "
-          + "\n                                         ______                   "
-          + "\n                                        / __/ /_ ____ _  ___      "
-          + "\n                                       _\\ \\/ / // /  ' \\(_-<      "
-          + "\n                                      /___/_/\\_,_/_/_/_/___/      "
-          + "\n                                       Version 0.004.110624"
-          + "\n" 
-        );
-
-
-    // -->  varHell = true  <---
-
-        // Character Variables:
-        String kName = "Kara"; 
-        // NOTE: Kara is just a shorhand for character because I got tire of writing "Character" every time
-        // It also helps differentiate the character from the player
-        boolean nameSet = false;
-
-        int kHealth = 100;
-        int kMaxHealth = 100;
-        int level = 1;
-        int lives = 9;
-        int[] skills = new int[4];
-        double[] damageMultipliers = new double[4];
-        String oldJob = "Unemployed";
-        int luck = 0;
-        int tempCurrencyName = 0; // currency or money
-
-        // Combat Variables
-        String kWeapon = "Fists";
-        String kDmgType = "Blunt";
-        int kDamage = 5;
-        String kArmour = "Clothes";
-        double kDmgRes = 0.5;
-
-        // Merchant variables
-        String[] itemsForSale = new String[5];
-        int[] itemCost = new int[5];
-
-        // Reputation variables (a group/gang will attack Kara if their reputation is too low)
-        // These should also be able to fit in a list I just wanted to visualize it better
-        int govRep = 0;
-        // Gangs (names can change)
-        int stabbasRep = 0;
-        int shoottasRep = 0;
-
-        // Variables for changing the color of text 
-        // got them from stack overflow: https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
-        // Might need to change this depending on how Prof. Weronika shows us how to do this
-        final String RESET = "\u001B[0m"; // Resets color (needed after every change)
-        final String RED = "\u001B[31m"; // Reserved for Enemies
-        final String GREEN = "\u001B[32m"; // Reserved for Kara
-        final String YELLOW = "\u001B[33m"; // Reserved for Merchants
-        final String BLUE = "\u001B[34m"; // Reserved for Allies
-        final String PURPLE = "\u001B[35m"; // Reserved for NPCs
-        final String CYAN = "\u001B[36m"; // Reserved for debugging
-
-    // -->  varHell = false  <--
-
-
-
-    // Character Creator:
-
-        // While loop runs until player chooses Kara's name
-        while (!nameSet) {
-            System.out.println("\n____________________________________________________________________________________________________\n");
-            System.out.print("What is your character's name: ");
-    
-            String newName = input.nextLine(); // Takes player's input for Kara's name
-            kName = newName;
-    
-            System.out.println("\n" + kName + " will be your character's name throuout the game.\n"
-                + "\n1. Confirm name\n2. Change name\n"
-            );
-    
-            switch (playerSelection()) {
-                case "2":
-                    System.out.print("Clearing name...");
-                    input.nextLine(); // Clears input to make room for new name
-                    break;
-                default: nameSet = true;
-            }
-        }
-
-        skills = setSkills(skills);
-        damageMultipliers = setDamageMultipliers(damageMultipliers);
-
-        System.out.println("\n____________________________________________________________________________________________________\n");
-        System.out.print("What was your character's occupation:\n");
-        System.out.println("\n1. Sushi Chef\n2. Steel Worker\n3. Farmer\n4. Catnip Dealer\n5. CEO\n");
-    
-        switch (playerSelection()) {
-            case "1":
-                oldJob = "Sushi";
-                break;
-            case "2":
-                oldJob = "Steel";
-                break;
-            case "3":
-                oldJob = "Farmer";
-                break;
-            case "4":
-                oldJob = "Dealer";
-                break;
-            case "5":
-                oldJob = "CEO";
-                break;
-            default:
-                oldJob = "Unemployed";
-        }
-
-        skills = jobSkills(oldJob, skills);
-        tempCurrencyName = jobMoney(oldJob, tempCurrencyName);
-        luck = (oldJob.equals("CEO"))? 1 : 0;
-        kWeapon = startWeapon(oldJob);
-        kDamage = startDamage(kWeapon);
-        kDmgType = startDmgType(oldJob);
-        clearConsole();
-
-        // Debugging character
-        if (kName.equals("D. Bugger")) {
-            skills[0] = 100;
-            skills[1] = 100;
-            skills[2] = 100;
-            skills[3] = 100;
-            damageMultipliers[0] = 3.0;
-            damageMultipliers[1] = 3.0;
-            damageMultipliers[2] = 3.0;
-            damageMultipliers[3] = 3.0;
-            tempCurrencyName = 1000000;
-            luck = 10;
-            kWeapon = "Dragonn KLR 20mm Anti-Matiriel Rifle";
-            kDamage = 100;
-            kDmgType = "Ranged";
-            kArmour = "T-Shirt and Jorts";
-            kDmgRes = 3.0;
-            System.out.println(kName + " ready.");
-        }
-
-
-
-
-
-
-
-
-
-    /*
-    * ACT 1
-    * 
-    * This section just sets the background for why Kara ends up in the slums of Keji
-    * It's still early enough that we can change everything
-    * Story is still wip tho I just wrote something up quickly to have an idea of what to do
-    * 
-    */
-
-
-
-        // Sets a custom start and location based on player's choice of job
-        if (oldJob.equals("Sushi")) {
-            System.out.println(CYAN + "DEBUG{SHUSHI CHEF START}" + RESET);
-        } else if (oldJob.equals("Steel")) {
-            System.out.println(CYAN + "DEBUG{STEEL WORKER START}" + RESET);
-        } else if (oldJob.equals("Farmer")) {
-            System.out.println(CYAN + "DEBUG{FARMER START}" + RESET);
-        } else if (oldJob.equals("Dealer")) {
-            System.out.println(CYAN + "DEBUG{CATNIP DEALER START}" + RESET);
-        } else if (oldJob.equals("CEO")) {
-            System.out.println(CYAN + "DEBUG{CEO START}" + RESET);
-        } else {
-            System.out.println(CYAN + "DEBUG{UNEMPLOYED START}" + RESET);
-        }
-
-        /*
-        * Examples of what could happen :
-        *
-        * Kara ends up in the slums after loosing or quitting their job
-        * {Story stuff goes here}
-        *
-        * Kara finds a book that starts thier journey
-        * {Moves on to act 2}
-        */
-
-
-
-
-
-
-    // Debugging/Testing Area: (This is all temporary and should get removed later)
-
-        System.out.println("\n\nEntering debug area...\n\n");
-
-        System.out.println(CYAN + "KARA STATS:\n");
-        System.out.println(
-              "NAME: " + kName + "\n"
-            + "HEALTH: " + kHealth + "/" + kMaxHealth + "\n"
-            + "LEVEL: " + level + "\n"
-            + "LIVES: " + lives + "\n"
-            + "LUCK: " + luck + "\n"
-            + "tempCurrencyName: " + tempCurrencyName + "\n\n"
-            + "SKILLS:\n"
-            + "Strength (" + skills[0] + ")\n"
-            + "Speech (" + skills[1] + ")\n"
-            + "Stamina (" + skills[2] + ")\n"
-            + "Sneak (" + skills[3] + ")\n\n"
-            + "DMG MULT:\n"
-            + "Sharp (" + damageMultipliers[0] + ")\n"
-            + "Blunt (" + damageMultipliers[1] + ")\n"
-            + "Elemental (" + damageMultipliers[2] + ")\n"
-            + "Ranged (" + damageMultipliers[3] + ")\n\n"
-            + "WEAPON: " + kWeapon + "\n"
-            + "DAMAGE: "+ kDamage +"\n"
-            + "DAMAGE TYPE: " + kDmgType + "\n\n"
-            + "ARMOUR: " + kArmour + "\n"
-            + "DAMAGE RESISTANCE: " + kDmgRes + RESET + "\n\n"
-        );
-        clearConsole();
-
-        // Combat test (all of these will be needed every time there is a fight unless that fight doesnt "level up" Kara)
-        // Coloured text test might change depending on how were taught in class
-        System.out.println(RED + "Goober: Oi! Were gonna fight now!");
-        System.out.println(GREEN + kName + ": Ok." + RESET);
-        // I lost 2 lives with a "balanced" character...
-        lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Goober", 100, 10);
-        level = levelUp(kName, level);
-        kMaxHealth += 10;
-        kHealth = kMaxHealth;
-        skills = increaseSkills(kName, skills);
-        damageMultipliers = increaseDamage(kName, damageMultipliers);
-
-
-        // Shop test (Might need a method for all of this but everything I tried needed global variables)
-        System.out.println(GREEN + kName + ": Theres a shop ahead. I hope I have enough money...\n" + RESET);
-        System.out.print("~");
-        if (playerSelection().equals("motherlode"))
-            tempCurrencyName += 100000;
-
-        // List of items available for purchase
-        itemsForSale[0] = "Air Guitar";
-        itemsForSale[1] = "Mass Produced Sword";
-        itemsForSale[2] = "Baseball Bat";
-        itemsForSale[3] = "Thermobaric Anti-Personel Rocket Launcher";
-        itemsForSale[4] = "Plate Armour";
-
-        // Prices for each item
-        itemCost[0] = 10;
-        itemCost[1] = 50;
-        itemCost[2] = 40;
-        itemCost[3] = 1000000;
-        itemCost[4] = 10000;
-
-        System.out.println(kName + " enters a small shop.");
-        System.out.println(YELLOW + "\nMu'Guffin: Buy something. Or dont." + RESET);
-
-        // Skill check to lower the prices
-        if (skills[1] >= 40) {
-            System.out.println(GREEN + kName + ": Im not paying that much!");
-            System.out.println(YELLOW + "Mu'Guffin: Oh no!" + RESET);
-            itemCost[0] = 1;
-            itemCost[1] = 5;
-            itemCost[2] = 4;
-            itemCost[3] = 100000;
-            itemCost[4] = 1000;
-        } else if (skills[1] >= 10) {
-            System.out.println(GREEN + kName + ": Why dont we negotiate?");
-            System.out.println(YELLOW + "Mu'Guffin: Hmmm. Ok." + RESET);
-            itemCost[0] = 1;
-            itemCost[1] = 30;
-            itemCost[2] = 15;
-            itemCost[3] = 250000;
-            itemCost[4] = 5000;
-        } else {
-            System.out.println(GREEN + kName + ": Can you lower the prices?");
-            System.out.println(YELLOW + "Mu'Guffin: No." + RESET);
-        }
-
-        System.out.println("\n" + GREEN + kName + RESET + "'s {tempCurrencyName}: " + tempCurrencyName + "\n");
-        System.out.println(YELLOW + "\nMu'Guffin: This is what I sell...\n" + RESET);
-
-        // Displays the list of items
-        for (int i = 0; i < 5; i++) {
-            System.out.println((i + 1) + ". " + itemsForSale[i] + " (" + itemCost[i] + ")");
-        }
-        System.out.println("");
-
-        // Gives Kara their purchased item and "pays" the shop owner
-        switch (playerSelection()) {
-            case "1": tempCurrencyName = (tempCurrencyName >= itemCost[0])? tempCurrencyName -= 10: tempCurrencyName; break;
-            case "2":
-                if (tempCurrencyName >= itemCost[1]) {
-                    tempCurrencyName -= itemCost[1];
-                    kWeapon = "Sword";
-                    kDamage = 13;
-                    kDmgType = "Sharp";
-                    System.out.println(YELLOW + "Mu'Guffin: Thats a #1 seller." + RESET);
-                } else {
-                    System.out.println(YELLOW + "Mu'Guffin: Brokie. Git outta 'ere!" + RESET);
-                }
-                break;
-            case "3":
-                if (tempCurrencyName >= itemCost[2]) {
-                    tempCurrencyName -= itemCost[2];
-                    kWeapon = "Baseball Bat";
-                    kDamage = 11;
-                    kDmgType = "Blunt";
-                    System.out.println(YELLOW + "Mu'Guffin: Good whacker if you need to whack." + RESET);
-                } else {
-                    System.out.println(YELLOW + "Mu'Guffin: Brokie. Git outta 'ere!" + RESET);
-                }
-                break;
-            case "4":
-                if (tempCurrencyName >= itemCost[3]) {
-                    tempCurrencyName -= itemCost[3];
-                    kWeapon = "Thermobaric Anti-Personel Rocket Launcher";
-                    kDamage = 300;
-                    kDmgType = "Elemental";
-                    System.out.println(YELLOW + "Mu'Guffin: You dont need allat for street cats." + RESET);
-                } else {
-                    System.out.println(YELLOW + "Mu'Guffin: Brokie. Git outta 'ere!" + RESET);
-                }
-                break;
-            case "5":
-                if (tempCurrencyName >= itemCost[4]) {
-                    tempCurrencyName -= itemCost[4];
-                    kArmour = "Plate Armour";
-                    kDmgRes = 1.8;
-                    System.out.println(YELLOW + "Mu'Guffin: That'll stop a train!" + RESET);
-                } else {
-                    System.out.println(YELLOW + "Mu'Guffin: Brokie. Git outta 'ere!" + RESET);
-                }
-                break;
-            default: System.out.println(YELLOW + "Mu'Guffin: Git out if you aint buyin' nun!" + RESET);
-        }
-        clearConsole();
-
-
-        // Two enemy attack test
-        System.out.println(RED + "Goofy Fella: Im gonna stab ya!");
-        System.out.println("Silly Fella: And Im gonna wait patiently here. Surely nothing bad happens to my friend.");
-        System.out.println(GREEN + kName + ": What?" + RESET);
-
-        lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Goofy Fella", 50, 5);
-
-        System.out.println(RED + "Silly Fella: You killed my buddy! Now Im going to stab you... with a gun!" + RESET);
-
-        lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Silly Fella", 150, 20);
-        level = levelUp(kName, level);
-        kMaxHealth += 10;
-        kHealth = kMaxHealth;
-        skills = increaseSkills(kName, skills);
-        damageMultipliers = increaseDamage(kName, damageMultipliers);
-        stabbasRep -= 2;
-
-        // Reputation test
-        System.out.println(GREEN + kName + RESET + " has made some " + RED + "enemies" + RESET + "...\nShould " + kName + " join a " + BLUE + "gang" + RESET + " for safety?");
-        System.out.println("1. Join the shoottas\n2. Call the cops\n");
-
-        switch (playerSelection()) {
-            case "1":
-                if (oldJob == "Dealer") {
-                    System.out.println(BLUE + "Big Shootta: Haha! Look who came back boys.");
-                    System.out.println("Dont worry " + kName + " you're still like family to us." + RESET);
-                    shoottasRep += 5;
-                } else {
-                    System.out.println(PURPLE + "Big Shootta: Dont worry kid well keep you safe...");
-                    System.out.println("But we gotta make sure you're not a cop..." + RESET);
-
-                    lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Cop", 10, 0);
-                    System.out.println(BLUE + "Big Shootta: Sloppy work pal... but you're in." + RESET);
-                    shoottasRep += 3;
-                    stabbasRep -= 1;
-                    govRep -= 1;
-                }
-
-                break;
-            case "2":
-                System.out.println(PURPLE + "Operator: So you killed a gang member in the slums and you want us to help?");
-                System.out.println(GREEN + kName + ": Yup!");
-                System.out.println(RED + "Operator: Sorry. We cant do anything about it." + RESET);
-                shoottasRep -= 3;
-                stabbasRep -= 3;
-                break;
-            default: System.out.println(kName + " didn't do anything about it.");
-        }
-
-        System.out.println(CYAN + "\nDEBUG{REPUTATION GOV:" + govRep + ", STAB:" + stabbasRep + ", SHOOT:" + shoottasRep + "}" + RESET);
-        clearConsole();
-
-        // Reputation check
-        if (shoottasRep < 0 && stabbasRep < 0) {
-            System.out.println(GREEN + kName + RED + " got jumpped in an allyway by multiple people!" + RESET);
-
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
-
-            level = levelUp(kName, level);
-            kMaxHealth += 10;
-            kHealth = kMaxHealth;
-            skills = increaseSkills(kName, skills);
-            damageMultipliers = increaseDamage(kName, damageMultipliers);
-
-            System.out.println(RED + "Unfortunately... " + kName + " pissed off more than one gang!" + RESET);
-
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Shootta", 100, 20);
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Shootta", 100, 20);
-        } else if (shoottasRep > 0 && stabbasRep < 0) {
-            System.out.println(GREEN + kName + RED + " got jumpped in an allyway by multiple people!" + RESET);
-
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Stabba", 100, 10);
-
-            System.out.println(BLUE + "A few Shoottas heard the commotion, and picked off the rest." + RESET);
-        } else if (stabbasRep < 0) {
-            System.out.println(RED + "\nStabba: Shanka sends his regards!\n\n" + RESET);
-            System.out.println(kName + " got stabbed walking down the street!");
-            kHealth -= 10;
-            System.out.println("Health: " + kHealth + "/" + kMaxHealth + "\n");
-            System.out.println(GREEN + kName + ": Ouch. Somebody help me!");
-            System.out.println(PURPLE + "Bystander: Nah you're good." + RESET);
-        } else {
-            System.out.println(kName + " carried on with their day.");
-        }
-
-        if (kName.equals("D. Bugger")) {
-            System.out.println(CYAN + "Ad Min: Why dont you pick on someone your own size!" + RESET);
-            lives = combat(kName, kHealth, kMaxHealth, kDamage, kDmgRes, kDmgType, skills, damageMultipliers, luck, lives, "Ad Min", 10000, 100);
-        }
-
-        System.out.println(CYAN + "\n\nThats it for now. Thanks for playing :)\n\n" + RESET);
-    }
 }

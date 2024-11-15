@@ -58,3 +58,11 @@ Update 4 --- Nov. 6th, 2024:
 * Added color to certain text (might need to change if Prof. W. shows us a diff way)
 * Fixed Unemployed bug removing weapon
 * Added +10 to skill points for better balancing
+
+Update 5 --- Nov. 15th, 2024:
+* Moved function junction to the bottom
+* Added a different colouring method using a method instead of individual variables
+* Added a proper start to 1/6 of the backgrounds
+* Added a function for slowing text (based on Lab 11.13)
+* Added a pause function for slowing things down
+* Removed redundant methods in the character creator

@@ -48,12 +48,14 @@ public class NekomuraSlums {
           + "\n    __   |/ /_  _ \\_  //_/  __ \\_  __ `__ \\  / / /_  ___/  __ `/  "
           + "\n    _  /|  / /  __/  ,<  / /_/ /  / / / / / /_/ /_  /   / /_/ /   "
           + "\n    /_/ |_/  \\___//_/|_| \\____//_/ /_/ /_/\\__,_/ /_/    \\__,_/    "
-          + "\n                                         ______                   "
+          , "CYAN")
+          + colour(
+            "\n                                         ______                   "
           + "\n                                        / __/ /_ ____ _  ___      "
           + "\n                                       _\\ \\/ / // /  ' \\(_-<      "
           + "\n                                      /___/_/\\_,_/_/_/_/___/      "
-          , "CYAN")
-          + "\n                                       Version 0.005.111524"
+          , "PURPLE")
+          + "\n                                       Version 0.006.112224"
           + "\n" 
         );
 
@@ -182,7 +184,7 @@ public class NekomuraSlums {
             money = 10000;
         }
 
-        clearConsole();
+        clearConsole(1000);
 
         // Debugging character
         if (kName.equals("D. Bugger")) {
@@ -248,7 +250,7 @@ public class NekomuraSlums {
             }
         }
 
-        clearConsole();
+        clearConsole(1000);
 
         // Sets a custom start and location based on player's choice of job
         if (background.equals("Sushi")) {
@@ -290,7 +292,7 @@ public class NekomuraSlums {
             }
 
             System.out.println("About 30 minutes pass by... Then a new customer approaches " + colour(kName, "GREEN") + ".");
-            clearConsole();
+            clearConsole(3500);
 
             isSpeaking(colour("Customer", "Purple"), "Hey man! Im trying to find some of that good good!\n");
             isSpeaking(colour(kName, "Green"), "And Im supposed to help how exactly?\n");
@@ -364,7 +366,7 @@ public class NekomuraSlums {
 
 
 // Debugging/Testing Area: (This is all temporary and should get removed later)
-        clearConsole();
+        clearConsole(3000);
 
         System.out.println("\n\nEntering debug area...\n\n");
 
@@ -393,7 +395,7 @@ public class NekomuraSlums {
             + "DAMAGE RESISTANCE: " + kDmgRes + "\n\n"
             , "CYAN"));
 
-        clearConsole();
+        clearConsole(5000);
 
         // Combat test (all of these will be needed every time there is a fight unless that fight doesnt "level up" Kara)
         // Coloured text test might change depending on how were taught in class
@@ -453,65 +455,72 @@ public class NekomuraSlums {
             System.out.println(colour("Mu'Guffin: No.", "YELLOW"));
         }
 
-        System.out.println("\n" + kName + "'s money: " + money + "\n");
-        System.out.println(colour("\nMu'Guffin: This is what I sell...\n", "YELLOW"));
+        boolean inShop = true;
+        while (inShop) {
 
-        // Displays the list of items
-        for (int i = 0; i < 5; i++) {
-            System.out.println((i + 1) + ". " + itemsForSale[i] + " (" + itemCost[i] + ")");
+            System.out.println("\n" + kName + "'s money: " + money + "\n");
+            System.out.println(colour("\nMu'Guffin: This is what I sell...\n", "YELLOW"));
+
+            // Displays the list of items
+            for (int i = 0; i < 5; i++) {
+                System.out.println((i + 1) + ". " + itemsForSale[i] + " (" + itemCost[i] + ")");
+            }
+            System.out.println("\n'e' Leave Shop\n");
+
+            // Gives Kara their purchased item and "pays" the shop owner
+            switch (playerSelection()) {
+                case "e": 
+                    System.out.println(colour("Mu'Guffin: Bye. Dont come back 'ere.", "YELLOW"));
+                    inShop = false;
+                    continue;
+                case "1": money = (money >= itemCost[0])? money -= 10: money; break;
+                case "2":
+                    if (money >= itemCost[1]) {
+                        money -= itemCost[1];
+                        kWeapon = "Sword";
+                        kDamage = 13;
+                        kDmgType = "Sharp";
+                        System.out.println(colour("Mu'Guffin: Thats a #1 seller.", "YELLOW"));
+                    } else {
+                        System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                    }
+                    break;
+                case "3":
+                    if (money >= itemCost[2]) {
+                        money -= itemCost[2];
+                        kWeapon = "Baseball Bat";
+                        kDamage = 11;
+                        kDmgType = "Blunt";
+                        System.out.println(colour("Mu'Guffin: Good whacker if you need to whack.", "YELLOW"));
+                    } else {
+                        System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                    }
+                    break;
+                case "4":
+                    if (money >= itemCost[3]) {
+                        money -= itemCost[3];
+                        kWeapon = "Thermobaric Anti-Personel Rocket Launcher";
+                        kDamage = 300;
+                        kDmgType = "Elemental";
+                        System.out.println(colour("Mu'Guffin: You dont need allat for street cats.", "YELLOW"));
+                    } else {
+                        System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                    }
+                    break;
+                case "5":
+                    if (money >= itemCost[4]) {
+                        money -= itemCost[4];
+                        kArmour = "Plate Armour";
+                        kDmgRes = 1.8;
+                        System.out.println(colour("Mu'Guffin: That'll stop a train!", "YELLOW"));
+                    } else {
+                        System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
+                    }
+                    break;
+                default: System.out.println(colour("Mu'Guffin: Git out if you aint buyin' nun!", "YELLOW"));
+            }
+            clearConsole(1000);
         }
-        System.out.println("");
-
-        // Gives Kara their purchased item and "pays" the shop owner
-        switch (playerSelection()) {
-            case "1": money = (money >= itemCost[0])? money -= 10: money; break;
-            case "2":
-                if (money >= itemCost[1]) {
-                    money -= itemCost[1];
-                    kWeapon = "Sword";
-                    kDamage = 13;
-                    kDmgType = "Sharp";
-                    System.out.println(colour("Mu'Guffin: Thats a #1 seller.", "YELLOW"));
-                } else {
-                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
-                }
-                break;
-            case "3":
-                if (money >= itemCost[2]) {
-                    money -= itemCost[2];
-                    kWeapon = "Baseball Bat";
-                    kDamage = 11;
-                    kDmgType = "Blunt";
-                    System.out.println(colour("Mu'Guffin: Good whacker if you need to whack.", "YELLOW"));
-                } else {
-                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
-                }
-                break;
-            case "4":
-                if (money >= itemCost[3]) {
-                    money -= itemCost[3];
-                    kWeapon = "Thermobaric Anti-Personel Rocket Launcher";
-                    kDamage = 300;
-                    kDmgType = "Elemental";
-                    System.out.println(colour("Mu'Guffin: You dont need allat for street cats.", "YELLOW"));
-                } else {
-                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
-                }
-                break;
-            case "5":
-                if (money >= itemCost[4]) {
-                    money -= itemCost[4];
-                    kArmour = "Plate Armour";
-                    kDmgRes = 1.8;
-                    System.out.println(colour("Mu'Guffin: That'll stop a train!", "YELLOW"));
-                } else {
-                    System.out.println(colour("Mu'Guffin: Brokie. Git outta 'ere!", "YELLOW"));
-                }
-                break;
-            default: System.out.println(colour("Mu'Guffin: Git out if you aint buyin' nun!", "YELLOW"));
-        }
-        clearConsole();
-
 
         // Two enemy attack test
         System.out.println(colour("Goofy Fella: Im gonna stab ya!", "RED"));
@@ -569,7 +578,7 @@ public class NekomuraSlums {
         }
 
         System.out.println(colour("\nDEBUG{REPUTATION GOV:" + govRep + ", STAB:" + stabbasRep + ", SHOOT:" + shoottasRep + "}", "CYAN"));
-        clearConsole();
+        clearConsole(5000);
 
         // Reputation check
         if (shoottasRep < 0 && stabbasRep < 0) {
@@ -639,14 +648,10 @@ public static String playerSelection(){
 }
 
 // Method that clears the screen
-public static void clearConsole() {
+public static void clearConsole(int ms) {
     System.out.println("\n____________________________________________________________________________________________________\n");
     System.out.println("Clearing Screen...");
-    try {
-        Thread.sleep(3000); // Waits 3 secs before clearing screen
-    } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-    }
+    pause(ms);
 
     for (int i = 0; i < 50; i++) {
         System.out.println("\n\n");
@@ -685,6 +690,14 @@ public static void pause(int ms) {
 // Method that slows down text chunks (Based off Youssef's method "slowText")
 public static void isSpeaking(String name, String text) {
     System.out.print(name + ": ");
+    for (int i = 0; i < text.length(); i++) {
+        System.out.print(text.charAt(i));
+        pause(68);
+    }
+}
+
+// Method that slows down text
+public static void slowTxt(String text) {
     for (int i = 0; i < text.length(); i++) {
         System.out.print(text.charAt(i));
         pause(68);
@@ -822,7 +835,6 @@ public static double[] setDamageMultipliers(double[] damageMultipliers) {
             break;
         default:
             System.out.println("Damage Multipliers Confirmed!");
-            System.out.println("\n____________________________________________________________________________________________________\n");
     }
 
     return damageMultipliers;
@@ -841,7 +853,7 @@ public static double[] setDamageMultipliers(double[] damageMultipliers) {
 
 // Main method that starts and ends combat also sets lives if the player died
 public static int combat(String kName, int kHealth, int kMaxHealth, int kDamage, double kDmgRes, String kDmgType, int[] skills, double[] damageMultipliers, int luck, int lives, String eName, int eHealth, int eDamage) {
-    clearConsole();
+    clearConsole(5000);
     // Color Variables
     final String RESET = "\u001B[0m"; // Resets color (needed after every change)
     final String RED = "\u001B[31m"; // Reserved for Enemies
@@ -970,7 +982,7 @@ public static int combat(String kName, int kHealth, int kMaxHealth, int kDamage,
                 if (lives < 0) {
                     System.out.println(kName + " ran out of lives...");
                     System.out.println(kName + "'s journey ended unexpectedly.");
-                    clearConsole();
+                    clearConsole(9000);
                     input.close();
                     System.exit(1);
                 }
@@ -1091,7 +1103,7 @@ public static double[] increaseDamage(String kName, double[] damageMultipliers) 
             System.out.println("That's not an option.");
     }
 
-    clearConsole();
+    clearConsole(2000);
     return damageMultipliers;
 }
 
